@@ -1,5 +1,17 @@
-name: crypto-analyzer
-recipe: laravel
+name: cryptoana
+recipe: lamp
 config:
   php: '7.3'
   webroot: public
+services:
+  node:
+    type: node:12.13
+tooling:
+  npm:
+    service: node
+  node:
+    service: node
+  gulp:
+    service: node
+  yarn:
+    service: node
