@@ -123,12 +123,12 @@ class Analyzer extends Controller
     $client = new MarketClient();
     $tables = $client->getTables();
 
-    $currentDay = now();
-    $startDay = now()->subDay();
-    $endDay = now();
+    $startDay = now()->subDay()->setTimezone('America/New_York');
+    $endDay = now()->setTimezone('America/New_York');;
 
     for($ite=0; $ite<21; $ite++){
 
+      printf("<b>Start day %s - End day %s</b>", $startDay, $endDay);
       foreach($tables as $table){
 
         // Start prices
@@ -160,14 +160,10 @@ class Analyzer extends Controller
           echo sprintf("<h3><a href='%s'>%s : %s</a></h3>",
              url("/price-up-analyze/$table/" . $endDay), $table,  $pricePercDiff);
         }
-
       }
-
-
 
       $startDay = $startDay->subDay();
       $endDay = $endDay->subDay();
-
     }
 
 
