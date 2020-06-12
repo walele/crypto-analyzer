@@ -52597,6 +52597,7 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js"); //$('#tab
 
 $(document).ready(function () {
   $('#markets').DataTable();
+  $('.table-analyze').DataTable();
 });
 
 /***/ }),

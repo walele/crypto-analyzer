@@ -11,6 +11,108 @@ use Carbon\Carbon;
 
 class Analyzer extends Controller
 {
+  public function priceUpAnalyze($market, $time)
+  {
+    $tables = [];
+    $columns = [];
+    $markets = [];
+
+    $client = new MarketClient();
+
+    //
+    //  Last 24 h change
+    //
+    $endDay = new Carbon($time);
+    $startDay = (new Carbon($time))->subDay();
+
+    $table = [
+      'name' => 'Last 24h price diff',
+      'columns' => [],
+      'markets' => []
+    ];
+
+    for($ite=0; $ite<7; $ite++){
+        // Start prices & end prices
+        $debutPrices = $client->getMarketPricesAfter($market, $startDay, 3);
+        $startMP = new MarketPrices($debutPrices);
+        $endPrices = $client->getMarketPricesBefore($market, $endDay, 3);
+        $endMP = new MarketPrices($endPrices);
+
+        // Time & Price diff
+        $firstTime = $startMP->firstTimestamp();
+        $lastTime = $endMP->firstTimestamp();
+        $timeDiff = Helpers::getTimeDiff($firstTime, $lastTime);
+        $pricePercDiff = Helpers::calcPercentageDiff($startMP->avgPrice(), $endMP->avgPrice());
+
+        // Column name
+        if(!isset($columns[$ite])){
+          $columns[$ite] = sprintf("%s to <br>%s <br><small>%s</small>",
+            $startMP->startDate(), $endMP->startDate(), $timeDiff
+          );
+        }
+
+        $markets[$market][$ite] = $pricePercDiff;
+
+      $startDay = $startDay->subDay();
+      $endDay = $endDay->subDay();
+
+    }
+
+    $table['columns'] = $columns;
+    $table['markets'] = $markets;
+    $tables[] = $table;
+
+    //
+    //  Last 1h h change
+    //
+    $endDay = new Carbon($time);
+    $startDay = (new Carbon($time))->subDay();
+
+    $table = [
+      'name' => 'Last 1h price diff',
+      'columns' => [],
+      'markets' => []
+    ];
+
+    for($ite=0; $ite<16; $ite++){
+        // Start prices & end prices
+        $debutPrices = $client->getMarketPricesAfter($market, $startDay, 3);
+        $startMP = new MarketPrices($debutPrices);
+        $endPrices = $client->getMarketPricesBefore($market, $endDay, 3);
+        $endMP = new MarketPrices($endPrices);
+
+        // Time & Price diff
+        $firstTime = $startMP->firstTimestamp();
+        $lastTime = $endMP->firstTimestamp();
+        $timeDiff = Helpers::getTimeDiff($firstTime, $lastTime);
+        $pricePercDiff = Helpers::calcPercentageDiff($startMP->avgPrice(), $endMP->avgPrice());
+
+        // Column name
+        if(!isset($columns[$ite])){
+          $columns[$ite] = sprintf("%s to <br>%s <br><small>%s</small>",
+            $startMP->startDate(), $endMP->startDate(), $timeDiff
+          );
+        }
+
+        $markets[$market][$ite] = $pricePercDiff;
+
+      $startDay = $startDay->subHour();
+      $endDay = $endDay->subHour();
+
+    }
+
+    $table['columns'] = $columns;
+    $table['markets'] = $markets;
+    $tables[] = $table;
+
+
+
+    return view('table-custom-multiple', [
+      'tables' => $tables,
+    ]);
+
+    return;
+  }
 
   public function lastDaysUpPrices()
   {
@@ -51,7 +153,8 @@ class Analyzer extends Controller
 
         $markets[$table][$ite] = $pricePercDiff;
         if($pricePercDiff > 17){
-          echo sprintf("<h3>%s : %s</h3>", $table, $pricePercDiff);
+          echo sprintf("<h3><a href='%s'>%s : %s</a></h3>",
+             url("/price-up-analyze/$table/" . $endDay), $table,  $pricePercDiff);
         }
 
       }

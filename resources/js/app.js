@@ -2,5 +2,6 @@ require('./bootstrap');
 //$('#table').bootstrapTable();
 
 $(document).ready( function () {
-    $('#markets').DataTable();
+  $('#markets').DataTable();
+  $('.table-analyze').DataTable();
 } );

@@ -64,7 +64,6 @@ class MarketClient
 
   public function getMarketPricesAfter($market, $time, int $limit = 2)
   {
-
     $results = \DB::table($market)
                       ->where('timestamp', '>', $time)
                       ->limit($limit)
