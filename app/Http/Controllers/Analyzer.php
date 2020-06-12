@@ -18,12 +18,14 @@ class Analyzer extends Controller
     $markets = [];
 
     $client = new MarketClient();
-
+    echo "Time $time <br>";
     //
     //  Last 24 h change
     //
     $endDay = new Carbon($time);
     $startDay = (new Carbon($time))->subDay();
+    echo "end $endDay <br>";
+    echo "start $startDay <br>";
 
     $table = [
       'name' => 'Last 24h price diff',
@@ -33,9 +35,9 @@ class Analyzer extends Controller
 
     for($ite=0; $ite<7; $ite++){
         // Start prices & end prices
-        $debutPrices = $client->getMarketPricesAfter($market, $startDay, 3);
+        $debutPrices = $client->getMarketPricesAfter($market, $startDay, 1);
         $startMP = new MarketPrices($debutPrices);
-        $endPrices = $client->getMarketPricesBefore($market, $endDay, 3);
+        $endPrices = $client->getMarketPricesBefore($market, $endDay, 1);
         $endMP = new MarketPrices($endPrices);
 
         // Time & Price diff
@@ -66,7 +68,7 @@ class Analyzer extends Controller
     //  Last 1h h change
     //
     $endDay = (new Carbon($time))->subHour(4)->addHour(4);
-    $startDay = (new Carbon($time))->subHour(5)->addHour(5);
+    $startDay = (new Carbon($time))->subHour(5)->addHour(4);
     $columns = [];
     $markets = [];
 
@@ -78,9 +80,9 @@ class Analyzer extends Controller
 
     for($ite=0; $ite<24; $ite++){
         // Start prices & end prices
-        $debutPrices = $client->getMarketPricesAfter($market, $startDay, 3);
+        $debutPrices = $client->getMarketPricesAfter($market, $startDay, 1);
         $startMP = new MarketPrices($debutPrices);
-        $endPrices = $client->getMarketPricesBefore($market, $endDay, 3);
+        $endPrices = $client->getMarketPricesBefore($market, $endDay, 1);
         $endMP = new MarketPrices($endPrices);
 
         // Time & Price diff
