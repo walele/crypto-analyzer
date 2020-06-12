@@ -66,7 +66,7 @@ class Analyzer extends Controller
     //  Last 1h h change
     //
     $endDay = new Carbon($time);
-    $startDay = (new Carbon($time))->subDay();
+    $startDay = (new Carbon($time))->subHour();
 
     $table = [
       'name' => 'Last 1h price diff',
