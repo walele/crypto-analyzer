@@ -18,22 +18,9 @@ Route::get('/', function () {
 });
 
 Route::get('/last-day', 'Analyzer@lastDayAnalyze');
+Route::get('/last-days-market-prices-diff', 'Analyzer@lastDaysMarketPricesDiff');
 
 Route::get('/crypto', function () {
-     $results = DB::select('select * from ETHBTC');
-     foreach($results as $result){
-       $price =  $result->price;
-       $date =  $result->timestamp;
-       $timestamp = strtotime($date);
-
-       echo "$date $timestamp $price <br>";
-     }
-
-     $tables = DB::select('SHOW TABLES');
-     foreach($tables as $table)
-     {
-           echo $table->Tables_in_db_name;
-     }
 
     return 'ok';
 });

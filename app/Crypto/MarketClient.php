@@ -48,4 +48,30 @@ class MarketClient
     return $results->first();
 
   }
+
+  public function getMarketPricesBefore($market, $time, int $limit = 2)
+  {
+
+    $results = \DB::table($market)
+                      ->where('timestamp', '<', $time)
+                      ->limit($limit)
+                      ->orderByRaw('id  DESC')
+                      ->get();
+
+    return $results;
+
+  }
+
+  public function getMarketPricesAfter($market, $time, int $limit = 2)
+  {
+
+    $results = \DB::table($market)
+                      ->where('timestamp', '>', $time)
+                      ->limit($limit)
+                      ->orderByRaw('id  ASC')
+                      ->get();
+
+    return $results;
+
+  }
 }

@@ -5,9 +5,62 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Crypto\MarketClient;
+use App\Crypto\MarketPrices;
+use App\Crypto\Helpers;
+use Carbon\Carbon;
 
 class Analyzer extends Controller
 {
+  public function lastDaysMarketPricesDiff()
+  {
+    $columns = [];
+    $markets = [];
+    $currentDay = now();
+
+    $client = new MarketClient();
+    $tables = $client->getTables();
+
+    $ite = 0;
+    foreach($tables as $table){
+
+      // Start prices
+      $startDay = now()->subDay();
+      $debutPrices = $client->getMarketPricesAfter($table, $startDay, 3);
+      $startMP = new MarketPrices($debutPrices);
+
+      // End prices
+      $endDay = now();
+      $endPrices = $client->getMarketPricesBefore($table, $endDay, 3);
+
+      $endMP = new MarketPrices($endPrices);
+
+
+      // Time & Price diff
+      $firstTime = $startMP->firstTimestamp();
+      $lastTime = $endMP->firstTimestamp();
+      $timeDiff = Helpers::getTimeDiff($firstTime, $lastTime);
+
+      $pricePercDiff = Helpers::calcPercentageDiff($startMP->avgPrice(), $endMP->avgPrice());
+
+
+      // Column name
+      if(!isset($columns[$ite])){
+        //print_r($endPrices->all());
+        $columns[$ite] = $startMP->startDate() . ' to ' . $endMP->startDate() . " " . $timeDiff;
+      }
+
+
+    }
+
+    print_r($columns);
+    print_r($markets);
+    return;
+    return view('table', [
+      'columns' => $columns,
+      'markets' => $markets,
+    ]);
+
+  }
   public function lastDayAnalyze()
   {
 
