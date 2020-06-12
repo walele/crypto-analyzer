@@ -76,7 +76,7 @@ class Analyzer extends Controller
       'markets' => []
     ];
 
-    for($ite=0; $ite<16; $ite++){
+    for($ite=0; $ite<24; $ite++){
         // Start prices & end prices
         $debutPrices = $client->getMarketPricesAfter($market, $startDay, 3);
         $startMP = new MarketPrices($debutPrices);
