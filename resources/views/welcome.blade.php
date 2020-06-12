@@ -2,5 +2,9 @@
 
 
 @section('content')
-<h3 class="intro">Cosmos Code is a ressource for creative coding & digital art inspiration</h3>
+<h2>Crypto Analyzer</h2>
+<ul>
+  <li><a href="{{ url('last-days-market-prices-diff')}}">last-days-market-prices-diff</a></li>
+  <li><a href="{{ url('last-days-up-prices')}}">last-days-up-prices</a></li>
+</ul>
 @endsection

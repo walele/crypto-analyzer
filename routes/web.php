@@ -19,6 +19,7 @@ Route::get('/', function () {
 
 Route::get('/last-day', 'Analyzer@lastDayAnalyze');
 Route::get('/last-days-market-prices-diff', 'Analyzer@lastDaysMarketPricesDiff');
+Route::get('/last-days-up-prices', 'Analyzer@lastDaysUpPrices');
 
 Route::get('/crypto', function () {
 

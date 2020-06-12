@@ -11,6 +11,62 @@ use Carbon\Carbon;
 
 class Analyzer extends Controller
 {
+
+  public function lastDaysUpPrices()
+  {
+    $client = new MarketClient();
+    $tables = $client->getTables();
+
+    $currentDay = now();
+    $startDay = now()->subDay();
+    $endDay = now();
+
+    for($ite=0; $ite<21; $ite++){
+
+      foreach($tables as $table){
+
+        // Start prices
+        //echo Carbon::now()->timezoneName;                            // UTC
+        $debutPrices = $client->getMarketPricesAfter($table, $startDay, 3);
+        $startMP = new MarketPrices($debutPrices);
+
+        // End prices
+        $endPrices = $client->getMarketPricesBefore($table, $endDay, 3);
+        $endMP = new MarketPrices($endPrices);
+
+        // Time & Price diff
+        $firstTime = $startMP->firstTimestamp();
+        $lastTime = $endMP->firstTimestamp();
+        $timeDiff = Helpers::getTimeDiff($firstTime, $lastTime);
+        $pricePercDiff = Helpers::calcPercentageDiff($startMP->avgPrice(), $endMP->avgPrice());
+
+        // Column name
+        if(!isset($columns[$ite])){
+          $columns[$ite] = sprintf("%s to %s <small>%s</small>",
+            $startMP->startDate(), $endMP->startDate(), $timeDiff
+          );
+
+          echo sprintf("<p>%s</p>", $columns[$ite]);
+        }
+
+        $markets[$table][$ite] = $pricePercDiff;
+        if($pricePercDiff > 17){
+          echo sprintf("<h3>%s : %s</h3>", $table, $pricePercDiff);
+        }
+
+      }
+
+
+
+      $startDay = $startDay->subDay();
+      $endDay = $endDay->subDay();
+
+    }
+
+
+    return ;
+  }
+
   public function lastDaysMarketPricesDiff()
   {
     $columns = [];
@@ -23,7 +79,7 @@ class Analyzer extends Controller
     $startDay = now()->subDay();
     $endDay = now();
 
-    for($ite=0; $ite<5; $ite++){
+    for($ite=0; $ite<7; $ite++){
 
       foreach($tables as $table){
 

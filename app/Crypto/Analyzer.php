@@ -5,7 +5,7 @@ namespace App\Crypto;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
-class MarketPrices
+class Analyzer
 {
   private $prices;
   private $first;
@@ -20,7 +20,7 @@ class MarketPrices
   public function startDate()
   {
     $first = $this->prices->first();
-    $date = new Carbon($first->timestamp ?? '');
+    $date = new Carbon($first->timestamp);
     $str = $date->format('m/d H:i');
 
     return $str;
