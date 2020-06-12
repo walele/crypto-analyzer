@@ -156,7 +156,7 @@ class Analyzer extends Controller
         }
 
         $markets[$table][$ite] = $pricePercDiff;
-        if($pricePercDiff > 17){
+        if($pricePercDiff > 10){
           echo sprintf("<h3><a href='%s'>%s : %s</a></h3>",
              url("/price-up-analyze/$table/" . $endDay), $table,  $pricePercDiff);
         }
