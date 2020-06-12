@@ -7,7 +7,7 @@
     <tr>
       <th>Market Name</th>
       @foreach( $columns as $column)
-        <th>{{ $column }} </th>
+        <th>{!! $column !!} </th>
       @endforeach
     </tr>
   </thead>
@@ -19,7 +19,7 @@
       @foreach( $market as $data)
       <td>{{ $data}}</td>
       @endforeach
-      
+
     </tr>
     @endforeach
   </tbody>

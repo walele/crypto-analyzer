@@ -54,14 +54,14 @@ class MarketPrices
   {
     $first = $this->prices->first();
 
-    return $first->timestamp;
+    return $first->timestamp ?? '';
   }
 
   public function lastTimestamp()
   {
     $last = $this->prices->last();
 
-    return $last->timestamp;
+    return $last->timestamp ?? '';
   }
 
 }

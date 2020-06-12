@@ -15,38 +15,49 @@ class Analyzer extends Controller
   {
     $columns = [];
     $markets = [];
-    $currentDay = now();
 
     $client = new MarketClient();
     $tables = $client->getTables();
 
-    $ite = 0;
-    foreach($tables as $table){
+    $currentDay = now();
+    $startDay = now()->subDay();
+    $endDay = now();
 
-      // Start prices
-      $startDay = now()->subDay();
-      $debutPrices = $client->getMarketPricesAfter($table, $startDay, 3);
-      $startMP = new MarketPrices($debutPrices);
+    for($ite=0; $ite<5; $ite++){
 
-      // End prices
-      $endDay = now();
-      $endPrices = $client->getMarketPricesBefore($table, $endDay, 3);
-      $endMP = new MarketPrices($endPrices);
+      foreach($tables as $table){
 
-      // Time & Price diff
-      $firstTime = $startMP->firstTimestamp();
-      $lastTime = $endMP->firstTimestamp();
-      $timeDiff = Helpers::getTimeDiff($firstTime, $lastTime);
-      $pricePercDiff = Helpers::calcPercentageDiff($startMP->avgPrice(), $endMP->avgPrice());
+        // Start prices
+        //echo Carbon::now()->timezoneName;                            // UTC
+        $debutPrices = $client->getMarketPricesAfter($table, $startDay, 3);
+        $startMP = new MarketPrices($debutPrices);
 
-      // Column name
-      if(!isset($columns[$ite])){
-        //print_r($endPrices->all());
-        $columns[$ite] = $startMP->startDate() . ' to ' . $endMP->startDate() . " " . $timeDiff;
+        // End prices
+        $endPrices = $client->getMarketPricesBefore($table, $endDay, 3);
+        $endMP = new MarketPrices($endPrices);
+
+        // Time & Price diff
+        $firstTime = $startMP->firstTimestamp();
+        $lastTime = $endMP->firstTimestamp();
+        $timeDiff = Helpers::getTimeDiff($firstTime, $lastTime);
+        $pricePercDiff = Helpers::calcPercentageDiff($startMP->avgPrice(), $endMP->avgPrice());
+
+        // Column name
+        if(!isset($columns[$ite])){
+          $columns[$ite] = sprintf("%s to <br>%s <br><small>%s</small>",
+            $startMP->startDate(), $endMP->startDate(), $timeDiff
+          );
+        }
+
+        $markets[$table][$ite] = $pricePercDiff;
+
       }
-      $markets[$table][$ite] = $pricePercDiff;
+
+      $startDay = $startDay->subDay();
+      $endDay = $endDay->subDay();
 
     }
+
 
     return view('table-custom', [
       'columns' => $columns,
