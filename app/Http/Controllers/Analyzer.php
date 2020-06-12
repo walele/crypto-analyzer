@@ -31,31 +31,24 @@ class Analyzer extends Controller
       // End prices
       $endDay = now();
       $endPrices = $client->getMarketPricesBefore($table, $endDay, 3);
-
       $endMP = new MarketPrices($endPrices);
-
 
       // Time & Price diff
       $firstTime = $startMP->firstTimestamp();
       $lastTime = $endMP->firstTimestamp();
       $timeDiff = Helpers::getTimeDiff($firstTime, $lastTime);
-
       $pricePercDiff = Helpers::calcPercentageDiff($startMP->avgPrice(), $endMP->avgPrice());
-
 
       // Column name
       if(!isset($columns[$ite])){
         //print_r($endPrices->all());
         $columns[$ite] = $startMP->startDate() . ' to ' . $endMP->startDate() . " " . $timeDiff;
       }
-
+      $markets[$table][$ite] = $pricePercDiff;
 
     }
 
-    print_r($columns);
-    print_r($markets);
-    return;
-    return view('table', [
+    return view('table-custom', [
       'columns' => $columns,
       'markets' => $markets,
     ]);
