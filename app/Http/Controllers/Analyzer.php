@@ -65,8 +65,8 @@ class Analyzer extends Controller
     //
     //  Last 1h h change
     //
-    $endDay = new Carbon($time);
-    $startDay = (new Carbon($time))->subHour();
+    $endDay = (new Carbon($time))->subHour(4);
+    $startDay = (new Carbon($time))->subHour(5);
     $columns = [];
     $markets = [];
 
