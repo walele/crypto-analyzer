@@ -6,14 +6,16 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Crypto\MarketClient;
 use App\Crypto\MarketPrices;
+use App\Crypto\Analyzer;
 use App\Crypto\Helpers;
 use Carbon\Carbon;
 
-class Analyzer extends Controller
+class AnalyzerController extends Controller
 {
 
   public function lastHourDiff()
   {
+    $analyzer = new Analyzer();
     $columns = [];
     $markets = [];
 
@@ -21,8 +23,8 @@ class Analyzer extends Controller
     $tables = $client->getTables();
 
     $currentDay = now();
-    $startDay = now()->subHour();
-    $endDay = now();
+    $startDay = now()->subHour()->setTimezone('America/New_York');;
+    $endDay = now()->setTimezone('America/New_York');;
 
     for($ite=0; $ite<7; $ite++){
 

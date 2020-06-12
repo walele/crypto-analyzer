@@ -10,11 +10,8 @@ class Analyzer
   private $prices;
   private $first;
 
-  public function __construct( Collection $prices)
+  public function __construct( )
   {
-      $this->prices = $prices;
-      $this->first = $prices->first();
-
   }
 
   public function startDate()

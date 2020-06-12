@@ -17,11 +17,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/last-day', 'Analyzer@lastDayAnalyze');
-Route::get('/last-days-market-prices-diff', 'Analyzer@lastDaysMarketPricesDiff');
-Route::get('/last-days-up-prices', 'Analyzer@lastDaysUpPrices');
-Route::get('/last-hour-diff', 'Analyzer@lastHourDiff');
-Route::get('/price-up-analyze/{market}/{time}', 'Analyzer@priceUpAnalyze');
+Route::get('/last-day', 'AnalyzerController@lastDayAnalyze');
+Route::get('/last-days-market-prices-diff', 'AnalyzerController@lastDaysMarketPricesDiff');
+Route::get('/last-days-up-prices', 'AnalyzerController@lastDaysUpPrices');
+Route::get('/last-hour-diff', 'AnalyzerController@lastHourDiff');
+Route::get('/price-up-analyze/{market}/{time}', 'AnalyzerController@priceUpAnalyze');
 
 Route::get('/crypto', function () {
 
