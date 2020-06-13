@@ -21,7 +21,7 @@ class MarketPrices
   {
     $first = $this->prices->first();
     $date = new Carbon($first->timestamp ?? '');
-    $str = $date->format('m/d H:i');
+    $str = $date->format('m/d-H:i');
 
     return $str;
   }
@@ -30,7 +30,7 @@ class MarketPrices
   {
     $first = $this->prices->last();
     $date = new Carbon($first->timestamp);
-    $str = $date->format('m/d H:i');
+    $str = $date->format('m/d-H:i');
 
     return $str;
   }
