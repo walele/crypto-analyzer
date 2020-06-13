@@ -6,6 +6,7 @@
 </head>
 <body class="{{$bodyClass ?? ''}}">
   <div class="main">
+    <h1><a href="{{ url('/') }}">Crypto Analyzer</a></h1>
     <div class="container">
       @yield('content')
     </div>

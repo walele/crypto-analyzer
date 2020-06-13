@@ -47,6 +47,29 @@ class AnalyzerController extends Controller
     ]);
   }
 
+  public function last12HoursDiff()
+  {
+    $analyzer = new Analyzer();
+    $data = $analyzer->getMarketsDiffByTime(12, 7, now());
+
+    return view('table-custom', [
+      'columns' => $data->getColumns(),
+      'markets' => $data->getMarkets(),
+    ]);
+  }
+
+  public function last24HoursDiff()
+  {
+    $analyzer = new Analyzer();
+    $data = $analyzer->getMarketsDiffByTime(24, 7, now());
+
+    return view('table-custom', [
+      'columns' => $data->getColumns(),
+      'markets' => $data->getMarkets(),
+    ]);
+  }
+
+
   public function priceUpAnalyze($market, $time)
   {
     $tables = [];

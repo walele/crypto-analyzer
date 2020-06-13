@@ -23,6 +23,8 @@ Route::get('/last-days-up-prices', 'AnalyzerController@lastDaysUpPrices');
 Route::get('/last-hour-diff', 'AnalyzerController@lastHourDiff');
 Route::get('/last-3hours-diff', 'AnalyzerController@last3HoursDiff');
 Route::get('/last-6hours-diff', 'AnalyzerController@last6HoursDiff');
+Route::get('/last-12hours-diff', 'AnalyzerController@last12HoursDiff');
+Route::get('/last-24hours-diff', 'AnalyzerController@last24HoursDiff');
 Route::get('/price-up-analyze/{market}/{time}', 'AnalyzerController@priceUpAnalyze');
 
 Route::get('/crypto', function () {
