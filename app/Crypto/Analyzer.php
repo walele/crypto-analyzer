@@ -48,7 +48,8 @@ class Analyzer
         ));
 
         // Add market PriceDiff
-        $debug = " ( " . $startMP->avgPrice(). ' ' . $endMP->avgPrice() . ')';
+        $debug = " <br><small> ( " . $startMP->avgPrice(). ' ' . $endMP->avgPrice() . ')</smal>';
+        $debug .= " <br><small>$firstTime $lastTime</small>";
         $analysis->setMarket($table, $i, $pricePercDiff . $debug);
 
       }
