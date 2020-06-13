@@ -14,7 +14,7 @@ class Analyzer
   {
   }
 
-  public function getMarketsDiffByTime(int $step = 1, int $ite = 5, Carbon $end)
+  public function getMarketsDiffByTime(int $step = 1, int $ite = 5, Carbon $end, $minute=false)
   {
     $analysis = new Analysis;
     $client = new MarketClient();
@@ -22,7 +22,11 @@ class Analyzer
 
     $end->setTimezone('America/New_York');
     $endDay = $end->copy();
-    $startDay = $end->copy()->subHours($step);
+    if($minute){
+      $startDay = $end->copy()->subMinutes($step);
+    }else{
+      $startDay = $end->copy()->subHours($step);
+    }
 
     for( $i = $ite; $i > 0; $i--){
 
@@ -54,8 +58,13 @@ class Analyzer
 
       }
 
-      $startDay = $startDay->subHours($step);
-      $endDay = $endDay->subHours($step);
+      if($minute){
+        $startDay = $end->copy()->subMinutes($step);
+        $endDay = $endDay->subMinutes($step);
+      }else{
+        $startDay = $startDay->subHours($step);
+        $endDay = $endDay->subHours($step);
+      }
 
     }
 
