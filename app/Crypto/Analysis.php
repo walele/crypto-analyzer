@@ -18,7 +18,7 @@ class Analysis
   public function getColumns()
   {
     ksort($this->columns);
-    
+
     return $this->columns;
   }
 
@@ -43,7 +43,7 @@ class Analysis
 
   public function calcTotal()
   {
-    $this->setColumn('total', 'total');
+    $this->setColumn('999_total', 'total');
 
     foreach($this->markets as $name => $m){
       $this->markets[$name]['total'] = array_sum($this->markets[$name]);
