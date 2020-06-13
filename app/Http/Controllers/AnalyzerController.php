@@ -13,58 +13,26 @@ use Carbon\Carbon;
 class AnalyzerController extends Controller
 {
 
+
   public function lastHourDiff()
   {
     $analyzer = new Analyzer();
-    $columns = [];
-    $markets = [];
-
-    $client = new MarketClient();
-    $tables = $client->getTables();
-
-    $currentDay = now();
-    $startDay = now()->subHour()->setTimezone('America/New_York');;
-    $endDay = now()->setTimezone('America/New_York');;
-
-    for($ite=0; $ite<7; $ite++){
-
-      foreach($tables as $table){
-
-        // Start prices
-        //echo Carbon::now()->timezoneName;                            // UTC
-        $debutPrices = $client->getMarketPricesAfter($table, $startDay, 3);
-        $startMP = new MarketPrices($debutPrices);
-
-        // End prices
-        $endPrices = $client->getMarketPricesBefore($table, $endDay, 3);
-        $endMP = new MarketPrices($endPrices);
-
-        // Time & Price diff
-        $firstTime = $startMP->firstTimestamp();
-        $lastTime = $endMP->firstTimestamp();
-        $timeDiff = Helpers::getTimeDiff($firstTime, $lastTime);
-        $pricePercDiff = Helpers::calcPercentageDiff($startMP->avgPrice(), $endMP->avgPrice());
-
-        // Column name
-        if(!isset($columns[$ite])){
-          $columns[$ite] = sprintf("%s to <br>%s <br><small>%s</small>",
-            $startMP->startDate(), $endMP->startDate(), $timeDiff
-          );
-        }
-
-        $markets[$table][$ite] = $pricePercDiff;
-
-      }
-
-      $startDay = $startDay->subHour();
-      $endDay = $endDay->subHour();
-
-    }
-
+    $data = $analyzer->getLastHourDiff();
 
     return view('table-custom', [
-      'columns' => $columns,
-      'markets' => $markets,
+      'columns' => $data['columns'],
+      'markets' => $data['markets'],
+    ]);
+  }
+
+  public function last6HoursDiff()
+  {
+    $analyzer = new Analyzer();
+    $data = $analyzer->getLast6HoursDiff();
+
+    return view('table-custom', [
+      'columns' => $data->getColumns(),
+      'markets' => $data->getMarkets(),
     ]);
   }
 
