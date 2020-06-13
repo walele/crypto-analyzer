@@ -20,7 +20,7 @@ class Analyzer
     $client = new MarketClient();
     $tables = $client->getTables();
 
-    //$end->setTimezone('America/New_York');
+    $end->setTimezone('America/New_York');
     $endDay = $end->copy();
     $startDay = $end->copy()->subHours($step);
 
