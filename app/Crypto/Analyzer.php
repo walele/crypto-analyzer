@@ -21,7 +21,7 @@ class Analyzer
     $tables = $client->getTables();
 
     $endDay = $end->setTimezone('America/New_York');
-    $startDay = $end->subHour($step)->setTimezone('America/New_York');;
+    $startDay = $end->subHours($step)->setTimezone('America/New_York');;
 
     for( $i = 0; $i < $ite; $i++){
 
