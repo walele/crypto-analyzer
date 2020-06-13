@@ -15,7 +15,7 @@
   <tbody>
     @foreach( $markets as $key => $market)
     <tr>
-      <td>{{ $key}}</td>
+      <td><a href="{{ url('market' . $key) }}">{{ $key}}</a></td>
 
       @foreach( $market as $data)
       <td>{{ $data}}</td>

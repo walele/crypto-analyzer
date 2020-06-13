@@ -73,4 +73,15 @@ class MarketClient
     return $results;
 
   }
+
+
+  public function getMarketLastPrices($market, $limit)
+  {
+    $results = \DB::table($market)
+                      ->limit($limit)
+                      ->orderByRaw('id  DESC')
+                      ->get();
+
+    return $results;
+  }
 }

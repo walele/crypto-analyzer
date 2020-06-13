@@ -79,6 +79,16 @@ class AnalyzerController extends Controller
     ]);
   }
 
+  public function marketAnalyze($market)
+  {
+    $analyzer = new Analyzer();
+    $data = $analyzer->getMarketAnalysis($market, 2);
+
+    return view('market-analysis', [
+      'prices' => $data,
+    ]);
+  }
+
 
   public function priceUpAnalyze($market, $time)
   {

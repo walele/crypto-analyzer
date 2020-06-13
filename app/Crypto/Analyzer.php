@@ -24,9 +24,6 @@ class Analyzer
     $endDay = $end->copy();
     $startDay = $end->copy()->subHours($step);
 
-    echo "Startday $startDay <br>";
-    echo "Enday $endDay <br>";
-
     for( $i = $ite; $i > 0; $i--){
 
       foreach($tables as $table){
@@ -68,6 +65,18 @@ class Analyzer
   public function getLast6HoursDiff()
   {
     return $this->getMarketsDiffByTime(6, 5, now());
+  }
+
+  public function getMarketAnalysis($market)
+  {
+    $client = new MarketClient();
+    $prices = [];
+    $lastPrices = $client->getMarketLastPrices($market, 20);
+
+    $prices = $lastPrices->reverse();
+
+
+    return $prices;
   }
 
 }
