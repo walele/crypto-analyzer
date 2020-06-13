@@ -48,7 +48,7 @@ class Analysis
     $this->setColumn('999_total', 'total');
 
     foreach($this->markets as $name => $m){
-      $this->markets[$name]['total'] = array_sum($this->markets[$name]);
+      $this->markets[$name]['999_total'] = array_sum($this->markets[$name]);
     }
   }
 }
