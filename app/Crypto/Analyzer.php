@@ -24,9 +24,6 @@ class Analyzer
     $endDay = $end->copy();
     $startDay = $end->copy()->subHours($step);
 
-    echo "end $endDay <br>";
-    echo "start $startDay <br>";
-
     for( $i = 0; $i < $ite; $i++){
 
       foreach($tables as $table){
@@ -59,6 +56,8 @@ class Analyzer
       $endDay = $endDay->subHours($step);
 
     }
+
+    $analysis->calcTotal();
 
     return $analysis;
   }

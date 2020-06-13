@@ -36,4 +36,13 @@ class Analysis
   {
     $this->markets[$table][$ite]= $pricePercDiff;
   }
+
+  public function calcTotal()
+  {
+    $this->setColumn('total', 'total');
+
+    foreach($this->markets as $name => $m){
+      $this->markets[$name]['total'] = array_sum($this->markets[$name]);
+    }
+  }
 }
