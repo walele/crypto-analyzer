@@ -17,11 +17,22 @@ class AnalyzerController extends Controller
   public function lastHourDiff()
   {
     $analyzer = new Analyzer();
-    $data = $analyzer->getLastHourDiff();
+    $data = $analyzer->getMarketsDiffByTime(1, 12, now());
 
     return view('table-custom', [
       'columns' => $data['columns'],
       'markets' => $data['markets'],
+    ]);
+  }
+
+  public function last3HoursDiff()
+  {
+    $analyzer = new Analyzer();
+    $data = $analyzer->getMarketsDiffByTime(3, 7, now());
+
+    return view('table-custom', [
+      'columns' => $data->getColumns(),
+      'markets' => $data->getMarkets(),
     ]);
   }
 
