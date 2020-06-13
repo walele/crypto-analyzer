@@ -24,6 +24,17 @@ class AnalyzerController extends Controller
     ]);
   }
 
+  public function longLastHalfHourDiff()
+  {
+    $analyzer = new Analyzer();
+    $data = $analyzer->getMarketsDiffByTime(30, 30, now(), true);
+
+    return view('table-custom', [
+      'columns' => $data->getColumns(),
+      'markets' => $data->getMarkets(),
+    ]);
+  }
+
   public function lastHourDiff()
   {
     $analyzer = new Analyzer();
