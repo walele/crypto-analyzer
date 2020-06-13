@@ -6,3 +6,7 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+table.dataTable thead .sorting{
+  min-width: 100px;
+}
