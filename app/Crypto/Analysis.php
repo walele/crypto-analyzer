@@ -24,7 +24,9 @@ class Analysis
 
   public function getMarkets()
   {
-    ksort($this->markets);
+    foreach ($this->markets as $key => $m) {
+      ksort($this->markets[$key]);
+    }
 
     return $this->markets;
   }
