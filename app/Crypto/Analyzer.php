@@ -29,11 +29,11 @@ class Analyzer
       foreach($tables as $table){
 
         // Start prices
-        $debutPrices = $client->getMarketPricesAfter($table, $startDay, 2);
+        $debutPrices = $client->getMarketPricesAfter($table, $startDay, 1);
         $startMP = new MarketPrices($debutPrices);
 
         // End prices
-        $endPrices = $client->getMarketPricesBefore($table, $endDay, 2);
+        $endPrices = $client->getMarketPricesBefore($table, $endDay, 1);
         $endMP = new MarketPrices($endPrices);
 
         // Time & Price diff
