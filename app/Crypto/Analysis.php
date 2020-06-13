@@ -17,11 +17,15 @@ class Analysis
 
   public function getColumns()
   {
+    ksort($this->columns);
+    
     return $this->columns;
   }
 
   public function getMarkets()
   {
+    ksort($this->markets);
+
     return $this->markets;
   }
 

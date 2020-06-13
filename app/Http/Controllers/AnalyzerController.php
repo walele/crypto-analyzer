@@ -13,6 +13,16 @@ use Carbon\Carbon;
 class AnalyzerController extends Controller
 {
 
+  public function lastHalfHourDiff()
+  {
+    $analyzer = new Analyzer();
+    $data = $analyzer->getMarketsDiffByTime(0.5, 7, now());
+
+    return view('table-custom', [
+      'columns' => $data->getColumns(),
+      'markets' => $data->getMarkets(),
+    ]);
+  }
 
   public function lastHourDiff()
   {

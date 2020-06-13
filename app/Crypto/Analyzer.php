@@ -20,11 +20,14 @@ class Analyzer
     $client = new MarketClient();
     $tables = $client->getTables();
 
-    $end->setTimezone('America/New_York');
+    //$end->setTimezone('America/New_York');
     $endDay = $end->copy();
     $startDay = $end->copy()->subHours($step);
 
-    for( $i = 0; $i < $ite; $i++){
+    echo "Startday $startDay <br>";
+    echo "Enday $endDay <br>";
+
+    for( $i = $ite; $i > 0; $i--){
 
       foreach($tables as $table){
 
