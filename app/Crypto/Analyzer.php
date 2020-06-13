@@ -59,7 +59,7 @@ class Analyzer
       }
 
       if($minute){
-        $startDay = $end->copy()->subMinutes($step);
+        $startDay = $startDay->subMinutes($step);
         $endDay = $endDay->subMinutes($step);
       }else{
         $startDay = $startDay->subHours($step);
