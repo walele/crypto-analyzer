@@ -25,6 +25,7 @@ class MarketClient
 
     return $btc_tables;
   }
+
   public function getLastDayMarketPrice($market)
   {
     $yesterday = now()->subDay();
@@ -46,6 +47,17 @@ class MarketClient
                       ->get();
 
     return $results->first();
+
+  }
+
+  public function getLastMarketPrices($market, int $limit)
+  {
+    $results = \DB::table($market)
+                      ->limit($limit)
+                      ->orderByRaw('id  DESC')
+                      ->get();
+
+    return $results;
 
   }
 

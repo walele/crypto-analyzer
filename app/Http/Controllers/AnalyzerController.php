@@ -13,6 +13,16 @@ use Carbon\Carbon;
 class AnalyzerController extends Controller
 {
 
+  public function lastEntriesMovingAverage()
+  {
+    $analyzer = new Analyzer();
+    $data = $analyzer->getLastEntriesMovingAverage();
+
+    return view('table-custom', [
+      'columns' => $data->getColumns(),
+      'markets' => $data->getMarkets(),
+    ]);
+  }
   public function lastHalfHourDiff()
   {
     $analyzer = new Analyzer();

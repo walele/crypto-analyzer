@@ -20,6 +20,7 @@ Route::get('/', function () {
 Route::get('/last-day', 'AnalyzerController@lastDayAnalyze');
 Route::get('/last-days-market-prices-diff', 'AnalyzerController@lastDaysMarketPricesDiff');
 Route::get('/last-days-up-prices', 'AnalyzerController@lastDaysUpPrices');
+Route::get('/last-entries-moving-average', 'AnalyzerController@lastEntriesMovingAverage');
 
 Route::get('/last-halfhour-diff', 'AnalyzerController@lastHalfHourDiff');
 Route::get('/long-last-halfhour-diff', 'AnalyzerController@longLastHalfHourDiff');

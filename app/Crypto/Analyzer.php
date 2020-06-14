@@ -90,4 +90,50 @@ class Analyzer
     return $prices;
   }
 
+
+  public function getLastEntriesMovingAverage()
+  {
+    $analysis = new Analysis;
+    $data = [];
+    $client = new MarketClient();
+    $tables = $client->getTables();
+
+    // Column name
+    $analysis->setColumn('ma1', 'ma1');
+    $analysis->setColumn('ma2', 'ma2');
+    $analysis->setColumn('diff', 'diff');
+    $analysis->setColumn('timeDiff', 'timeDiff');
+    $analysis->setColumn('period', 'period');
+
+    foreach($tables as $market){
+
+      // MA 7
+      $ma1Prices = $client->getLastMarketPrices($market, 7);
+      $ma1 = $ma1Prices ->average('price');
+
+      // MA 25
+      $ma2Prices = $client->getLastMarketPrices($market, 25);
+      $ma2 = $ma2Prices ->average('price');
+
+      // diff
+      $diff = $ma1 > $ma2 ? 'MA1 >' : 'ma2';
+      $diff .= ' ' .  number_format($ma1-$ma2, 14);
+
+      $firstTime = $ma2Prices->last()->timestamp;
+      $lastTime = $ma2Prices->first()->timestamp;
+      $timeDiff = Helpers::getTimeDiff($firstTime, $lastTime);
+
+
+      $analysis->setMarket($market, 'ma1', round($ma1, 10) );
+      $analysis->setMarket($market, 'ma2', $ma2 );
+      $analysis->setMarket($market, 'diff', $diff );
+      $analysis->setMarket($market, 'timeDiff', $firstTime . ' '.  $lastTime);
+      $analysis->setMarket($market, 'period', $timeDiff );
+
+    }
+
+
+    return $analysis;
+  }
+
 }

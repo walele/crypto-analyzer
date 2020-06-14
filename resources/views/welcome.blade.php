@@ -6,6 +6,7 @@
 <ul>
   <li><a href="{{ url('last-days-market-prices-diff')}}">last-days-market-prices-diff</a></li>
   <li><a href="{{ url('last-days-up-prices')}}">last-days-up-prices</a></li>
+  <li><a href="{{ url('last-entries-moving-average')}}">Last entries moving average</a></li>
   <li><a href="{{ url('last-halfhour-diff')}}">Last half hour diff</a></li>
   <li><a href="{{ url('long-last-halfhour-diff')}}">Long Last half hour diff</a></li>
   <li><a href="{{ url('last-hour-diff')}}">Last hour diff</a></li>
