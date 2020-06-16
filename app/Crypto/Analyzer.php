@@ -116,8 +116,9 @@ class Analyzer
       $ma2 = $ma2Prices ->average('price');
 
       // diff
+      $pricePercDiff = Helpers::calcPercentageDiff($ma2, $ma1);
       $diff = $ma1 > $ma2 ? 'MA1 >' : 'ma2';
-      $diff .= ' ' .  number_format($ma1-$ma2, 14);
+      $diff .= ' ' .  number_format($pricePercDiff, 2);
 
       $firstTime = $ma2Prices->last()->timestamp;
       $lastTime = $ma2Prices->first()->timestamp;
