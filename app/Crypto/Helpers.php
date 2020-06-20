@@ -37,10 +37,13 @@ class Helpers
 
   public static function calcPercentageDiff($startPrice, $endPrice)
   {
-    $diff =   $endPrice - $startPrice;
-    $average = ($endPrice + $startPrice) / 2.0 ;
-    $diffPerc = ($diff / $average) * 100;
+    //$diff =   $endPrice - $startPrice;
+    //$average = ($endPrice + $startPrice) / 2.0 ;
+    //$diffPerc = ($diff / $average) * 100;
+    // return number_format($diffPerc, 4);
 
-    return number_format($diffPerc, 4);
+
+    return number_format( ( ($endPrice - $startPrice) / $endPrice) * 100, 4);
+
   }
 }
