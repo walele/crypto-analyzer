@@ -98,21 +98,26 @@ class Analyzer
     $client = new MarketClient();
     $tables = $client->getTables();
 
+    $ma1Nb = 7;
+    $ma2Nb = 25;
+
     // Column name
-    $analysis->setColumn('ma1', 'ma1');
-    $analysis->setColumn('ma2', 'ma2');
+    $analysis->setColumn('ma1', "ma1 ($ma1Nb)");
+    $analysis->setColumn('ma2', "ma2 ($ma2Nb)");
     $analysis->setColumn('diff', 'diff');
-    $analysis->setColumn('timeDiff', 'timeDiff');
-    $analysis->setColumn('period', 'period');
+    $analysis->setColumn('timeDiff1', 'timeDiff1');
+    $analysis->setColumn('timeDiff2', 'timeDiff2');
+    $analysis->setColumn('period1', 'period1');
+    $analysis->setColumn('period2', 'period2');
 
     foreach($tables as $market){
 
       // MA 7
-      $ma1Prices = $client->getLastMarketPrices($market, 7);
+      $ma1Prices = $client->getLastMarketPrices($market, $ma1Nb);
       $ma1 = $ma1Prices ->average('price');
 
       // MA 25
-      $ma2Prices = $client->getLastMarketPrices($market, 25);
+      $ma2Prices = $client->getLastMarketPrices($market, $ma2Nb);
       $ma2 = $ma2Prices ->average('price');
 
       // diff
@@ -120,17 +125,24 @@ class Analyzer
       $diff = $ma1 > $ma2 ? 'MA1 >' : 'ma2';
       $diff .= ' ' .  number_format($pricePercDiff, 2);
 
-      $firstTime = $ma2Prices->last()->timestamp;
-      $lastTime = $ma2Prices->first()->timestamp;
-      $timeDiff = Helpers::getTimeDiff($firstTime, $lastTime);
+      $firstTime1 = $ma1Prices->last()->timestamp;
+      $lastTime1 = $ma1Prices->first()->timestamp;
+      $timeDiff1 = Helpers::getTimeDiff($firstTime1, $lastTime1);
 
+      $firstTime2 = $ma2Prices->last()->timestamp;
+      $lastTime2 = $ma2Prices->first()->timestamp;
+      $timeDiff2 = Helpers::getTimeDiff($firstTime2, $lastTime2);
+
+      $period1 = sprintf("<small>%s <br> %s</small>", $firstTime1, $lastTime1);
+      $period2 = sprintf("<small>%s <br> %s</small>", $firstTime2, $lastTime2);
 
       $analysis->setMarket($market, 'ma1', round($ma1, 10) );
       $analysis->setMarket($market, 'ma2', $ma2 );
       $analysis->setMarket($market, 'diff', $diff );
-      $analysis->setMarket($market, 'timeDiff', $firstTime . ' '.  $lastTime);
-      $analysis->setMarket($market, 'period', $timeDiff );
-
+      $analysis->setMarket($market, 'timeDiff1', $timeDiff1 );
+      $analysis->setMarket($market, 'timeDiff2', $timeDiff2 );
+      $analysis->setMarket($market, 'period1', $period1);
+      $analysis->setMarket($market, 'period2', $period2);
     }
 
 
