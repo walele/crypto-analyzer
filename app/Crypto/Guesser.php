@@ -31,7 +31,7 @@ class Guesser
         for($i=0; $i<$nb; $i++){
           $last1 = ($lastMAs[$i]);
           $last2 = ($lastMAs[$i+1]);
-          if($last1 < $last2){
+          if($last1 <= $last2){
             $alwaysGoUp = false;
           }
         }
