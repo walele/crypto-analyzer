@@ -29,8 +29,8 @@ class Guesser
         $alwaysGoUp = true;
         $nb = count($lastMAs)-1;
         for($i=0; $i<$nb; $i++){
-          $last1 = ($lastMAs[$i]);
-          $last2 = ($lastMAs[$i+1]);
+          $last1 = ($lastMAs[$i]['ma']);
+          $last2 = ($lastMAs[$i+1]['ma']);
           if($last1 <= $last2){
             $alwaysGoUp = false;
           }
