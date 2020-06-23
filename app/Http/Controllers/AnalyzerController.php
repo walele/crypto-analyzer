@@ -7,11 +7,19 @@ use App\Http\Controllers\Controller;
 use App\Crypto\MarketClient;
 use App\Crypto\MarketPrices;
 use App\Crypto\Analyzer;
+use App\Crypto\Guesser;
 use App\Crypto\Helpers;
 use Carbon\Carbon;
 
 class AnalyzerController extends Controller
 {
+
+  public function currentBet()
+  {
+      $data = Guesser::getCurrentBet();
+
+      return;
+  }
 
   public function lastEntriesMovingAverage()
   {
@@ -23,6 +31,7 @@ class AnalyzerController extends Controller
       'markets' => $data->getMarkets(),
     ]);
   }
+
   public function lastHalfHourDiff()
   {
     $analyzer = new Analyzer();

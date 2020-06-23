@@ -32,6 +32,8 @@ Route::get('/last-6hours-diff', 'AnalyzerController@last6HoursDiff');
 Route::get('/last-12hours-diff', 'AnalyzerController@last12HoursDiff');
 Route::get('/last-24hours-diff', 'AnalyzerController@last24HoursDiff');
 
+Route::get('/current-bet', 'AnalyzerController@currentBet');
+
 Route::get('/price-up-analyze/{market}/{time}', 'AnalyzerController@priceUpAnalyze');
 Route::get('/market/{market}/', 'AnalyzerController@marketAnalyze');
 
