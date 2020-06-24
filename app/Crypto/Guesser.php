@@ -50,7 +50,7 @@ class Guesser
         }
         $latestMa = $lastMAs->first()['ma'];
 
-        if($alwaysGoUp && $latestMa < $longMa){
+        if($alwaysGoUp ){
           $first = $lastMAs->first();
           $last = $lastMAs->last();
           $diff = Helpers::calcPercentageDiff($last['ma'], $first['ma']);
