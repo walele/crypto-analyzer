@@ -36,7 +36,7 @@ class Guesser
 
     foreach($tables as $table){
         $lastMAs = $analyzer->getLastMAsFromMarket($table, 7, 5);
-        $longMa = $analyzer->getLastMAFromMarket($table, 22);
+        $longMa = $analyzer->getLastMAFromMarketByStep($table, 22, 3);
         $longMa = $longMa['ma'] ?? null;
 
         // Check if moving average is always increasing

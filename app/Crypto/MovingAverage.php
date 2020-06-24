@@ -34,6 +34,31 @@ class MovingAverage
 
   }
 
+  public function getLastMAFromMarketByStep(string $market, int $ma, int $split)
+  {
+    $data = collect();
+    $client = new MarketClient();
+    $prices = $client->getLastMarketPrices($market, $ma * $split);
+    $pricesByStep = collect();
+    $splitted = $prices->split($ma);
+    foreach($splitted as $s){
+      $pricesByStep->push($s->first());
+    }
+
+    $maValue = ($pricesByStep->avg('price'));
+    $debut = $pricesByStep->last()->timestamp;
+    $end = $pricesByStep->first()->timestamp;
+
+    $data = [
+      'ma' => $maValue,
+      'debut' => $debut,
+      'end' => $end,
+    ] ;
+
+    return $data;
+
+  }
+
   public function getLastMAsFromMarket(string $market, int $ma, int $nb)
   {
     $data = collect();
