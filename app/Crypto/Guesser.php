@@ -25,12 +25,13 @@ class Guesser
     $longMaNb = 22;
 
     // Column name
-    $analysis->setColumn('ma1', "ma2");
-    $analysis->setColumn('ma1Period', "ma1Period");
-    $analysis->setColumn('ma2', "ma2");
-    $analysis->setColumn('ma2Period', "ma2Period");
-    $analysis->setColumn('diff', "diff");
-    $analysis->setColumn('ma3', "ma3 ($longMaNb)");
+    $analysis->setColumn('0diff', "diff");
+    $analysis->setColumn('1ma1', "ma2");
+    $analysis->setColumn('2ma1Period', "ma1Period");
+    $analysis->setColumn('3ma2', "ma2");
+    $analysis->setColumn('4ma2Period', "ma2Period");
+    $analysis->setColumn('5ma3', "ma3 ($longMaNb)");
+    $analysis->setColumn('6lower', "lower");
 
 
     foreach($tables as $table){
@@ -54,13 +55,16 @@ class Guesser
           $first = $lastMAs->first();
           $last = $lastMAs->last();
           $diff = Helpers::calcPercentageDiff($last['ma'], $first['ma']);
+          $lower = ($latestMa < $longMa) ? 'LOWER' : '';
 
-          $analysis->setMarket($table, 'ma1', $last['ma']);
-          $analysis->setMarket($table, 'ma1Period', $last['end']);
-          $analysis->setMarket($table, 'ma2', $first['ma']);
-          $analysis->setMarket($table, 'ma2Period', $first['end']);
-          $analysis->setMarket($table, 'diff', $diff);
-          $analysis->setMarket($table, 'ma3', $longMa);
+          $analysis->setMarket($table, '1ma1', $last['ma']);
+          $analysis->setMarket($table, '2ma1Period', $last['end']);
+          $analysis->setMarket($table, '3ma2', $first['ma']);
+          $analysis->setMarket($table, '4ma2Period', $first['end']);
+          $analysis->setMarket($table, '0diff', $diff);
+          $analysis->setMarket($table, '5ma3', $longMa);
+          $analysis->setMarket($table, '6lower', $lower);
+
 
         }
     }
