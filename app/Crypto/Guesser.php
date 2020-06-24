@@ -59,7 +59,7 @@ class Guesser
           $last = $lastMAs->last();
           $diff = Helpers::calcPercentageDiff($last['ma'], $first['ma']);
           $lower = ($longMa1 < $longMa2) ? 'LOWER' : '';
-          $period = sprintf("<small>%s <br> %s</small>", $last['end'], $first['end'])
+          $period = sprintf("<small>%s <br> %s</small>", $last['end'], $first['end']);
 
           $analysis->setMarket($table, '0diff', $diff);
           $analysis->setMarket($table, '1ma1', $last['ma']);
