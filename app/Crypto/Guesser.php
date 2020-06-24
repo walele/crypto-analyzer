@@ -37,6 +37,7 @@ class Guesser
         $lastMAs = $analyzer->getLastMAsFromMarket($table, 7, 5);
         $longMa = $analyzer->getLastMAFromMarket($table, 22);
         $longMa = $longMa['ma'] ?? null;
+
         // Check if moving average is always increasing
         $alwaysGoUp = true;
         $nb = $lastMAs->count()-1;
@@ -59,7 +60,7 @@ class Guesser
           $analysis->setMarket($table, 'ma2', $first['ma']);
           $analysis->setMarket($table, 'ma2Period', $first['end']);
           $analysis->setMarket($table, 'diff', $diff);
-          $analysis->setMarket($table, 'ma3', $latestMa);
+          $analysis->setMarket($table, 'ma3', $longMa);
 
         }
     }
