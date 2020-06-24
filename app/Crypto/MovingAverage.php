@@ -14,6 +14,26 @@ class MovingAverage
   {
   }
 
+  public function getLastMAFromMarket(string $market, int $ma)
+  {
+    $data = collect();
+    $client = new MarketClient();
+    $prices = $client->getLastMarketPrices($market, $ma);
+
+    $maValue = ($prices->avg('price'));
+    $debut = $prices->last()->timestamp;
+    $end = $prices->first()->timestamp;
+
+    $data = [
+      'ma' => $maValue,
+      'debut' => $debut,
+      'end' => $end,
+    ] ;
+
+    return $data;
+
+  }
+
   public function getLastMAsFromMarket(string $market, int $ma, int $nb)
   {
     $data = collect();
@@ -35,7 +55,7 @@ class MovingAverage
         'debut' => $debut,
         'end' => $end,
       ]);
-      
+
     }
 
     return $data;
