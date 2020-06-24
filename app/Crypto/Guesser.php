@@ -22,22 +22,25 @@ class Guesser
     $client = new MarketClient();
     $tables = $client->getTables();
     $bets = [];
-    $longMaNb = 22;
+    $longMa1Nb = 7;
+    $longMa2Nb = 22;
 
     // Column name
-    $analysis->setColumn('0diff', "diff");
-    $analysis->setColumn('1ma1', "ma2");
-    $analysis->setColumn('2ma1Period', "ma1Period");
-    $analysis->setColumn('3ma2', "ma2");
-    $analysis->setColumn('4ma2Period', "ma2Period");
-    $analysis->setColumn('5ma3', "ma3 ($longMaNb)");
+    $analysis->setColumn('0diff', "Short MA Diff");
+    $analysis->setColumn('1ma1', "MA 1");
+    $analysis->setColumn('2ma2', "MA 2");
+    $analysis->setColumn('3maPeriod', "maPeriod");
+    $analysis->setColumn('4lma1', "LONG MA 1 ($longMa1Nb)");
+    $analysis->setColumn('5lma2', "LONG MA 2 ($longMa2Nb)");
     $analysis->setColumn('6lower', "lower");
 
 
     foreach($tables as $table){
         $lastMAs = $analyzer->getLastMAsFromMarket($table, 7, 5);
-        $longMa = $analyzer->getLastMAFromMarketByStep($table, 22, 3);
-        $longMa = $longMa['ma'] ?? null;
+        $longMa1 = $analyzer->getLastMAFromMarketByStep($table, 7, 3);
+        $longMa2 = $analyzer->getLastMAFromMarketByStep($table, 22, 3);
+        $longMa1 = $longMa1['ma'] ?? null;
+        $longMa2 = $longMa2['ma'] ?? null;
 
         // Check if moving average is always increasing
         $alwaysGoUp = true;
@@ -55,16 +58,16 @@ class Guesser
           $first = $lastMAs->first();
           $last = $lastMAs->last();
           $diff = Helpers::calcPercentageDiff($last['ma'], $first['ma']);
-          $lower = ($latestMa < $longMa) ? 'LOWER' : '';
+          $lower = ($longMa1 < $longMa2) ? 'LOWER' : '';
+          $period = sprintf("<small>%s <br> %s</small>", $last['end'], $first['end'])
 
-          $analysis->setMarket($table, '1ma1', $last['ma']);
-          $analysis->setMarket($table, '2ma1Period', $last['end']);
-          $analysis->setMarket($table, '3ma2', $first['ma']);
-          $analysis->setMarket($table, '4ma2Period', $first['end']);
           $analysis->setMarket($table, '0diff', $diff);
-          $analysis->setMarket($table, '5ma3', $longMa);
+          $analysis->setMarket($table, '1ma1', $last['ma']);
+          $analysis->setMarket($table, '2ma2', $first['ma']);
+          $analysis->setMarket($table, '3maPeriod', $period);
+          $analysis->setMarket($table, '4lma1', $longMa1);
+          $analysis->setMarket($table, '5lma2', $longMa2);
           $analysis->setMarket($table, '6lower', $lower);
-
 
         }
     }
