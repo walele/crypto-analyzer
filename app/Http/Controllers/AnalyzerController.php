@@ -18,7 +18,10 @@ class AnalyzerController extends Controller
   {
       $data = Guesser::getCurrentBet();
 
-      return;
+      return view('table-custom', [
+        'columns' => $data->getColumns(),
+        'markets' => $data->getMarkets(),
+      ]);
   }
 
   public function lastEntriesMovingAverage()

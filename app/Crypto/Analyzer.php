@@ -14,32 +14,6 @@ class Analyzer
   {
   }
 
-  public function getLastMAsFromMarket(string $market, int $ma, int $nb)
-  {
-    $data = [];
-    $client = new MarketClient();
-    $prices = $client->getLastMarketPrices($market, $ma+$nb-1);
-  //  print_r($prices);
-    for($i=0; $i<$nb ;$i++){
-      $maPrices = $prices->take($ma);
-      //print_r($maPrices->all());
-      $prices->shift();
-
-      $maValue = ($maPrices->avg('price'));
-      $debut = $maPrices->last()->timestamp;
-      $end = $maPrices->first()->timestamp;
-
-      $data[] = [
-        'ma' => $maValue,
-        'debut' => $debut,
-        'end' => $end,
-      ];
-    }
-
-    return $data;
-    
-  }
-
   public function getMarketsDiffByTime(int $step = 1, int $ite = 5, Carbon $end, $minute=false)
   {
     $analysis = new Analysis;
