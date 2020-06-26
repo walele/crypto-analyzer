@@ -28,7 +28,7 @@ class Guesser
 
     $longerMa1Nb = 7;
     $longerMa2Nb = 22;
-    $longerMaStep = 7;
+    $longerMaStep = 12;
 
     // Column name
     $analysis->setColumn('0diff', "Short MA Diff");
