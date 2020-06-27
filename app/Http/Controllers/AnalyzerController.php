@@ -29,7 +29,7 @@ class AnalyzerController extends Controller
       $bets = $guesser->getAllBets();
       $currentBets = [
         'name' => 'Current bets',
-        'columns' => ['Time', 'Market', 'Payload', 'Active'],
+        'columns' => ['Time', 'Market', 'Payload', 'Price', 'Active'],
         'markets' => $bets,
       ];
 

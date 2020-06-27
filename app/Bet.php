@@ -10,6 +10,7 @@ class Bet extends Model
     protected $fillable = [
       'market',
       'payload',
-      'active'
+      'active',
+      'buy_price'
     ];
 }

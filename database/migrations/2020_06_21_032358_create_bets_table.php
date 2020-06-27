@@ -18,8 +18,10 @@ class CreateBetsTable extends Migration
             $table->timestamps();
             $table->string('market');
             $table->string('payload', 2048)->nullable();
+            $table->string('buy_price')->nullable();
             $table->boolean('active')->nullable();
             $table->boolean('success')->nullable();
+            $table->string('final_prices')->nullable();
         });
     }
 

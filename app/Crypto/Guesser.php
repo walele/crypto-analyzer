@@ -132,11 +132,16 @@ class Guesser
     $parsedBets = [];
     $bets = Bet::All();
 
+
     foreach( $bets as $id => $bet){
+
+      $payload = sprintf("<pre><small> %s </small></pre>",
+                          print_r(unserialize($bet->payload), true));
       $parsedBets[$id] = [
           'time' => $bet->created_at,
           'market' => $bet->market,
-          'payload' => '<pre>' . print_r(unserialize($bet->payload), true) . '</pre>',
+          'payload' => $payload,
+          'price' => $bet->buy_price ,
           'active' => $bet->active ? 'True' : 'False',
         ];
     }
@@ -148,15 +153,22 @@ class Guesser
   public function placeBet()
   {
       $newBets = [];
+      $client = new MarketClient;
 
       foreach ($this->bets as $name => $value) {
 
         $activeBet = $this->getActiveBet($name);
 
         if( ! $activeBet->count() ){
+
+
+          $curPrice = $client->getLastMarketPrice($name);
+          $price = number_format($curPrice->price, 10);
+
           $bet = new Bet([
             'market' => $name,
             'payload' => serialize($value),
+            'buy_price' => $price,
             'active' => true
           ]);
           $bet->save();
