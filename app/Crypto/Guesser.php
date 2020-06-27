@@ -121,7 +121,7 @@ class Guesser
 
   public function getActiveBet($market)
   {
-    $activeBet = Bet::where('market', $market, )
+    $activeBet = Bet::where('market', $market )
                       ->where('active', 1);
 
     return $activeBet;
