@@ -4,18 +4,20 @@ namespace App\Crypto;
 
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use App\Bet;
 
 class Guesser
 {
   private $columns = [];
   private $markets = [];
+  private $bets = [];
 
   public function __construct()
   {
 
   }
 
-  public static function getCurrentBet()
+  public function getCurrentBet()
   {
     $analysis = new Analysis;
     $analyzer = new MovingAverage();
@@ -89,8 +91,80 @@ class Guesser
           $analysis->setMarket($table, '9lowerlong', $lower2);
 
         }
+
+        if( $alwaysGoUp && $lower1 == 'LOWER' && $lower2 == 'LOWER' ){
+          $payload = [
+            'diff' => $diff,
+            'ma1' => $last['ma'],
+            'ma2' => $first['ma'],
+            'maPeriod' => $period,
+            'lma1' => $longMa1,
+            'lma2' => $longMa2,
+            'xlma1' => $longerMa1,
+            'xlma2' => $longerMa2,
+          ];
+
+          $this->bets[$table] = $payload;
+        }
     }
 
     return $analysis;
+  }
+
+
+  public function getActiveBets()
+  {
+    $activeBets = Bet::where('active', 1);
+
+    return $activeBets;
+  }
+
+  public function getActiveBet($market)
+  {
+    $activeBet = Bet::where('market', $market, )
+                      ->where('active', 1);
+
+    return $activeBet;
+  }
+
+  public function getAllBets()
+  {
+    $parsedBets = [];
+    $bets = Bet::All();
+
+    foreach( $bets as $id => $bet){
+      $parsedBets[$id] = [
+          'time' => $bet->created_at,
+          'market' => $bet->market,
+          'payload' => '<pre>' . print_r(unserialize($bet->payload), true) . '</pre>',
+          'active' => $bet->active ? 'True' : 'False',
+        ];
+    }
+
+    return $parsedBets;
+  }
+
+
+  public function placeBet()
+  {
+      $newBets = [];
+
+      foreach ($this->bets as $name => $value) {
+
+        $activeBet = $this->getActiveBet($name);
+
+        if( ! $activeBet->count() ){
+          $bet = new Bet([
+            'market' => $name,
+            'payload' => serialize($value),
+            'active' => true
+          ]);
+          $bet->save();
+          $newBets[$name] = $value;
+        }
+
+      }
+
+      return $newBets;
   }
 }

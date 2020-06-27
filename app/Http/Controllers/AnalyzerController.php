@@ -16,11 +16,29 @@ class AnalyzerController extends Controller
 
   public function currentBet()
   {
-      $data = Guesser::getCurrentBet();
-
-      return view('table-custom', [
+      $tables = [];
+      $guesser = new Guesser;
+      $data = $guesser->getCurrentBet();
+      $currentUps = [
+        'name' => 'Current ups',
         'columns' => $data->getColumns(),
         'markets' => $data->getMarkets(),
+      ];
+
+      $newBets = $guesser->placeBet();
+      $bets = $guesser->getAllBets();
+      $currentBets = [
+        'name' => 'Current bets',
+        'columns' => ['Time', 'Market', 'Payload', 'Active'],
+        'markets' => $bets,
+      ];
+
+    //  print_r($currentBets);
+    //  print_r($currentUps); die();
+      $tables[] = $currentBets;
+      $tables[] = $currentUps;
+      return view('table-custom-multiple', [
+        'tables' => $tables
       ]);
   }
 
@@ -83,10 +101,12 @@ class AnalyzerController extends Controller
   {
     $analyzer = new Analyzer();
     $data = $analyzer->getLast6HoursDiff();
+    $content = '';
 
     return view('table-custom', [
       'columns' => $data->getColumns(),
       'markets' => $data->getMarkets(),
+      'content' => $content
     ]);
   }
 
