@@ -143,6 +143,8 @@ class Guesser
           'payload' => $payload,
           'price' => $bet->buy_price ,
           'active' => $bet->active ? 'True' : 'False',
+          'finalPrices' => $bet->final_prices,
+          'success' => $bet->success ? 'True' : 'False',
         ];
     }
 
@@ -178,5 +180,40 @@ class Guesser
       }
 
       return $newBets;
+  }
+
+  public function validateBets()
+  {
+    $client = new MarketClient;
+    $betTimeout = 3;
+    $limit = (60/5) * $betTimeout;
+    $bets = Bet::where('active', true)
+                ->where('created_at', '<',
+                  Carbon::now()->subHours($betTimeout)->toDateTimeString() )
+                ->get();
+
+    //print_r($bets->toArray());
+    foreach($bets as $bet){
+
+      $buy_price = (float) $bet->buy_price;
+      $successPrice = $buy_price + ($buy_price * 0.022);
+
+      $prices = $client->getLastMarketPrices($bet->market, $limit);
+      $firstPrice = $prices->first();
+      $lastPrice = $prices->last();
+      $maxPrice = $prices->max('price');
+      $diff = Helpers::calcPercentageDiff($buy_price, $maxPrice);
+
+      $finalPrices = sprintf('<small>%s <br> %s</small> %s (%s)',
+                  $lastPrice->timestamp, $firstPrice->timestamp, $maxPrice, $diff);
+      $success = $maxPrice > $successPrice;
+
+
+      $bet->final_prices = $finalPrices;
+      $bet->success = $success;
+      $bet->active = false;
+      $bet->save();
+
+    }
   }
 }

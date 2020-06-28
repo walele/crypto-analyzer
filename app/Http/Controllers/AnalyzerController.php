@@ -25,11 +25,12 @@ class AnalyzerController extends Controller
         'markets' => $data->getMarkets(),
       ];
 
+      $guesser->validateBets();
       $newBets = $guesser->placeBet();
       $bets = $guesser->getAllBets();
       $currentBets = [
         'name' => 'Current bets',
-        'columns' => ['Time', 'Market', 'Payload', 'Price', 'Active'],
+        'columns' => ['Time', 'Market', 'Payload', 'Price', 'Active', 'FinalPrices', 'Success'],
         'markets' => $bets,
       ];
 
