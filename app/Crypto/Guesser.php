@@ -127,7 +127,7 @@ class Guesser
     return $activeBet;
   }
 
-  public function getAllBets()
+  public function getAllBets($limit = 100)
   {
     $parsedBets = [];
     $bets = Bet::All();
@@ -185,7 +185,7 @@ class Guesser
   public function validateBets()
   {
     $client = new MarketClient;
-    $betTimeout = 3;
+    $betTimeout = 6;
     $limit = (60/5) * $betTimeout;
     $bets = Bet::where('active', true)
                 ->where('created_at', '<',

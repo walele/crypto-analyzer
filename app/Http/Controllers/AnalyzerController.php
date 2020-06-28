@@ -14,6 +14,12 @@ use Carbon\Carbon;
 class AnalyzerController extends Controller
 {
 
+  public function betsAnalyzer()
+  {
+    echo 'x00x00';
+    return;
+  }
+
   public function currentBet()
   {
       $tables = [];
@@ -27,7 +33,7 @@ class AnalyzerController extends Controller
 
       $guesser->validateBets();
       $newBets = $guesser->placeBet();
-      $bets = $guesser->getAllBets();
+      $bets = $guesser->getAllBets(42);
       $currentBets = [
         'name' => 'Current bets',
         'columns' => ['Time', 'Market', 'Payload', 'Price', 'Active', 'FinalPrices', 'Success'],
