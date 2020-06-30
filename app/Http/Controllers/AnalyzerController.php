@@ -10,13 +10,32 @@ use App\Crypto\Analyzer;
 use App\Crypto\Guesser;
 use App\Crypto\Helpers;
 use Carbon\Carbon;
+use App\Bet;
 
 class AnalyzerController extends Controller
 {
 
   public function betsAnalyzer()
   {
-    echo 'x00x00';
+    $bets = Bet::where('active', false)
+    ->get();
+
+    printf('<p>Total %s</p>', $bets->count());
+
+    $success = Bet::where('active', false)
+                            ->where('success', true)
+                            ->get();
+    printf('<p>Success %s</p>', $success->count());
+
+
+    $fails = Bet::where('active', false)
+                            ->where('success', false)
+                            ->get();
+    printf('<p>Fails %s</p>', $fails->count());
+
+    $rate = $success->count() * 100 / $bets->count();
+    printf('<p>Rate %s</p>', $rate);
+
     return;
   }
 
@@ -33,7 +52,7 @@ class AnalyzerController extends Controller
 
       $guesser->validateBets();
       $newBets = $guesser->placeBet();
-      $bets = $guesser->getAllBets(42);
+      $bets = $guesser->getAllBets(50);
       $currentBets = [
         'name' => 'Current bets',
         'columns' => ['Time', 'Market', 'Payload', 'Price', 'Active', 'FinalPrices', 'Success'],

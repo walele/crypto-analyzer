@@ -130,7 +130,8 @@ class Guesser
   public function getAllBets($limit = 100)
   {
     $parsedBets = [];
-    $bets = Bet::All();
+    $bets = Bet::limit($limit)
+                ->get();
 
 
     foreach( $bets as $id => $bet){
