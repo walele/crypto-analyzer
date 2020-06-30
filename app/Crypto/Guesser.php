@@ -49,18 +49,20 @@ class Guesser
 
         // Calc price always go up
         $prices = $client->getLastMarketPrices($table, 5);
-        $prices = $prices->reverse();
         $nb = $prices->count() -1;
         $alwaysGoUp2 = true;
         $pricesStr = '';
+      //  print_r($prices);
         for($i =0; $i<$nb; $i++){
           $last1 = $prices->get($i)->price;
           $last2 = $prices->get($i+1)->price;
-          if($last2 <= $last1){
+        //  echo "$i $last1 $last2";
+          if($last1 <= $last2){
             $alwaysGoUp2 = false;
           }
           $pricesStr .= $last1 . ' <br>';
         }
+        //die();
 
         $lastMAs = $analyzer->getLastMAsFromMarket($table, 7, 5);
 
