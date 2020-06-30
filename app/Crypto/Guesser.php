@@ -131,6 +131,7 @@ class Guesser
   {
     $parsedBets = [];
     $bets = Bet::limit($limit)
+                ->orderByRaw('id  DESC')
                 ->get();
 
 
