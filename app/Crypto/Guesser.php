@@ -34,6 +34,7 @@ class Guesser
 
     // Column name
     $analysis->setColumn('0diff', "Short MA Diff");
+    $analysis->setColumn('diff', "price diff");
     $analysis->setColumn('1ma1', "MA 1");
     $analysis->setColumn('2ma2', "MA 2");
     $analysis->setColumn('3maPeriod', "maPeriod");
@@ -45,6 +46,22 @@ class Guesser
     $analysis->setColumn('9lowerlong', "lower longer");
 
     foreach($tables as $table){
+
+        // Calc price always go up
+        $prices = $client->getLastMarketPrices($table, 5);
+        $prices = $prices->reverse();
+        $nb = $prices->count() -1;
+        $alwaysGoUp2 = true;
+        $pricesStr = '';
+        for($i =0; $i<$nb; $i++){
+          $last1 = $prices->get($i)->price;
+          $last2 = $prices->get($i+1)->price;
+          if($last2 <= $last1){
+            $alwaysGoUp2 = false;
+          }
+          $pricesStr .= $last1 . ' <br>';
+        }
+
         $lastMAs = $analyzer->getLastMAsFromMarket($table, 7, 5);
 
         // LONG MA
@@ -71,7 +88,7 @@ class Guesser
         }
         $latestMa = $lastMAs->first()['ma'];
 
-        if($alwaysGoUp ){
+        if($alwaysGoUp2 ){
           $first = $lastMAs->first();
           $last = $lastMAs->last();
           $diff = Helpers::calcPercentageDiff($last['ma'], $first['ma']);
@@ -79,6 +96,7 @@ class Guesser
           $lower2 = ($longerMa1 < $longerMa2) ? 'LOWER' : '';
           $period = sprintf("<small>%s <br> %s</small>", $last['end'], $first['end']);
 
+          $analysis->setMarket($table, 'diff', $pricesStr);
           $analysis->setMarket($table, '0diff', $diff);
           $analysis->setMarket($table, '1ma1', $last['ma']);
           $analysis->setMarket($table, '2ma2', $first['ma']);
@@ -92,7 +110,9 @@ class Guesser
 
         }
 
-        if( $alwaysGoUp && $lower1 == 'LOWER' && $lower2 == 'LOWER' ){
+
+
+        if( $alwaysGoUp && $alwaysGoUp2 && $lower1 == 'LOWER' && $lower2 == 'LOWER' ){
           $payload = [
             'diff' => $diff,
             'ma1' => $last['ma'],
@@ -102,6 +122,7 @@ class Guesser
             'lma2' => $longMa2,
             'xlma1' => $longerMa1,
             'xlma2' => $longerMa2,
+            'pricesStr' => $pricesStr
           ];
 
           $this->bets[$table] = $payload;
