@@ -16,6 +16,7 @@
   <li><a href="{{ url('last-24hours-diff')}}">Last 24 hours diff</a></li>
   <li><a href="{{ url('current-bet')}}">Current bet</a></li>
   <li><a href="{{ url('bets-analyzer')}}">Bets analyzer</a></li>
+  <li><a href="{{ url('betbot')}}">BetBot</a></li>
 
 </ul>
 @endsection
