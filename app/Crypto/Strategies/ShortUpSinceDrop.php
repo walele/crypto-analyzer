@@ -33,8 +33,8 @@ class ShortUpSinceDrop implements Strategy
     $ma30mLatestCumul = new MovingAverageLatestDiffCumul('30m', 7, 7);
     $this->indicators[] = $ma30mLatestCumul;
 
-    $ma15mLatestCumul = new MovingAverageLatestDiffCumul('30m', 7, 7);
-    $this->indicators[] = $ma30mLatestCumul;
+    $ma15mLatestCumul = new MovingAverageLatestDiffCumul('15m', 7, 7);
+    $this->indicators[] = $ma15mLatestCumul;
 
 
     // Init Table with columns
