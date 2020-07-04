@@ -4,6 +4,7 @@ namespace App\Crypto\BetBot;
 
 use App\Crypto\Strategies\Strategy;
 use App\Crypto\MarketClient;
+use App\Bet;
 
 class BetBot
 {
@@ -30,7 +31,6 @@ class BetBot
   public function run()
   {
     $html = '';
-
 
     foreach($this->strategies as $s){
       $html .= $s->run($this->markets);

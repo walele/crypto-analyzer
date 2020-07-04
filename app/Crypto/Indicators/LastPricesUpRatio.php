@@ -8,6 +8,8 @@ use App\Crypto\Helpers;
 class LastPricesUpRatio implements Indicator
 {
 
+  private $number = 7;
+
   /**
   * Get indicator key
   */
@@ -21,7 +23,7 @@ class LastPricesUpRatio implements Indicator
   */
   public function getName(): string
   {
-    return 'LastPricesUpRatio';
+    return 'LastPricesUpRatio '. $this->number;
   }
 
   /**
@@ -31,10 +33,9 @@ class LastPricesUpRatio implements Indicator
   {
 
     $client = new MarketClient;
-    $prices = $client->getLastMarketPrices($market, 5);
+    $prices = $client->getLastMarketPrices($market, $this->number);
     $total = $prices->count();
     $iteration = $total - 1;
-    $alwaysGoUp = true;
     $ratio = 0;
     $pricesStr = '';
     for($i =0; $i<$iteration; $i++) {
@@ -44,12 +45,11 @@ class LastPricesUpRatio implements Indicator
         $ratio++;
       }
 
+      $timeDiff = Helpers::getTimeDiff($prices->last()->timestamp, $prices->first()->timestamp);
+
       $pricesStr .= "$last2  - $last1" . ' <br>';
     }
 
-    //print_r($prices);
-    //printf("<p>%s</p>", $pricesStr);
-    //$diff = Helpers::calcPercentageDiff($prices->first()->price, $prices->first()->price);
     $ratio = $ratio * 1.0 / $iteration;
 
     return $ratio;

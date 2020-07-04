@@ -5,6 +5,7 @@ namespace App\Crypto\Strategies;
 use App\Crypto\Indicators\LastPricesUpRatio;
 use App\Crypto\Indicators\MovingAverage;
 use App\Crypto\Indicators\MovingAverageComp;
+use App\Crypto\Indicators\LastPricesDiffPercCumul;
 use App\Crypto\Table;
 
 class ShortUpSinceDrop implements Strategy
@@ -20,6 +21,9 @@ class ShortUpSinceDrop implements Strategy
     // Create Indicators
     $lastPricesUp = new LastPricesUpRatio;
     $this->indicators[] = $lastPricesUp;
+
+    $lastPricesDiffPercCumul = new LastPricesDiffPercCumul;
+    $this->indicators[] = $lastPricesDiffPercCumul;
 
     $ma5min7 = new MovingAverageComp('1h', 7, 22, MovingAverageComp::LOWER);
     $this->indicators[] = $ma5min7;

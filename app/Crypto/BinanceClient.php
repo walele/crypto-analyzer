@@ -49,7 +49,7 @@ class BinanceClient
       return $cache;
     }
 
-    $params = sprintf("?symbol=%s&interval=%s&limit=50", $market, $interval);
+    $params = sprintf("?symbol=%s&interval=%s&limit=200", $market, $interval);
     $url = self::API_URL . self::CANDLESTICK_URL . $params;
     $response = Http::get($url);
     $data = json_decode($response->body());

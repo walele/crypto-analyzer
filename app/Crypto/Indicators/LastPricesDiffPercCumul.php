@@ -7,13 +7,22 @@ use App\Crypto\Helpers;
 
 class LastPricesDiffPercCumul implements Indicator
 {
+  private $number = 7;
+
+  /**
+  * Get indicator name
+  */
+  public function getKey(): string
+  {
+    return 'LastPricesDiffPercCumul';
+  }
 
   /**
   * Get indicator name
   */
   public function getName(): string
   {
-    return 'LastPricesUpRatio';
+    return 'LastPricesDiffPercCumul';
   }
 
   /**
@@ -23,28 +32,25 @@ class LastPricesDiffPercCumul implements Indicator
   {
 
     $client = new MarketClient;
-    $prices = $client->getLastMarketPrices($market, 5);
+    $prices = $client->getLastMarketPrices($market, $this->number);
+    $prices = $prices->reverse();
     $total = $prices->count();
     $iteration = $total - 1;
-    $alwaysGoUp = true;
-    $ratio = 0;
-    $pricesStr = '';
-    for($i =0; $i<$iteration; $i++) {
-      $last1 = $prices->get($i)->price;
-      $last2 = $prices->get($i+1)->price;
-      if($last1 > $last2){
-        $ratio++;
-      }
+    $diffCumul = 0.0;
 
-      $pricesStr .= "$last2  - $last1" . ' <br>';
+    for($i =0; $i<$iteration; $i++) {
+
+      $last1 = $prices->values()->get($i)->price;
+      $last2 = $prices->values()->get($i+1)->price;
+
+      $diff = Helpers::calcPercentageDiff($last1, $last2);
+      $diff = (float) $diff;
+      $diffCumul += $diff;
+
     }
 
-    //print_r($prices);
-    //printf("<p>%s</p>", $pricesStr);
-    //$diff = Helpers::calcPercentageDiff($prices->first()->price, $prices->first()->price);
-    $ratio = $ratio * 1.0 / $iteration;
-
-    return $ratio;
+    return $diffCumul;
 
   }
+  
 }
