@@ -55,6 +55,7 @@ class ShortUpSinceDrop implements Strategy
       $html .= sprintf("%s %s<br>", 'Run ShortUp Strategy on market', $market) ;
 
       $row = [$market];
+      $addRow = true;
 
       foreach($this->indicators as $key => $i){
 
@@ -64,16 +65,17 @@ class ShortUpSinceDrop implements Strategy
         if( $i->getKey() == 'LastPricesUpRatio' &&
         $value < 0.7){
           $html .= sprintf("<small> - Value too small: %s, skip next indicator</small><br/>",  $value) ;
-          $row[] = $value;
-          $row[] = '0';
-
+          $addRow = false;
           break;
         }
 
         $row[] = $value;
       }
 
-      $this->table->addRow($row);
+      if($addRow){
+        $this->table->addRow($row);
+      }
+
     }
 
     return $html;

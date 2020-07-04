@@ -27,7 +27,12 @@ class MovingAverageComp implements Indicator
   */
   public function getName(): string
   {
-    $str = sprintf('MovingAverageComp %s %s', $this->ma1, $this->ma2 );
+    $compStr = '';
+    if($this->comparison == self::LOWER){
+      $compStr = 'lower';
+    }
+    $str = sprintf('MovingAverageComp %s : %% of ma%s < ma%s in %s',
+      $compStr, $this->ma1, $this->ma2 , $this->interval);
     return $str;
   }
 
@@ -57,8 +62,10 @@ class MovingAverageComp implements Indicator
 
     $diff =  ( ($ma2 - $ma1) / $ma2) * 100;
     if( $this->comparison === SELF::LOWER ){
-
+      $diff =  ( ($ma2 - $ma1) / $ma2) * 100;
     }
+
+    $diff = number_format($diff, 2);
 
     return $diff;
 
@@ -71,7 +78,7 @@ class MovingAverageComp implements Indicator
     $closeTimes = [];
 
     // Loop from more recent
-    for( $i=$nb-2; $i > ($nb-$ma-2); $i--){
+    for( $i=$nb-1; $i > ($nb-$ma-1); $i--){
 
       $closePrices[] = $data[$i][4];
 
