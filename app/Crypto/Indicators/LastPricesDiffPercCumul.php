@@ -22,7 +22,7 @@ class LastPricesDiffPercCumul implements Indicator
   */
   public function getName(): string
   {
-    return 'LastPricesDiffPercCumul';
+    return 'LastPricesDiffPercCumul ' . $this->number;
   }
 
   /**
@@ -52,5 +52,5 @@ class LastPricesDiffPercCumul implements Indicator
     return $diffCumul;
 
   }
-  
+
 }
