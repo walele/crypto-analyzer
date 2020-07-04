@@ -3,6 +3,7 @@
 namespace App\Crypto\BetBot;
 
 use App\Crypto\Strategies\Strategy;
+use App\Crypto\Bettoer;
 use App\Crypto\MarketClient;
 use App\Bet;
 
@@ -35,6 +36,7 @@ class BetBot
     foreach($this->strategies as $s){
       $html .= $s->run($this->markets);
       $this->table = $s->getTable();
+      $this->bets = $s->getBets();
     }
 
     return $html;
@@ -45,6 +47,12 @@ class BetBot
     return $this->table;
   }
 
+  public function getBets()
+  {
+
+    return $this->bets;
+  }
+
   public function __toString()
   {
     $s = '';
@@ -53,4 +61,5 @@ class BetBot
     }
     return '';
   }
+
 }

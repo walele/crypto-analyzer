@@ -10,4 +10,6 @@ interface Strategy
 
   public function getTable(): Table;
 
+  public function getBets();
+
 }

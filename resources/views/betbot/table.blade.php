@@ -1,4 +1,5 @@
-<table id="markets">
+<h2>{{ $table->getName() }}</h2>
+<table class="table-analyze">
   <thead>
     <tr>
       @foreach( $table->getColumns() as $th)
@@ -10,7 +11,7 @@
     @foreach( $table->getRows() as $tr)
     <tr>
       @foreach( $tr as $td)
-        <td>{{ $td }}</td>
+        <td>{!! $td !!}</td>
       @endforeach
     </tr>
     @endforeach

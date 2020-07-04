@@ -7,8 +7,10 @@
 <div class="">
   {!! $content !!}
 
-  @isset($table)
-    @include('betbot.table', ['table' => $table])
+  @isset($tables)
+    @foreach( $tables as $table)
+      @include('betbot.table', ['table' => $table])
+    @endforeach
   @endisset
 </div>
 @endsection

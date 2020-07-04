@@ -12,6 +12,7 @@ class ShortUpSinceDrop implements Strategy
 {
   private $indicators = [];
   private $table;
+  private $bets = [];
 
   /**
   *   Constructor
@@ -30,7 +31,7 @@ class ShortUpSinceDrop implements Strategy
 
 
     // Init Table with columns
-    $this->table = new Table;
+    $this->table = new Table('Bot strategy');
     $this->table->addColumn( 'Market' );
     foreach($this->indicators as $key => $i){
       $this->table->addColumn( $i->getName() );
@@ -43,6 +44,14 @@ class ShortUpSinceDrop implements Strategy
   public function getTable(): Table
   {
     return $this->table;
+  }
+
+  /**
+  * Get bets
+  */
+  public function getBets()
+  {
+    return $this->bets;
   }
 
 
@@ -60,12 +69,14 @@ class ShortUpSinceDrop implements Strategy
 
       $row = [$market];
       $addRow = true;
+      $payload = [];
 
       foreach($this->indicators as $key => $i){
 
         $value = $i->getValue($market);
         $html .= sprintf("<small> - Indicator %s as value %s</small><br/>", $key, $value) ;
 
+        // SKIP Condition
         if( $i->getKey() == 'LastPricesUpRatio' &&
         $value < 0.7){
           $html .= sprintf("<small> - Value too small: %s, skip next indicator</small><br/>",  $value) ;
@@ -74,10 +85,17 @@ class ShortUpSinceDrop implements Strategy
         }
 
         $row[] = $value;
+        $payload[$i->getName()] = $value;
       }
 
       if($addRow){
         $this->table->addRow($row);
+
+
+        $this->bets[$market] = [
+          'market' => $market,
+          'payload' => $payload
+        ];
       }
 
     }

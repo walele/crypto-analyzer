@@ -7,8 +7,19 @@ use Illuminate\Support\Collection;
 
 class Table
 {
+    private $name = 'Table';
     private $columns = [];
     private $rows = [];
+
+    public function __construct(string $name)
+    {
+      $this->name = $name;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
 
     /**
     * Add column
@@ -18,12 +29,23 @@ class Table
       $this->columns[] = $c;
     }
 
+
+    public function setColumns(array $columns)
+    {
+      $this->columns = $columns;
+    }
+
     /**
     * Add row
     */
     public function addRow(array $r)
     {
       $this->rows[] = $r;
+    }
+
+    public function setRows(array $rows)
+    {
+      $this->rows = $rows;
     }
 
     /**
