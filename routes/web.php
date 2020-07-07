@@ -41,6 +41,9 @@ Route::get('/betbot', 'BetBotController@index');
 Route::get('/price-up-analyze/{market}/{time}', 'AnalyzerController@priceUpAnalyze');
 Route::get('/market/{market}/', 'AnalyzerController@marketAnalyze');
 
+Route::get('csv/bets', 'API\BetController@csv');
+
+
 Route::get('/crypto', function () {
 
     return 'ok';
