@@ -32,7 +32,8 @@ class Bets extends ResourceCollection
       // Set column
       $columns = [
         'id',
-        'market'
+        'market',
+        'success'
       ];
       foreach($bet['payload'] as $name => $p){
         $columns[] = $name;
@@ -44,6 +45,7 @@ class Bets extends ResourceCollection
         $row= [
           'id' => $bet['id'],
           'market' => $bet['market'],
+          'success' => $bet['success'] ? 1 : 0,
         ];
         $row = array_merge($row, $bet['payload']);
 
