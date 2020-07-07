@@ -16,7 +16,7 @@ trait getMovingAverage
     $closeTimes = [];
 
     // Loop from more recent
-    for( $i=$nb-1-$offset; $i > ($nb-$ma-1-$offset); $i--){
+    for( $i=$nb-1-$offset; $i > ($nb-$ma-1-$offset) && $i > 0; $i--){
 
       $closePrices[] = $data[$i][4];
 

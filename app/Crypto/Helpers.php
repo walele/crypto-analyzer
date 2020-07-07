@@ -41,7 +41,9 @@ class Helpers
     //$average = ($endPrice + $startPrice) / 2.0 ;
     //$diffPerc = ($diff / $average) * 100;
     // return number_format($diffPerc, 4);
-
+    if($endPrice == 0){
+      return 0;
+    }
 
     return number_format( ( ($endPrice - $startPrice) / $endPrice) * 100, 4);
 
