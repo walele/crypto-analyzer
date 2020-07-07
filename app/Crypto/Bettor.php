@@ -24,7 +24,7 @@ class Bettor
   public function getCurrentBetsTable(): Table
   {
     $table = new Table('Current bets');
-    $bets = $this->getAllBets(50);
+    $bets = $this->getAllBets(100);
     $table->setRows($bets);
     $table->setColumns([
       'Time', 'Market', 'Payload', 'Price', 'Active', 'FinalPrices', 'Success'
