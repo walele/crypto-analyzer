@@ -91,6 +91,14 @@ class ShortUpSinceDrop implements Strategy
           break;
         }
 
+        // SKIP Condition
+        if( $i->getKey() == 'MovingAverageLatestDiffCumul' &&
+        $value < 0.0){
+          $html .= sprintf("<small>MovingAverageLatestDiffCumul - Value too small: %s, skip next indicator</small><br/>",  $value) ;
+          $addRow = false;
+          break;
+        }        
+
         $row[] = $value;
         $payload[$i->getName()] = $value;
       }
