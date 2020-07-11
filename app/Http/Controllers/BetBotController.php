@@ -15,6 +15,10 @@ use App\Crypto\BetBot\BetBot;
 use App\Crypto\Strategies\ShortUpSinceDrop;
 use Carbon\Carbon;
 use App\Bet;
+use Rubix\ML\Datasets\Labeled;
+use Rubix\ML\Extractors\CSV;
+use Rubix\ML\Transformers\NumericStringConverter;
+use Rubix\ML\Classifiers\KNearestNeighbors;
 
 class BetBotController extends Controller
 {
@@ -45,8 +49,18 @@ class BetBotController extends Controller
       ]);
   }
 
-  public function showBets()
+  public function ml()
   {
+    $path  = storage_path('crypto.csv');
+    echo $path;
+    $dataset = Labeled::fromIterator(new CSV($path, true))
+    ->apply(new NumericStringConverter());
+
+    $estimator = new KNearestNeighbors(3);
+
+    var_dump($estimator);
+    $estimator->train($dataset);
+
     return;
   }
 
