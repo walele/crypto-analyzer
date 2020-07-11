@@ -1,11 +1,21 @@
 <template>
-  <div class="crud">
-    <div class="col-1">
-      Market
+  <div class="row">
+    <div class="col-sm">
+      {{ market }}
     </div>
-    <div class="col-2">
-      <h3>Name: {{ name | properCase }}</h3>
-      <button @click="del">Delete</button>
+    <div class="col-sm">
+      {{ created_at }}
+    </div>
+    <div class="col-sm">
+      {{ active }}
+    </div>
+    <div class="col-sm">
+      {{ success }}
+    </div>
+    <div class="col-sm">
+      <p v-for="(thing, index) in payload">
+        {{ index }} : {{ thing }}
+      </p>
     </div>
   </div>
 </template>
@@ -24,7 +34,7 @@
         this.$emit('delete', this.id);
       }
     },
-    props: ['id', 'color', 'name'],
+    props: ['id', 'market', 'created_at', 'active', 'success', 'payload'],
     filters: {
       properCase(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);

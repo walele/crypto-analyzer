@@ -34,9 +34,13 @@
 
 <script>
 
-  function Bet({ id, market}) {
+  function Bet({ id, market, created_at, active, success, payload}) {
      this.id = id;
-     this.name = market;
+     this.market = market;
+     this.created_at = created_at;
+     this.active = active;
+     this.success = success;
+     this.payload = payload;
 
    }
 
