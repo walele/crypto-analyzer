@@ -17,6 +17,7 @@
   <li><a href="{{ url('current-bet')}}">Current bet</a></li>
   <li><a href="{{ url('bets-analyzer')}}">Bets analyzer</a></li>
   <li><a href="{{ url('betbot')}}">BetBot</a></li>
+  <li><a href="{{ url('betbot/vue')}}">BetBot Vue</a></li>
 
 </ul>
 @endsection

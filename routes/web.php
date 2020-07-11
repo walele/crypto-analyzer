@@ -36,12 +36,15 @@ Route::get('/current-bet', 'AnalyzerController@currentBet');
 Route::get('/bets-analyzer', 'AnalyzerController@betsAnalyzer');
 
 Route::get('/betbot', 'BetBotController@index');
+Route::get('/betbot/vue', 'BetBotController@vue');
+Route::get('/betbot/ml', 'BetBotController@ml');
 
 
 Route::get('/price-up-analyze/{market}/{time}', 'AnalyzerController@priceUpAnalyze');
 Route::get('/market/{market}/', 'AnalyzerController@marketAnalyze');
 
 Route::get('csv/bets', 'API\BetController@csv');
+Route::get('csv/bets2', 'API\BetController@csv2');
 
 
 Route::get('/crypto', function () {

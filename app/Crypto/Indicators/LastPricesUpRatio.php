@@ -50,6 +50,11 @@ class LastPricesUpRatio implements Indicator
       $pricesStr .= "$last2  - $last1" . ' <br>';
     }
 
+    // fix: when not enough prices in db
+    if($iteration == 0){
+      $iteration = 1;
+    }
+
     $ratio = $ratio * 1.0 / $iteration;
 
     return $ratio;
