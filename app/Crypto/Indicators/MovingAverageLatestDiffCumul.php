@@ -30,7 +30,7 @@ class MovingAverageLatestDiffCumul implements Indicator
   public function getName(): string
   {
 
-    $str = sprintf('MovingAverageLatestDiffCumul %s MA%s last %s',
+    $str = sprintf('MALatestDiffCumul %s MA%s last %s',
        $this->interval, $this->ma, $this->nb);
 
     return $str;
