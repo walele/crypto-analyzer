@@ -64,4 +64,9 @@ class BetBotController extends Controller
     return;
   }
 
+  public function vue()
+  {
+    return view('betbot.vue');
+  }
+
 }

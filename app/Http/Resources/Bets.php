@@ -75,6 +75,7 @@ class Bets extends ResourceCollection
           'market' => $bet->market,
           'success' => $bet->success,
           'active' => $bet->active,
+          'final_prices' => $bet->final_prices,
           'payload' => [],
         ];
 
