@@ -129,7 +129,7 @@ class Bettor
     foreach($bets as $bet){
 
       $buy_price = (float) $bet->buy_price;
-      $successPrice = $buy_price + ($buy_price * 0.022);
+      $successPrice = $buy_price + ($buy_price * 0.015);
 
       $prices = $client->getLastMarketPrices($bet->market, $limit);
       $firstPrice = $prices->first();
