@@ -14,7 +14,7 @@
     </div>
     <hr style="width: 42%">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="">
             <div class="card">
                 <div class="card-header">Current bets</div>
 
@@ -78,6 +78,10 @@
             fields: [
             {
               key: 'id',
+              sortable: true
+            },
+            {
+              key: 'market',
               sortable: true
             },
             {
