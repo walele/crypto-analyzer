@@ -9,15 +9,30 @@ use App\Bet;
 
 class BetBot
 {
+  private static $instance = null;
+
   private $bets = [];
   private $strategies = [];
   private $markets = [];
   private $table;
 
-  public function __construct()
+  private function __construct()
   {
     $this->init();
   }
+
+  // The object is created from within the class itself
+  // only if the class has no instance.
+  public static function getInstance()
+  {
+    if (self::$instance == null)
+    {
+      self::$instance = new BetBot();
+    }
+
+    return self::$instance;
+  }
+
   private function init()
   {
     $client = new MarketClient();
@@ -60,6 +75,17 @@ class BetBot
       //var_dump($s);
     }
     return '';
+  }
+
+  public function strategyToString(): string
+  {
+      $str = '';
+
+      foreach($this->strategies as $s){
+        $str .= ($s->getStrategyToString());
+      }
+
+      return $str;
   }
 
 }

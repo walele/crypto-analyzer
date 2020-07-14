@@ -24,9 +24,9 @@ class BetBotController extends Controller
 {
   public function index()
   {
+      $bot = BetBot::getInstance();
+
       // Run bot strategy
-      $bot = new BetBot;
-      $bot->addStrategy(new ShortUpSinceDrop);
       $output = $bot->run();
       $botTable = $bot->getTable();
       $bets = $bot->getBets();

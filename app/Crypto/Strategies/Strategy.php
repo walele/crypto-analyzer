@@ -12,4 +12,6 @@ interface Strategy
 
   public function getBets();
 
+  public function getStrategyToString(): string;
+
 }

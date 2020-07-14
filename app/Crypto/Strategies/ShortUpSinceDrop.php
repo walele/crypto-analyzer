@@ -61,6 +61,15 @@ class ShortUpSinceDrop implements Strategy
     return $this->bets;
   }
 
+  public function getStrategyToString(): string
+  {
+    $str = '';
+    foreach($this->indicators as $key => $i){
+      $str = $i->getName() ;
+    }
+
+    return $str;
+  }
 
   /**
   *   Run all indicators on passed markets
@@ -97,7 +106,7 @@ class ShortUpSinceDrop implements Strategy
           $html .= sprintf("<small>MovingAverageLatestDiffCumul - Value too small: %s, skip next indicator</small><br/>",  $value) ;
           $addRow = false;
           break;
-        }        
+        }
 
         $row[] = $value;
         $payload[$i->getName()] = $value;
