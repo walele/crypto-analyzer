@@ -13732,3 +13732,11 @@ body .main {
   color: #91aace;
 }
 
+.small-text {
+  font-size: 0.8em;
+}
+
+.small-text p {
+  margin: 2px;
+}
+

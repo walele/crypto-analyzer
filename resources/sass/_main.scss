@@ -5,3 +5,10 @@ body .main{
   background: $dark;
   color: $bright;
 }
+
+.small-text{
+  font-size:0.8em;
+  p{
+    margin: 2px;
+  }
+}

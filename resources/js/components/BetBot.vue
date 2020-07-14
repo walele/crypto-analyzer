@@ -22,7 +22,7 @@
 
                   <b-table id="bet-table" striped hover :items="bets" :fields="fields" :per-page="7">
                     <template v-slot:cell(payload)="data">
-                      <span v-html="data.value"></span>
+                      <span class="small-text" v-html="data.value"></span>
                     </template>
                   </b-table>
 
@@ -74,7 +74,7 @@
             },
             {
               key: 'created_at',
-              sortable: false
+              sortable: true
             },
             {
               key: 'active',
