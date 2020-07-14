@@ -15,7 +15,7 @@ class Bets extends ResourceCollection
      */
     public function toArray($request)
     {
-      $bets = $this->getParsedData();
+      $bets = $this->getParsedData(true);
 
       return [
         'data' => $bets
@@ -26,7 +26,7 @@ class Bets extends ResourceCollection
     public function toCsv()
     {
       $data = [];
-      $bets = $this->getParsedData();
+      $bets = $this->getParsedData(false);
       $bet = $bets[0];
 
       // Set column
@@ -36,6 +36,7 @@ class Bets extends ResourceCollection
         'success',
         'active',
       ];
+
       foreach($bet['payload'] as $name => $p){
         $columns[] = $name;
       }
@@ -60,7 +61,7 @@ class Bets extends ResourceCollection
       return $data;
     }
 
-    private function getParsedData()
+    private function getParsedData($parsedPayload)
     {
       $onlyDrop = isset($_GET['onlydrop']);
       $bets = [];
@@ -76,17 +77,14 @@ class Bets extends ResourceCollection
           'success' => $bet->success,
           'active' => $bet->active,
           'final_prices' => $bet->final_prices,
-          'payload' => '',
+          'payload' => [],
         ];
 
-        // Parse Payload
-        $onlyDropBet = true;
         $payload = unserialize($bet->payload);
         foreach($payload as $key => $value){
 
           $id = Str::slug($key, '_');
-          $str = sprintf("<p><b>%s</b>: %s</p>", $id, number_format($value, 2));
-          $parsed['payload'] .= $str;
+          $parsed['payload'][$id] = number_format($value, 2);
 
           if($onlyDrop){
             if($id == "movingaveragecomp_lower_of_ma7_ma22_in_1h" &&
@@ -96,6 +94,28 @@ class Bets extends ResourceCollection
           }
 
         }
+
+        // Parse Payload
+        $onlyDropBet = true;
+        if($parsedPayload){
+          $parsed['payload'] = '';
+          $payload = unserialize($bet->payload);
+          foreach($payload as $key => $value){
+
+            $id = Str::slug($key, '_');
+            $str = sprintf("<p><b>%s</b>: %s</p>", $id, number_format($value, 2));
+            $parsed['payload'] .= $str;
+
+            if($onlyDrop){
+              if($id == "movingaveragecomp_lower_of_ma7_ma22_in_1h" &&
+                $value < 0){
+                $onlyDropBet = false;
+              }
+            }
+
+          }
+        }
+
 
         if($onlyDrop && !$onlyDropBet){
           continue;
