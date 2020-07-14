@@ -87,7 +87,7 @@ class Bets extends ResourceCollection
           $parsed['payload'][$id] = number_format($value, 2);
 
           if($onlyDrop){
-            if($id == "movingaveragecomp_lower_of_ma7_ma22_in_1h" &&
+            if($id == "macomp_lower_of_ma7_ma22_in_1h" &&
               $value < 0){
               $onlyDropBet = false;
             }
