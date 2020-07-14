@@ -63,7 +63,6 @@ class Bets extends ResourceCollection
 
     private function getParsedData($parsedPayload)
     {
-      $onlyDrop = isset($_GET['onlydrop']);
       $bets = [];
 
       foreach($this->collection as $bet){
@@ -86,17 +85,9 @@ class Bets extends ResourceCollection
           $id = Str::slug($key, '_');
           $parsed['payload'][$id] = number_format($value, 2);
 
-          if($onlyDrop){
-            if($id == "macomp_lower_of_ma7_ma22_in_1h" &&
-              $value < 0){
-              $onlyDropBet = false;
-            }
-          }
-
         }
 
         // Parse Payload
-        $onlyDropBet = true;
         if($parsedPayload){
           $parsed['payload'] = '';
           $payload = unserialize($bet->payload);
@@ -106,19 +97,7 @@ class Bets extends ResourceCollection
             $str = sprintf("<p><b>%s</b>: %s</p>", $id, number_format($value, 2));
             $parsed['payload'] .= $str;
 
-            if($onlyDrop){
-              if($id == "movingaveragecomp_lower_of_ma7_ma22_in_1h" &&
-                $value < 0){
-                $onlyDropBet = false;
-              }
-            }
-
           }
-        }
-
-
-        if($onlyDrop && !$onlyDropBet){
-          continue;
         }
 
         $bets[] = $parsed;
