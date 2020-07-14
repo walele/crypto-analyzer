@@ -36,8 +36,8 @@ class ShortUpSinceDrop implements Strategy
     $ma15mLatestCumul = new MovingAverageLatestDiffCumul('15m', 7, 7);
     $this->indicators[] = $ma15mLatestCumul;
 
-    $ma1hLatestCumul = new MovingAverageLatestDiffCumul('1h', 7, 7);
-    $this->indicators[] = $ma1hLatestCumul;
+    //$ma1hLatestCumul = new MovingAverageLatestDiffCumul('1h', 7, 7);
+    //$this->indicators[] = $ma1hLatestCumul;
 
     // Init Table with columns
     $this->table = new Table('Bot strategy');
