@@ -20,7 +20,11 @@
 
                 <div class="card-body">
 
-                  <b-table id="bet-table" striped hover :items="bets" :fields="fields" :per-page="7">
+                  <b-table id="bet-table" striped hover
+                      :items="bets"
+                      :fields="fields"
+                      :per-page="perPage"
+                      :currentPage="currentPage">
                     <template v-slot:cell(payload)="data">
                       <span class="small-text" v-html="data.value"></span>
                     </template>
@@ -65,7 +69,7 @@
           return {
             bets : [],
             strategy: '',
-            perPage: 3,
+            perPage: 7,
             currentPage: 1,
             fields: [
             {
@@ -95,7 +99,7 @@
         },
         computed: {
           rows() {
-            return this.items.length
+            return this.bets.length
           }
         },
         components() {
