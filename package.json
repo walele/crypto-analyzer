@@ -25,6 +25,7 @@
     },
     "dependencies": {
         "bootstrap-table": "^1.16.0",
+        "bootstrap-vue": "^2.15.0",
         "datatables.net": "^1.10.21",
         "jquery": "^3.5.1",
         "webpack": "^4.43.0"

@@ -1,18 +1,18 @@
 <template>
   <div class="row">
-    <div class="col-sm">
+    <div class="col">
       {{ market }}
     </div>
-    <div class="col-sm">
+    <div class="col">
       {{ created_at }}
     </div>
-    <div class="col-sm">
+    <div class="col">
       {{ active }}
     </div>
-    <div class="col-sm">
+    <div class="col">
       {{ success }}
     </div>
-    <div class="col-sm">
+    <div class="col-6">
       <p v-for="(thing, index) in payload">
         {{ index }} : {{ thing }}
       </p>

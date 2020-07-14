@@ -1,6 +1,9 @@
 import BetBot from './components/BetBot.vue';
+import { BTable, BPagination } from 'bootstrap-vue'
 
 const betbot = document.getElementById( "betbot" );
+Vue.component('b-table', BTable);
+Vue.component('b-pagination', BPagination);
 
 if(betbot){
   init(betbot);
@@ -13,7 +16,9 @@ function init(el){
     el: el,
 
     components: {
-      BetBot
+      BetBot,
+      BTable,
+      BPagination
     },
     render: h => h(BetBot)
   });

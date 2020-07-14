@@ -8,7 +8,7 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 require('./betbot.js');
-
+//import {   BTable } from 'bootstrap-vue'
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -20,8 +20,11 @@ require('./betbot.js');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
+// Install BootstrapVue
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('bet-component', require('./components/BetComponent.vue').default);
+//Vue.component('b-table', BTable);
+//Vue.use(BootstrapVue)
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

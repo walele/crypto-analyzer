@@ -1,0 +1,20 @@
+.card{
+
+  .card-header{
+    color: $brightextra;
+  }
+
+  background: $darksoft;
+  color: $bright;
+}
+
+.table, .table-hover
+{
+  color: $bright;
+
+  tbody{
+    tr:hover{
+      color: $brightextra;
+    }
+  }
+}

@@ -7,10 +7,12 @@
 
                 <div class="card-body">
                     <p>Current strategies</p>
+                    <p>{{ strategy }}</p>
                 </div>
             </div>
         </div>
     </div>
+    <hr style="width: 42%">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -18,16 +20,25 @@
 
                 <div class="card-body">
 
-                  <bet-component
-                    v-for="bet in bets"
-                    v-bind="bet"
-                    :key="bet.id"
-                  ></bet-component>
+                  <b-table id="bet-table" striped hover :items="bets" :fields="fields" :per-page="7">
+                    <template v-slot:cell(payload)="data">
+                      <span v-html="data.value"></span>
+                    </template>
+                  </b-table>
+
+                  <b-pagination
+                    v-model="currentPage"
+                    :total-rows="rows"
+                    :per-page="perPage"
+                    aria-controls="bet-table"
+                  ></b-pagination>
 
                 </div>
             </div>
         </div>
     </div>
+
+
 
   </div>
 </template>
@@ -52,11 +63,45 @@
         },
         data() {
           return {
-            bets : []
+            bets : [],
+            strategy: '',
+            perPage: 3,
+            currentPage: 1,
+            fields: [
+            {
+              key: 'id',
+              sortable: true
+            },
+            {
+              key: 'created_at',
+              sortable: false
+            },
+            {
+              key: 'active',
+              sortable: true,
+            },
+            {
+              key: 'success',
+              sortable: true,
+            },
+            ,
+            {
+              key: 'payload',
+              sortable: true,
+            }
+          ],
+            items: []
+          }
+        },
+        computed: {
+          rows() {
+            return this.items.length
           }
         },
         components() {
-          BetComponent
+          BetComponent,
+          BTable,
+          BPagination
         },
         methods: {
           async read() {
@@ -64,9 +109,14 @@
               method: 'get',
               url: '/api/bets'
             }).then(res => {
-              //this will be executed only when all requests are complete
-              console.log(res.data.data);
               res.data.data.forEach(bet => this.bets.push(new Bet(bet)));
+            });
+
+            axios({
+              method: 'get',
+              url: '/api/betbot'
+            }).then(res => {
+              this.strategy = res.data.strategy
             });
           }
         },
