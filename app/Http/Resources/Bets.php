@@ -62,30 +62,43 @@ class Bets extends ResourceCollection
 
     private function getParsedData()
     {
+      $onlyDrop = isset($_GET['onlydrop']);
       $bets = [];
-
 
       foreach($this->collection as $bet){
 
         // Default attribute
         $parsed = [
           'id' => $bet->id,
-          'created_at' => $bet->created_at,
+          'created_at' => $bet->created_at->toDateTimeString(),
           'updated_at' => $bet->updated_at,
           'market' => $bet->market,
           'success' => $bet->success,
           'active' => $bet->active,
           'final_prices' => $bet->final_prices,
-          'payload' => [],
+          'payload' => '',
         ];
 
         // Parse Payload
+        $onlyDropBet = true;
         $payload = unserialize($bet->payload);
         foreach($payload as $key => $value){
 
           $id = Str::slug($key, '_');
-          $parsed['payload'][$id] = $value;
+          $str = sprintf("<p><b>%s</b>: %s</p>", $id, number_format($value, 2));
+          $parsed['payload'] .= $str;
 
+          if($onlyDrop){
+            if($id == "movingaveragecomp_lower_of_ma7_ma22_in_1h" &&
+              $value < 0){
+              $onlyDropBet = false;
+            }
+          }
+
+        }
+
+        if($onlyDrop && !$onlyDropBet){
+          continue;
         }
 
         $bets[] = $parsed;
