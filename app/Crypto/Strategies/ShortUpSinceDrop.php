@@ -22,22 +22,22 @@ class ShortUpSinceDrop implements Strategy
   {
     // Create Indicators
     $lastPricesUp = new LastPricesUpRatio;
-    $this->indicators[] = $lastPricesUp;
+    $this->indicators['lastPricesUp'] = $lastPricesUp;
 
     $lastPricesDiffPercCumul = new LastPricesDiffPercCumul;
-    $this->indicators[] = $lastPricesDiffPercCumul;
+    $this->indicators['lastPricesDiffPercCumul'] = $lastPricesDiffPercCumul;
 
     $ma5min7 = new MovingAverageComp('1h', 7, 22, MovingAverageComp::LOWER);
-    $this->indicators[] = $ma5min7;
+    $this->indicators['ma5min7'] = $ma5min7;
 
     $ma30mLatestCumul = new MovingAverageLatestDiffCumul('30m', 7, 7);
-    $this->indicators[] = $ma30mLatestCumul;
+    $this->indicators['ma30mLatestCumul'] = $ma30mLatestCumul;
 
     $ma15mLatestCumul = new MovingAverageLatestDiffCumul('15m', 7, 7);
-    $this->indicators[] = $ma15mLatestCumul;
+    $this->indicators['ma15mLatestCumul'] = $ma15mLatestCumul;
 
-    //$ma1hLatestCumul = new MovingAverageLatestDiffCumul('1h', 7, 7);
-    //$this->indicators[] = $ma1hLatestCumul;
+    $ma1hLatestCumul = new MovingAverageLatestDiffCumul('1h', 7, 7);
+    $this->indicators['ma1hLatestCumul'] = $ma1hLatestCumul;
 
     // Init Table with columns
     $this->table = new Table('Bot strategy');
@@ -95,7 +95,7 @@ class ShortUpSinceDrop implements Strategy
         $html .= sprintf("<small> - Indicator %s as value %s</small><br/>", $key, $value) ;
 
         // SKIP Condition
-        if( $i->getKey() == 'LastPricesUpRatio' &&
+        if( $key == 'lastPricesUp' &&
         $value < 0.7){
           $html .= sprintf("<small> - Value too small: %s, skip next indicator</small><br/>",  $value) ;
           $addRow = false;
@@ -103,7 +103,7 @@ class ShortUpSinceDrop implements Strategy
         }
 
         // SKIP Condition
-        if( $i->getKey() == 'MovingAverageLatestDiffCumul' &&
+        if( in_array($key, ['ma30mLatestCumul', 'ma15mLatestCumul']) &&
         $value < 0.0){
           $html .= sprintf("<small>MovingAverageLatestDiffCumul - Value too small: %s, skip next indicator</small><br/>",  $value) ;
           $addRow = false;
