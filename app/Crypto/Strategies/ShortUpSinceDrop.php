@@ -36,6 +36,8 @@ class ShortUpSinceDrop implements Strategy
     $ma15mLatestCumul = new MovingAverageLatestDiffCumul('15m', 7, 7);
     $this->indicators[] = $ma15mLatestCumul;
 
+    $ma1hLatestCumul = new MovingAverageLatestDiffCumul('1h', 7, 7);
+    $this->indicators[] = $ma1hLatestCumul;
 
     // Init Table with columns
     $this->table = new Table('Bot strategy');
@@ -104,6 +106,14 @@ class ShortUpSinceDrop implements Strategy
         if( $i->getKey() == 'MovingAverageLatestDiffCumul' &&
         $value < 0.0){
           $html .= sprintf("<small>MovingAverageLatestDiffCumul - Value too small: %s, skip next indicator</small><br/>",  $value) ;
+          $addRow = false;
+          break;
+        }
+
+        // SKIP Condition
+        if( $i->getKey() == 'MovingAverageComp' &&
+        $value < 0.0){
+          $html .= sprintf("<small>MovingAverageComp - Value too small: %s, skip next indicator</small><br/>",  $value) ;
           $addRow = false;
           break;
         }
