@@ -28,6 +28,9 @@
                     <template v-slot:cell(payload)="data">
                       <span class="small-text" v-html="data.value"></span>
                     </template>
+                    <template v-slot:cell(final_prices)="data">
+                      <span v-html="data.value"></span>
+                    </template>
                   </b-table>
 
                   <b-pagination
@@ -49,13 +52,14 @@
 
 <script>
 
-  function Bet({ id, market, created_at, active, success, payload}) {
+  function Bet({ id, market, created_at, active, success, payload, final_prices}) {
      this.id = id;
      this.market = market;
      this.created_at = created_at;
      this.active = active;
      this.success = success;
      this.payload = payload;
+     this.final_prices = final_prices;
 
    }
 
@@ -91,6 +95,10 @@
             ,
             {
               key: 'payload',
+              sortable: true,
+            },
+            {
+              key: 'final_prices',
               sortable: true,
             }
           ],
