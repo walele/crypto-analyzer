@@ -68,7 +68,7 @@ class MovingAverageComp implements Indicator
       $diff =  ( ($ma2 - $ma1) / $ma2) * 100;
     }
 
-    $diff = number_format($diff, 2);
+    $diff = (float) number_format($diff, 2);
 
     return $diff;
 
