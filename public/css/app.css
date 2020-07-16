@@ -13727,6 +13727,13 @@ a.text-dark:focus {
   color: #11ece5;
 }
 
+.page-item .page-link,
+.page-item.disabled .page-link {
+  background: #1d2636;
+  color: #91aace;
+  border: none;
+}
+
 body .main {
   background: #0f1724;
   color: #91aace;
@@ -13738,5 +13745,10 @@ body .main {
 
 .small-text p {
   margin: 2px;
+}
+
+.hscroll {
+  overflow-x: auto;
+  /* Horizontal */
 }
 

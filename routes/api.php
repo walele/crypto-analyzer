@@ -20,4 +20,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::apiResource('bets', 'API\BetController');
 Route::get('csv/bets', 'API\BetController@csv');
+Route::get('stats/', 'API\BetController@stats');
 Route::get('betbot', 'API\BetBotController@index');

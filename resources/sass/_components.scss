@@ -18,3 +18,10 @@
     }
   }
 }
+
+.page-item .page-link,
+.page-item.disabled .page-link{
+  background: $darksoft;
+  color: $bright;
+  border: none;
+}

@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col">
             <div class="card">
                 <div class="card-header">BetBot</div>
 
@@ -11,11 +11,24 @@
                 </div>
             </div>
         </div>
+
+        <div class="col">
+            <div class="card">
+                <div class="card-header">Stats</div>
+
+                <div class="card-body">
+                    <p v-for="stat in stats">
+                      <b>{{ stat.label }}</b> {{ stat.text }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
     </div>
     <hr style="width: 42%">
-    <div class="row justify-content-center">
+    <div class="row justify-lg-content-center hscroll">
         <div class="">
-            <div class="card">
+            <div class="card ">
                 <div class="card-header">Current bets</div>
 
                 <div class="card-body">
@@ -73,6 +86,7 @@
           return {
             bets : [],
             strategy: '',
+            stats: [],
             perPage: 7,
             currentPage: 1,
             fields: [
@@ -133,6 +147,13 @@
               url: '/api/betbot'
             }).then(res => {
               this.strategy = res.data.strategy
+            });
+
+            axios({
+              method: 'get',
+              url: '/api/stats'
+            }).then(res => {
+              this.stats = res.data.stats
             });
           }
         },
