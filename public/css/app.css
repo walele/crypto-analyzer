@@ -13734,9 +13734,17 @@ a.text-dark:focus {
   border: none;
 }
 
+.small-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 2px;
+  font-size: 0.8em;
+}
+
 body .main {
   background: #0f1724;
   color: #91aace;
+  padding: 10px;
 }
 
 .small-text {

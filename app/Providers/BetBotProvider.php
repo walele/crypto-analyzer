@@ -15,9 +15,6 @@ class BetBotProvider extends ServiceProvider
      */
     public function register()
     {
-      $bot =  BetBot::getInstance();
-      $bot->addStrategy(new ShortUpSinceDrop);
-
       $this->app->singleton(BetBot::class, function ($app) {
 
           $bot =  BetBot::getInstance();
