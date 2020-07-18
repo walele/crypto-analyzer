@@ -1,20 +1,26 @@
 <template>
   <div class="">
     <div class="row justify-content-center">
-        <div class="col">
+        <div class="col-sm">
             <div class="card">
                 <div class="card-header">BetBot</div>
 
                 <div class="card-body">
-                    <p>Current strategies</p>
-                    <p>{{ strategy }}</p>
+                    <p>Current strategies: {{ strategy.description }}</p>
+                    <ul class="small-list">
+                      Conditions :
+                      <li v-for="cond in strategy.conditions">
+                         - {{ cond }}
+                      </li> 
+                    </ul>
+
                 </div>
             </div>
         </div>
 
-        <div class="col">
+        <div class="col-sm">
             <div class="card">
-                <div class="card-header">Stats</div>
+                <div class="card-header">Bets Stats</div>
 
                 <div class="card-body">
                     <p v-for="stat in stats">
@@ -24,9 +30,36 @@
             </div>
         </div>
 
+        <div class="col-sm">
+            <div class="card">
+                <div class="card-header">Wallet </div>
+
+                <div class="card-body">
+                  <p>BTC {{ wallet.btc }}</p>
+                  <p>All {{ wallet.all }}</p>
+
+                </div>
+            </div>
+        </div>
+
     </div>
+
     <hr style="width: 42%">
-    <div class="row justify-lg-content-center hscroll">
+
+    <div class="row justify-content-lg-center hscroll">
+        <div class="">
+            <div class="card ">
+                <div class="card-header">Current Trades</div>
+
+                <div class="card-body">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr style="width: 42%">
+
+    <div class="row justify-content-lg-center hscroll">
         <div class="">
             <div class="card ">
                 <div class="card-header">Current bets</div>
@@ -59,7 +92,6 @@
     </div>
 
 
-
   </div>
 </template>
 
@@ -87,6 +119,10 @@
             bets : [],
             strategy: '',
             stats: [],
+            wallet:{
+              btc: '',
+              all: '',
+            },
             perPage: 7,
             currentPage: 1,
             fields: [
@@ -154,6 +190,13 @@
               url: '/api/stats'
             }).then(res => {
               this.stats = res.data.stats
+            });
+
+            axios({
+              method: 'get',
+              url: '/api/wallet'
+            }).then(res => {
+              this.wallet = res.data.wallet
             });
           }
         },
