@@ -19,11 +19,22 @@ class LastPricesUpRatio implements Indicator
   }
 
   /**
+  * Get payload key
+  */
+  public function getPayloadKey(): string
+  {
+    $key = 'LastPricesUpRatio_' .  $this->number;
+    return $key;
+  }
+
+  /**
   * Get indicator name
   */
   public function getName(): string
   {
-    return 'LastPricesUpRatio '. $this->number;
+    $str = sprintf("Last %s prices up ratio", $this->number);
+
+    return $str;
   }
 
   /**

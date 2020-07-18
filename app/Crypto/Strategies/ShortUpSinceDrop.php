@@ -11,40 +11,63 @@ use App\Crypto\Table;
 
 class ShortUpSinceDrop implements Strategy
 {
-  private $indicators = [];
+
   private $table;
   private $bets = [];
+
+  use StrategyConditions;
 
   /**
   *   Constructor
   */
   public function __construct()
   {
-    // Create Indicators
+    // LastPricesUpRatio indicator & condition
     $lastPricesUp = new LastPricesUpRatio;
-    $this->indicators['lastPricesUp'] = $lastPricesUp;
+    $condition = new Condition (0.7, Condition::BIGGER, $lastPricesUp);
+    $this->addCondition('lastPricesUp', $condition);
 
+    // LastPricesDiffPercCumul
     $lastPricesDiffPercCumul = new LastPricesDiffPercCumul;
     $this->indicators['lastPricesDiffPercCumul'] = $lastPricesDiffPercCumul;
+    $this->addIndicator('lastPricesDiffPercCumul', new LastPricesDiffPercCumul);
 
-    $ma5min7 = new MovingAverageComp('1h', 7, 22, MovingAverageComp::LOWER);
-    $this->indicators['ma5min7'] = $ma5min7;
 
-    $ma30mLatestCumul = new MovingAverageLatestDiffCumul('30m', 7, 7);
-    $this->indicators['ma30mLatestCumul'] = $ma30mLatestCumul;
+    // MovingAverageComp
+    $ma1hComp7lower22 = new MovingAverageComp('1h', 7, 22, MovingAverageComp::LOWER);
+    $condition = new Condition (0.0, Condition::BIGGER, $ma1hComp7lower22);
+    $this->addCondition('1hMA7LowerThanMA22Percentage', $condition);
 
+    // MovingAverageLatestDiffCumul 15min
     $ma15mLatestCumul = new MovingAverageLatestDiffCumul('15m', 7, 7);
-    $this->indicators['ma15mLatestCumul'] = $ma15mLatestCumul;
+    $condition = new Condition (0.0, Condition::BIGGER, $ma15mLatestCumul);
+    $this->addCondition('ma15mLatestCumul', $condition);
 
+    // MovingAverageLatestDiffCumul 30min
+    $ma30mLatestCumul = new MovingAverageLatestDiffCumul('30m', 7, 7);
+    $condition = new Condition (0.0, Condition::BIGGER, $ma30mLatestCumul);
+    $this->addCondition('ma30mLatestCumul', $condition);
+
+    // MovingAverageLatestDiffCumul 1h
     $ma1hLatestCumul = new MovingAverageLatestDiffCumul('1h', 7, 7);
-    $this->indicators['ma1hLatestCumul'] = $ma1hLatestCumul;
+    $this->addIndicator('ma1hLatestCumul', $ma1hLatestCumul);
+
 
     // Init Table with columns
     $this->table = new Table('Bot strategy');
     $this->table->addColumn( 'Market' );
+    foreach($this->conditions as $key => $i){
+      $this->table->addColumn( $i->getName() );
+    }
     foreach($this->indicators as $key => $i){
       $this->table->addColumn( $i->getName() );
     }
+  }
+
+
+  public function getDescription(): string
+  {
+    return 'Spot crypto that are increasing after recent lost';
   }
 
   /**
@@ -63,15 +86,7 @@ class ShortUpSinceDrop implements Strategy
     return $this->bets;
   }
 
-  public function getStrategyToString(): string
-  {
-    $str = '';
-    foreach($this->indicators as $key => $i){
-      $str = $i->getName() ;
-    }
 
-    return $str;
-  }
 
   /**
   *   Run all indicators on passed markets
@@ -89,48 +104,57 @@ class ShortUpSinceDrop implements Strategy
       $addRow = true;
       $payload = [];
 
-      foreach($this->indicators as $key => $i){
+      // Loop all conditions & if all success add to bets
+      foreach($this->conditions as $key => $c){
 
-        $value = $i->getValue($market);
+        // Get indicator name & value
+        $indicator = $c->getIndicator();
+        $name = $c->getName();
+        $payloadKey = $indicator->getPayloadKey();
+        $value = $indicator->getValue($market);
+
+        // Log
         $html .= sprintf("<small> - Indicator %s as value %s</small><br/>", $key, $value) ;
 
-        // SKIP Condition
-        if( $key == 'lastPricesUp' &&
-        $value < 0.7){
-          $html .= sprintf("<small> - Value too small: %s, skip next indicator</small><br/>",  $value) ;
+        // If we dont satify condition
+        if( ! $c->checkCondition($value)) {
+          $html .= sprintf("<small> - Fail condition for %s. Value: %s</small><br/>", $name, $value) ;
           $addRow = false;
           break;
         }
 
-        // SKIP Condition
-        if( in_array($key, ['ma30mLatestCumul', 'ma15mLatestCumul']) &&
-        $value < 0.0){
-          $html .= sprintf("<small>MovingAverageLatestDiffCumul - Value too small: %s, skip next indicator</small><br/>",  $value) ;
-          $addRow = false;
-          break;
-        }
-
-        // SKIP Condition
-        if( $i->getKey() == 'MovingAverageComp' &&
-        $value < 0.0){
-          $html .= sprintf("<small>MovingAverageComp - Value too small: %s, skip next indicator</small><br/>",  $value) ;
-          $addRow = false;
-          break;
-        }
-
+        // Save to bet payload
         $row[] = $value;
-        $payload[$i->getName()] = $value;
+        $payload[$payloadKey] = $value;
+
       }
 
-      if($addRow){
-        $this->table->addRow($row);
 
+      if($addRow){
+
+        // Get extra indicators values
+        foreach($this->indicators as $key => $i){
+
+          $value = $i->getValue($market);
+          $html .= sprintf("<small> - Indicator %s as value %s</small><br/>", $key, $value) ;
+
+          $row[] = $value;
+          $payload[$i->getPayloadKey()] = $value;
+        }
+
+        $this->table->addRow($row);
 
         $this->bets[$market] = [
           'market' => $market,
           'payload' => $payload
         ];
       }
+
+
+
+
+
+
 
     }
 

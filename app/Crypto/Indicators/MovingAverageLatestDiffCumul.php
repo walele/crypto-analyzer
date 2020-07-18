@@ -30,8 +30,11 @@ class MovingAverageLatestDiffCumul implements Indicator
   public function getName(): string
   {
 
-    $str = sprintf('MALatestDiffCumul %s MA%s last %s',
-       $this->interval, $this->ma, $this->nb);
+    $str = sprintf('%s Latest %s MA(%s) diff cumul',
+                    $this->nb,
+                    $this->interval,
+                    $this->ma
+                  );
 
     return $str;
 
@@ -43,6 +46,17 @@ class MovingAverageLatestDiffCumul implements Indicator
   public function getKey(): string
   {
     return 'MovingAverageLatestDiffCumul';
+  }
+
+  /**
+  * Get payload key
+  */
+  public function getPayloadKey(): string
+  {
+    $key = sprintf("malatestdiffcumul_%s_ma%s_last_%s",
+      $this->interval, $this->ma, $this->nb  );
+
+    return $key;
   }
 
   /**

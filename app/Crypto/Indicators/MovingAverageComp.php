@@ -34,14 +34,25 @@ class MovingAverageComp implements Indicator
     if($this->comparison == self::LOWER){
       $compStr = 'lower';
     }
-    $str = sprintf('MAComp %s : %% of ma%s < ma%s in %s',
-      $compStr, $this->ma1, $this->ma2 , $this->interval);
+    $str = sprintf("%s MA(%s) %s percentage of MA(%s)",
+      $this->interval, $this->ma1, $compStr, $this->ma2  );
     return $str;
   }
 
   public function getKey(): string
   {
     return 'MovingAverageComp';
+  }
+
+  /**
+  * Get payload key
+  */
+  public function getPayloadKey(): string
+  {
+    $key = sprintf("macomp_lower_of_ma%s_ma%s_in_%s",
+      $this->ma1, $this->ma2, $this->interval  );
+
+    return $key;
   }
 
   /**

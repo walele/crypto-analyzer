@@ -18,6 +18,15 @@ class LastPricesDiffPercCumul implements Indicator
   }
 
   /**
+  * Get payload key
+  */
+  public function getPayloadKey(): string
+  {
+    $key = 'LastPricesDiffPercCumul ' . $this->number;
+    return $key;
+  }
+
+  /**
   * Get indicator name
   */
   public function getName(): string
