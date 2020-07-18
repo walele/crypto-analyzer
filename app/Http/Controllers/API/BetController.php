@@ -21,7 +21,7 @@ class BetController extends Controller
 
     public function csv()
     {
-        $res = new Bets(Bet::all());
+        $res = new Bets(Bet::orderBy('id', 'asc')->get());
         $csv = $res->toCsv();
 
         echo implode($csv['columns'], ',') . "\n";

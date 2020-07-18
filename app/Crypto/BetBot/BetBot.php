@@ -82,10 +82,33 @@ class BetBot
       $str = '';
 
       foreach($this->strategies as $s){
-        $str .= ($s->getStrategyToString());
+        $str .= ($s->getDescription());
       }
 
       return $str;
   }
+
+  public function getIndicators()
+  {
+    $data = [];
+
+    foreach($this->strategies as $s){
+      $data = ($s->getIndicators());
+    }
+
+    return $data;
+  }
+
+  public function getConditions()
+  {
+    $data = [];
+
+    foreach($this->strategies as $s){
+      $data = ($s->getConditions());
+    }
+
+    return $data;
+  }
+
 
 }

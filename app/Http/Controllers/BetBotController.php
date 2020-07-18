@@ -22,10 +22,8 @@ use Rubix\ML\Classifiers\KNearestNeighbors;
 
 class BetBotController extends Controller
 {
-  public function index()
+  public function index(BetBot $bot)
   {
-      $bot = BetBot::getInstance();
-
       // Run bot strategy
       $output = $bot->run();
       $botTable = $bot->getTable();
@@ -42,6 +40,8 @@ class BetBotController extends Controller
       $tables = [];
       $tables[] = $betsTable;
       $tables[] = $botTable;
+
+
 
       return view('betbot.index', [
         'content' => $output,
