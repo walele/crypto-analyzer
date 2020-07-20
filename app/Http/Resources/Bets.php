@@ -30,6 +30,7 @@ class Bets extends ResourceCollection
       $bet = $bets[0];
 
       // Set column
+      $payloadColumns = [];
       $columns = [
         'id',
         'market',
@@ -39,6 +40,7 @@ class Bets extends ResourceCollection
 
       foreach($bet['payload'] as $name => $p){
         $columns[] = $name;
+        $payloadColumns[] = $name;
       }
 
       // Set rows
@@ -50,7 +52,12 @@ class Bets extends ResourceCollection
           'success' => $bet['success'] ? 1 : 0,
           'active' => $bet['active'] ? 1 : 0,
         ];
-        $row = array_merge($row, $bet['payload']);
+
+        // Set payload column with order from first bet
+        foreach($payloadColumns as $c){
+          $value = $bet[$c] ?? 'N/A';
+          $row[$c] = $value;
+        }
 
         $rows[] = $row;
       }

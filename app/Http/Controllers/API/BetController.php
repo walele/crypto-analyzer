@@ -16,7 +16,7 @@ class BetController extends Controller
      */
     public function index()
     {
-        return new Bets(Bet::all());
+        return new Bets(Bet::orderBy('id', 'asc')->get());
     }
 
     public function csv()
