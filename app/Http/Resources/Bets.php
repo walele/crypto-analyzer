@@ -53,9 +53,11 @@ class Bets extends ResourceCollection
           'active' => $bet['active'] ? 1 : 0,
         ];
 
+
         // Set payload column with order from first bet
+        //$row = array_merge($row, $bet['payload']);
         foreach($payloadColumns as $c){
-          $value = $bet[$c] ?? 'N/A';
+          $value = $bet['payload'][$c] ?? 'N/A';
           $row[$c] = $value;
         }
 
