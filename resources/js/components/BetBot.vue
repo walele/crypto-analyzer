@@ -120,13 +120,14 @@
 
    }
 
-   function Trade({ id, market, created_at, active, success, buy_price}) {
+   function Trade({ id, market, created_at, active, success, buy_price, final_prices}) {
       this.id = id;
       this.market = market;
       this.created_at = created_at;
       this.active = active;
       this.success = success;
       this.buy_price = buy_price;
+      this.final_prices = final_prices;
     }
 
    import BetComponent from './BetComponent.vue';

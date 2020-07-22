@@ -3,11 +3,13 @@
 namespace App\Crypto\BetBot;
 
 use App\Crypto\Strategies\Strategy;
-use App\Crypto\Bettoer;
+use App\Crypto\Bettor;
 use App\Crypto\MarketClient;
+use App\Crypto\Helpers;
 use App\Bet;
 use App\Trade;
 use App\Http\Resources\Bets;
+use Carbon\Carbon;
 
 use Binance;
 use Rubix\ML\Datasets\Labeled;
@@ -174,32 +176,30 @@ class TradeBot
     $client = new MarketClient;
     $betTimeout = 6;
     $limit = (60/5) * $betTimeout;
-    $bets = Bet::where('active', true)
+    $trades = Trade::where('active', true)
                 ->where('created_at', '<',
                   Carbon::now()->subHours($betTimeout)->toDateTimeString() )
                 ->get();
 
     //print_r($bets->toArray());
-    foreach($bets as $bet){
+    foreach($trades as $trade){
 
-      $buy_price = (float) $bet->buy_price;
+      $buy_price = (float) $trade->buy_price;
       $successPrice = $buy_price + ($buy_price * 0.015);
 
-      $prices = $client->getLastMarketPrices($bet->market, $limit);
+      $prices = $client->getLastMarketPrices($trade->market, $limit);
       $firstPrice = $prices->first();
       $lastPrice = $prices->last();
       $maxPrice = $prices->max('price');
       $diff = Helpers::calcPercentageDiff($buy_price, $maxPrice);
 
-      $finalPrices = sprintf('<small>%s <br> %s</small> %s (%s)',
-                  $lastPrice->timestamp, $firstPrice->timestamp, $maxPrice, $diff);
+
       $success = $maxPrice > $successPrice;
 
-
-      $bet->final_prices = $finalPrices;
-      $bet->success = $success;
-      $bet->active = false;
-      $bet->save();
+      $trade->success = $success;
+      $trade->final_prices = $maxPrice;
+      $trade->active = false;
+      $trade->save();
 
     }
   }
@@ -236,6 +236,7 @@ class TradeBot
 
     // Place trades from succes bets
     $this->placeTrades($success);
+    $this->validateTrades();
 
     $data = [
       'logs' => $predictions,
