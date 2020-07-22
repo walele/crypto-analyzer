@@ -12,6 +12,7 @@ use App\Crypto\Guesser;
 use App\Crypto\Bettor;
 use App\Crypto\Helpers;
 use App\Crypto\BetBot\BetBot;
+use App\Crypto\BetBot\TradeBot;
 use App\Crypto\Strategies\ShortUpSinceDrop;
 use Carbon\Carbon;
 use App\Bet;
@@ -49,8 +50,39 @@ class BetBotController extends Controller
       ]);
   }
 
+  public function makeBets(BetBot $bot, TradeBot $tradeBot)
+  {
+    // Run bot strategy
+    $output = $bot->run();
+    $botTable = $bot->getTable();
+    $bets = $bot->getBets();
+
+    // Place new bets
+    $bettor = new Bettor;
+    foreach($bets as $bet){
+      $bettor->placeBet($bet);
+    }
+
+    // Validate current bet
+    $bettor->validateBets();
+    $betsTable = $bettor->getCurrentBetsTable();
+
+    dd($betsTable);
+
+  }
+
   public function ml()
   {
+    $samples = [
+      [3, 4, 50.5],
+      [1, 5, 24.7],
+      [4, 4, 62.0],
+      [3, 2, 31.1],
+    ];
+
+    $labels = ['married', 'divorced', 'married', 'divorced'];
+
+
     $path  = storage_path('crypto.csv');
     echo $path;
     $dataset = Labeled::fromIterator(new CSV($path, true))

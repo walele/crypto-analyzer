@@ -3,12 +3,21 @@
 namespace App\Http\Controllers\API;
 
 use App\Bet;
+use App\Trade;
 use App\Http\Resources\Bets;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Binance;
+use App\Crypto\BetBot\BetBot;
+use App\Crypto\BetBot\TradeBot;
 
-class TradesController extends Controller
+use Rubix\ML\Datasets\Labeled;
+use Rubix\ML\Datasets\Unlabeled;
+use Rubix\ML\CrossValidation\HoldOut;
+use Rubix\ML\Classifiers\KNearestNeighbors;
+use Rubix\ML\CrossValidation\Metrics\Accuracy;
+
+class TradeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,32 +26,32 @@ class TradesController extends Controller
      */
     public function index()
     {
-        //
+      return (Trade::orderBy('id', 'desc')->get());
+
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function wallet()
+
+    public function makeTrades(TradeBot $bot)
     {
-      $data = [];
-      $api_key = config('binance.api_key');
-      $api_secret = config('binance.api_secret');
-      $api = new Binance\API($api_key,$api_secret);
-      $ticker = $api->prices(); // Make sure you have an updated ticker object for this to work
-      $balances = $api->balances($ticker);
-      //print_r($balances);
+      // Get training data
+      $trainDataset = $bot->getTrainDataset();
 
-      $data['btc'] = $balances['BTC']['available'];
-      $data['all'] = $api->btc_value;
+      // Train with KNN
+      $estimator = new KNearestNeighbors(3);
+      $estimator->train($trainDataset);
 
-      $r = [
-        'wallet' => $data
-      ];
+      // Make predictions
+      $predictDataset = $bot->getPredictDataset();
+      $predictMarket = $bot->getPredictMarkets();
+      $predictions = $estimator->predict($predictDataset);
 
-      return $r;
+      // Get success predictions
+      $success = $bot->getSuccessBets($predictMarket, $predictions);
+
+      // Place trades from succes bets
+      $bot->placeTrades($success);
+
+      return $success;
     }
 
     /**
