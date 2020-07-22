@@ -35,7 +35,7 @@ Route::get('/last-24hours-diff', 'AnalyzerController@last24HoursDiff');
 Route::get('/current-bet', 'AnalyzerController@currentBet');
 Route::get('/bets-analyzer', 'AnalyzerController@betsAnalyzer');
 
-Route::get('/betbot', 'BetBotController@index');
+//Route::get('/betbot', 'BetBotController@index');
 Route::get('/betbot/make-bets', 'BetBotController@makeBets');
 Route::get('/betbot/vue', 'BetBotController@vue');
 Route::get('/betbot/ml', 'BetBotController@ml');
