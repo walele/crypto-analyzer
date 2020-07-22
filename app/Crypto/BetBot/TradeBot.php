@@ -152,7 +152,7 @@ class TradeBot
       $market = $trade->market;
       $actives = $this->getActiveTrade($market);
 
-
+      $bet = null;
       if( ! $actives->count() ){
 
         $price = $this->binanceApi->price($market);
