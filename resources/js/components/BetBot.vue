@@ -11,7 +11,7 @@
                       Conditions :
                       <li v-for="cond in strategy.conditions">
                          - {{ cond }}
-                      </li> 
+                      </li>
                     </ul>
 
                 </div>
@@ -51,11 +51,23 @@
             <div class="card ">
                 <div class="card-header">Current Trades</div>
 
+                <b-table id="trade-table" striped hover
+                    :items="trades">
+                  <template v-slot:cell(payload)="data">
+                    <span class="small-text" v-html="data.value"></span>
+                  </template>
+                  <template v-slot:cell(final_prices)="data">
+                    <span v-html="data.value"></span>
+                  </template>
+                </b-table>
+
+
                 <div class="card-body">
                 </div>
             </div>
         </div>
     </div>
+    <button type="button" class="btn"  v-on:click="makeTrades">make trades</button>
 
     <hr style="width: 42%">
 
@@ -108,6 +120,14 @@
 
    }
 
+   function Trade({ id, market, created_at, active, success}) {
+      this.id = id;
+      this.market = market;
+      this.created_at = created_at;
+      this.active = active;
+      this.success = success;
+    }
+
    import BetComponent from './BetComponent.vue';
 
     export default {
@@ -117,6 +137,7 @@
         data() {
           return {
             bets : [],
+            trades : [],
             strategy: '',
             stats: [],
             wallet:{
@@ -180,24 +201,34 @@
 
             axios({
               method: 'get',
-              url: '/api/betbot'
+              url: '/api/trades'
             }).then(res => {
+              res.data.forEach(trade => this.trades.push(new Trade(trade)));
+            });
+
+            axios({
+              method: 'get',
+              url: '/api/bot'
+            }).then(res => { 
               this.strategy = res.data.strategy
             });
 
             axios({
               method: 'get',
-              url: '/api/stats'
+              url: '/api/bot/stats'
             }).then(res => {
               this.stats = res.data.stats
             });
 
             axios({
               method: 'get',
-              url: '/api/wallet'
+              url: '/api/bot/wallet'
             }).then(res => {
               this.wallet = res.data.wallet
             });
+          },
+          makeTrades: function (event) {
+            console.log('lets go')
           }
         },
         created() {

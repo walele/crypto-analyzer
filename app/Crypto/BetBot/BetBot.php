@@ -3,7 +3,7 @@
 namespace App\Crypto\BetBot;
 
 use App\Crypto\Strategies\Strategy;
-use App\Crypto\Bettoer;
+use App\Crypto\Bettor;
 use App\Crypto\MarketClient;
 use App\Bet;
 
@@ -44,7 +44,7 @@ class BetBot
       $this->strategies[] = $s;
   }
 
-  public function run()
+  private function run()
   {
     $html = '';
 
@@ -55,6 +55,32 @@ class BetBot
     }
 
     return $html;
+  }
+
+  public function makeBets()
+  {
+
+    // Run bot strategy
+    $output = $this->run();
+    $botTable = $this->getTable();
+    $bets = $this->getBets();
+
+    // Place new bets
+    $bettor = new Bettor;
+    foreach($bets as $bet){
+      $bettor->placeBet($bet);
+    }
+
+    // Validate current bet
+    $bettor->validateBets();
+
+    $data = [
+      'logs' => $output,
+      'bets' => array_values($bets)
+    ];
+
+    return $data;
+
   }
 
   public function getTable()
