@@ -120,12 +120,13 @@
 
    }
 
-   function Trade({ id, market, created_at, active, success}) {
+   function Trade({ id, market, created_at, active, success, buy_price}) {
       this.id = id;
       this.market = market;
       this.created_at = created_at;
       this.active = active;
       this.success = success;
+      this.buy_price = buy_price;
     }
 
    import BetComponent from './BetComponent.vue';
@@ -209,7 +210,7 @@
             axios({
               method: 'get',
               url: '/api/bot'
-            }).then(res => { 
+            }).then(res => {
               this.strategy = res.data.strategy
             });
 
