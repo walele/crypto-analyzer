@@ -23,7 +23,19 @@
                 <div class="card-header">Bets Stats</div>
 
                 <div class="card-body">
-                    <p v-for="stat in stats">
+                    <p v-for="stat in statsBets">
+                      <b>{{ stat.label }}</b> {{ stat.text }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm">
+            <div class="card">
+                <div class="card-header">Trades Stats</div>
+
+                <div class="card-body">
+                    <p v-for="stat in statsTrades">
                       <b>{{ stat.label }}</b> {{ stat.text }}
                     </p>
                 </div>
@@ -141,7 +153,8 @@
             bets : [],
             trades : [],
             strategy: '',
-            stats: [],
+            statsBets: [],
+            statsTrades: [],
             wallet:{
               btc: '',
               all: '',
@@ -217,10 +230,18 @@
 
             axios({
               method: 'get',
-              url: '/api/bot/stats'
+              url: '/api/bot/stats/bets'
             }).then(res => {
-              this.stats = res.data.stats
+              this.statsBets = res.data.stats
             });
+
+            axios({
+              method: 'get',
+              url: '/api/bot/stats/trades'
+            }).then(res => {
+              this.statsTrades = res.data.stats
+            });
+
 
             axios({
               method: 'get',

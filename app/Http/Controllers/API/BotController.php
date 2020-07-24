@@ -11,6 +11,7 @@ use Binance;
 use App\Crypto\BetBot\BetBot;
 use App\Crypto\BetBot\TradeBot;
 use App\Crypto\Bettor;
+use App\Crypto\Stats;
 
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
@@ -44,45 +45,22 @@ class BotController extends Controller
     /**
     * Return bets stats
     */
-    public function stats(){
-      $data = [];
+    public function betsStats(){
+      $data = Stats::getBetsStats();
 
-      $bets = Bet::where('active', false)
-      ->get();
-
-      $data[] = [
-        'label' => 'Total',
-        'text' => $bets->count()
-      ];
-
-      $success = Bet::where('active', false)
-                              ->where('success', true)
-                              ->get();
-      $data[] = [
-        'label' => 'Success',
-        'text' => $success->count()
-      ];
-
-      $fails = Bet::where('active', false)
-                              ->where('success', false)
-                              ->get();
-      $data[] = [
-        'label' => 'Fails',
-        'text' => $fails->count()
-      ];
-
-      $rate = $success->count() * 100 / $bets->count();
-      $data[] = [
-        'label' => 'Rate',
-        'text' => number_format($rate, 2)
-      ];
-
-      $r = [
-          'stats' => $data
-      ];
-
-      return $r;
+      return $data;
     }
+
+
+    /**
+    * Return bets stats
+    */
+    public function tradesStats(){
+      $data = Stats::getTradesStats();
+
+      return $data;
+    }
+
 
 
     /**
