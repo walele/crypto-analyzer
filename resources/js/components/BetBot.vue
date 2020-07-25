@@ -39,6 +39,12 @@
                       <b>{{ stat.label }}</b> {{ stat.text }}
                     </p>
                 </div>
+
+                <p>Estimator stats</p>
+                <p v-for="stat in statsTrades">
+                  <b>{{ stat.label }}</b> {{ stat.text }}
+                </p>
+
             </div>
         </div>
 
@@ -121,7 +127,7 @@
 
 <script>
 
-  function Bet({ id, market, created_at, active, success, payload, final_prices}) {
+  function Bet({ id, market, created_at, active, success, payload, final_prices, buy_price}) {
      this.id = id;
      this.market = market;
      this.created_at = created_at;
@@ -129,6 +135,7 @@
      this.success = success;
      this.payload = payload;
      this.final_prices = final_prices;
+     this.buy_price = buy_price;
 
    }
 
@@ -185,6 +192,10 @@
             ,
             {
               key: 'payload',
+              sortable: true,
+            },
+            {
+              key: 'buy_price',
               sortable: true,
             },
             {
