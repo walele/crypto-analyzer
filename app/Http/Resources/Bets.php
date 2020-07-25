@@ -77,10 +77,14 @@ class Bets extends ResourceCollection
 
       foreach($this->collection as $bet){
 
+        $created_at = $bet->created_at;
+        $created_at->setTimezone('America/New_York');
+        $created_at  =$created_at->toDateTimeString();
+        
         // Default attribute
         $parsed = [
           'id' => $bet->id,
-          'created_at' => $bet->created_at->toDateTimeString(),
+          'created_at' => $created_at,
           'updated_at' => $bet->updated_at,
           'market' => $bet->market,
           'success' => $bet->success,
