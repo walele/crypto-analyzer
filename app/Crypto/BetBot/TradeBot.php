@@ -17,6 +17,7 @@ use Rubix\ML\Datasets\Unlabeled;
 use Rubix\ML\CrossValidation\HoldOut;
 use Rubix\ML\Classifiers\KNearestNeighbors;
 use Rubix\ML\CrossValidation\Metrics\Accuracy;
+use Rubix\ML\Kernels\Distance\Manhattan;
 
 class TradeBot
 {
