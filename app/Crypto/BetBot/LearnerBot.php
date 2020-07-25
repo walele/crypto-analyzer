@@ -15,6 +15,8 @@ use Rubix\ML\CrossValidation\Metrics\Accuracy;
 use Rubix\ML\CrossValidation\HoldOut;
 use Rubix\ML\NeuralNet\Optimizers\Adam;
 use Rubix\ML\NeuralNet\CostFunctions\CrossEntropy;
+use Rubix\ML\Kernels\Distance\Manhattan;
+
 
 class LearnerBot
 {
@@ -70,7 +72,7 @@ class LearnerBot
 
     // Instanciate estimator
     if( $estimatorName === 'knn'){
-      $estimator = new KNearestNeighbors(3);
+      $estimator = new KNearestNeighbors(42, true, new Manhattan());
     } else if ( $estimatorName === 'logistic_regression') {
       $estimator = new LogisticRegression(64, new Adam(0.001), 1e-4, 100, 1e-4, 5, new CrossEntropy());
     } else {

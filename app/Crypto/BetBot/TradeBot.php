@@ -98,7 +98,7 @@ class TradeBot
     $trainDataset = $this->learnerBot->getTrainDataset();
 
     // Train with KNN
-    $estimator = new KNearestNeighbors(3);
+    $estimator = new KNearestNeighbors(42, true, new Manhattan());
     $estimator->train($trainDataset);
 
     // Make predictions
