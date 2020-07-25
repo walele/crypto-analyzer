@@ -121,88 +121,9 @@ class TradeBot
     return $data;
   }
 
-/*
-  public function createDataset($data, $unlabeled = false)
-  {
-    $samples = $data['rows'];
-    $labels = [];
-
-    foreach($samples as $key => $sample){
-
-      // Set labels
-      $labels[] = ($sample['success'] == 1) ? 'success' : 'fail';
-
-      // Remove unused features
-      unset($samples[$key]['success']);
-      unset($samples[$key]['active']);
-      unset($samples[$key]['id']);
-      unset($samples[$key]['market']);
-
-      // Parse float for remaining features
-      $samples[$key] = array_map('floatval', $samples[$key]);
-
-    }
-
-    if($unlabeled){
-      $dataset = new Unlabeled($samples);
-    }else{
-      $dataset = new Labeled($samples, $labels);
-    }
-
-
-    return $dataset;
-  }
-
-  public function getTrainDataset()
-  {
-    // Get finish bets
-    $res = new Bets(Bet::where('active', false)
-                      ->orderBy('id', 'asc')->get());
-
-    $data = $res->toCsv();
-    $dataset = $this->createDataset($data);
-
-
-    return $dataset;
-
-  }
-
-  public function getPredictDataset()
-  {
-    // Get finish bets
-    $res = new Bets(Bet::where('active', true)
-                      ->orderBy('id', 'asc')->get());
-
-    $data = $res->toCsv();
-    $dataset = $this->createDataset($data, true);
-
-
-    return $dataset;
-  }
-
-  public function getPredictMarkets()
-  {
-    // Get finish bets
-    $res = (Bet::where('active', true)
-                          ->orderBy('id', 'asc')->get());
-
-    return $res;
-  }
-
-  public function getSuccessBets($bets, $predictions)
-  {
-    $success = [];
-
-    foreach( $bets as $key => $bet){
-      if( $predictions[$key] === 'success'){
-        $success[] = $bet;
-      }
-    }
-
-    return $success;
-  }
-*/
-
+  /**
+  *   Loop an array o trades and place
+  */
   public function placeTrades($trades)
   {
     foreach($trades as $trade){
@@ -236,6 +157,9 @@ class TradeBot
       return $bet;
   }
 
+  /**
+  *  Validate current active bets to see if they are success
+  */
   private function validateTrades()
   {
     $client = new MarketClient;
@@ -280,8 +204,6 @@ class TradeBot
 
     return $actives;
   }
-
-
 
 
 }

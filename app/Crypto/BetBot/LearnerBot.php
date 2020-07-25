@@ -10,8 +10,11 @@ use Carbon\Carbon;
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
 use Rubix\ML\Classifiers\KNearestNeighbors;
+use Rubix\ML\Classifiers\LogisticRegression;
 use Rubix\ML\CrossValidation\Metrics\Accuracy;
 use Rubix\ML\CrossValidation\HoldOut;
+use Rubix\ML\NeuralNet\Optimizers\Adam;
+use Rubix\ML\NeuralNet\CostFunctions\CrossEntropy;
 
 class LearnerBot
 {
@@ -56,18 +59,22 @@ class LearnerBot
   /**
   * Evaluate a model / estimator Accuracy
   */
-  public function evaluate($estimator)
+  public function evaluate($estimatorName)
   {
     // Validate estimator
-    if( ! in_array($estimator, self::ESTIMATORS) ){
+    if( ! in_array($estimatorName, self::ESTIMATORS) ){
       return [
         'error' => 'bad estimator'
       ];
     }
 
     // Instanciate estimator
-    if( $estimator === 'knn'){
+    if( $estimatorName === 'knn'){
       $estimator = new KNearestNeighbors(3);
+    } else if ( $estimatorName === 'logistic_regression') {
+      $estimator = new LogisticRegression(64, new Adam(0.001), 1e-4, 100, 1e-4, 5, new CrossEntropy());
+    } else {
+      return 'error bad estimator ' . $estimatorName;
     }
 
     // Get training data
@@ -77,7 +84,7 @@ class LearnerBot
     // Evaluate
     $validator = new HoldOut(0.2);
     $score = $validator->test($estimator, $dataset, new Accuracy());
-    
+
     return $score;
   }
 
