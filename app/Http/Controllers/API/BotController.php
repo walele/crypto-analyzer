@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Binance;
 use App\Crypto\BetBot\BetBot;
 use App\Crypto\BetBot\TradeBot;
+use App\Crypto\BetBot\LearnerBot;
 use App\Crypto\Bettor;
 use App\Crypto\Stats;
 
@@ -22,9 +23,7 @@ use Rubix\ML\CrossValidation\Metrics\Accuracy;
 class BotController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Get bot general info
      */
     public function index(BetBot $bot)
     {
@@ -37,10 +36,8 @@ class BotController extends Controller
         'description' => $bot->strategyToString()
       ];
 
-
       return $data;
     }
-
 
     /**
     * Return bets stats
@@ -51,9 +48,8 @@ class BotController extends Controller
       return $data;
     }
 
-
     /**
-    * Return bets stats
+    * Return trades stats
     */
     public function tradesStats(){
       $data = Stats::getTradesStats();
@@ -61,55 +57,40 @@ class BotController extends Controller
       return $data;
     }
 
-
-
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Get wallet info
      */
     public function wallet(TradeBot $bot)
     {
-      $data = [];
-      //$api_key = config('binance.api_key');
-      //$api_secret = config('binance.api_secret');
-      //$api = new Binance\API($api_key,$api_secret);
-      $api = $bot->getBinanceApi();
-      $api->useServerTime();
-      $ticker = $api->prices(); // Make sure you have an updated ticker object for this to work
-      $balances = $api->balances($ticker);
-      //print_r($balances);
+      $data = $bot->getWalletInfo();
 
-      $data['btc'] = $balances['BTC']['available'];
-      $data['all'] = $api->btc_value;
-
-      $r = [
-        'wallet' => $data
-      ];
-
-      return $r;
+      return $data;
     }
 
-
-
-    public function makeBets(BetBot $bot, TradeBot $tradeBot)
+    /**
+    * Make bets via BetBot
+    */
+    public function makeBets(BetBot $bot)
     {
       // Run bot strategy
       $output = $bot->makeBets();
 
       return $output;
-
     }
 
-
+    /**
+    * Make trades via tradebot
+    */
     public function makeTrades(TradeBot $bot)
     {
-      // Get training data
       $success = $bot->makeTrades();
 
       return $success;
     }
 
+    /**
+    * Make Bets & trades
+    */
     public function makeBetsAndTrades(BetBot $bot, TradeBot $tradeBot)
     {
       $bets = $bot->makeBets();
@@ -123,5 +104,19 @@ class BotController extends Controller
 
     }
 
+    /**
+    * Evaluate a ml estimator & model
+    */
+    public function evaluateEstimator($estimator){
+
+      $learner = LearnerBot::getInstance();
+      $result = $learner->evaluate($estimator);
+      $data = [
+        'estimator' => $estimator,
+        'score' => $result
+      ];
+
+      return $data;
+    }
 
 }

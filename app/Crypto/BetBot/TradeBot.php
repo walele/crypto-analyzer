@@ -26,6 +26,7 @@ class TradeBot
   private $strategies = [];
   private $markets = [];
   private $binanceApi;
+  private $learnerBot;
   private $tt = 0;
 
   public function __construct()
@@ -33,8 +34,10 @@ class TradeBot
     $this->init();
   }
 
-  // The object is created from within the class itself
-  // only if the class has no instance.
+
+  /**
+  *   Singleton
+  */
   public static function getInstance()
   {
     if (self::$instance == null)
@@ -45,19 +48,80 @@ class TradeBot
     return self::$instance;
   }
 
+  /**
+  *   Init
+  */
   private function init()
   {
     $api_key = config('binance.api_key');
     $api_secret = config('binance.api_secret');
     $this->binanceApi = new Binance\API($api_key,$api_secret);
+    $this->learnerBot = LearnerBot::getInstance();
   }
 
+  /**
+  * Get binance client
+  */
   public function getBinanceApi()
   {
     return $this->binanceApi;
   }
 
+  /**
+  * Get current wallet info
+  */
+  public function getWalletInfo()
+  {
+    $api = $this->getBinanceApi();
+    $api->useServerTime();
+    $ticker = $api->prices(); // Make sure you have an updated ticker object for this to work
+    $balances = $api->balances($ticker);
 
+    $data['btc'] = $balances['BTC']['available'];
+    $data['all'] = $api->btc_value;
+
+    $r = [
+      'wallet' => $data
+    ];
+
+    return $r;
+  }
+
+
+  /**
+  * Make trade from currents bets
+  *   Use LearnerBot to predict successful bets
+  */
+  public function makeTrades()
+  {
+    // Get training data
+    $trainDataset = $this->learnerBot->getTrainDataset();
+
+    // Train with KNN
+    $estimator = new KNearestNeighbors(3);
+    $estimator->train($trainDataset);
+
+    // Make predictions
+    $predictDataset = $this->learnerBot->getPredictDataset();
+    $predictMarket = $this->learnerBot->getPredictMarkets();
+    $predictions = $estimator->predict($predictDataset);
+
+    // Get success predictions
+    $success = $this->learnerBot->getSuccessBets($predictMarket, $predictions);
+
+    // Place trades from succes bets
+    $this->placeTrades($success);
+    $this->validateTrades();
+
+    $data = [
+      'logs' => $predictions,
+      'trades' => $success
+    ];
+
+    return $data;
+  }
+
+/*
   public function createDataset($data, $unlabeled = false)
   {
     $samples = $data['rows'];
@@ -137,6 +201,7 @@ class TradeBot
 
     return $success;
   }
+*/
 
   public function placeTrades($trades)
   {
@@ -217,34 +282,6 @@ class TradeBot
   }
 
 
-  public function makeTrades()
-  {
-    // Get training data
-    $trainDataset = $this->getTrainDataset();
-
-    // Train with KNN
-    $estimator = new KNearestNeighbors(3);
-    $estimator->train($trainDataset);
-
-    // Make predictions
-    $predictDataset = $this->getPredictDataset();
-    $predictMarket = $this->getPredictMarkets();
-    $predictions = $estimator->predict($predictDataset);
-
-    // Get success predictions
-    $success = $this->getSuccessBets($predictMarket, $predictions);
-
-    // Place trades from succes bets
-    $this->placeTrades($success);
-    $this->validateTrades();
-
-    $data = [
-      'logs' => $predictions,
-      'trades' => $success
-    ];
-
-    return $data;
-  }
 
 
 }

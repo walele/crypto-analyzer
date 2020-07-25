@@ -30,9 +30,10 @@ Route::prefix('bot')->group(function () {
   Route::get('wallet/', 'API\BotController@wallet');
 
   Route::get('/bets-and-trades', 'API\BotController@makeBetsAndTrades');
-
   Route::get('/make-bets', 'API\BotController@makeBets');
   Route::get('/make-trades', 'API\BotController@makeTrades');
+
+  Route::get('/ml/evaluate/{estimator}', 'API\BotController@evaluateEstimator');
 });
 
 //Route::get('stats/', 'API\BetController@stats');

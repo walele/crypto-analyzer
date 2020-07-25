@@ -27,7 +27,8 @@ class Bets extends ResourceCollection
     {
       $data = [];
       $bets = $this->getParsedData(false);
-      $bet = $bets[0];
+      $bet = $bets[0] ?? [];
+      $defaultPayload = $bet['payload'] ?? [];
 
       // Set column
       $payloadColumns = [];
@@ -38,7 +39,7 @@ class Bets extends ResourceCollection
         'active',
       ];
 
-      foreach($bet['payload'] as $name => $p){
+      foreach($defaultPayload as $name => $p){
         $columns[] = $name;
         $payloadColumns[] = $name;
       }
