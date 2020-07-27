@@ -23,6 +23,7 @@ require('./betbot.js');
 // Install BootstrapVue
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('bet-component', require('./components/BetComponent.vue').default);
+//Vue.component('table-list', require('./components/TableList.vue').default);
 //Vue.component('b-table', BTable);
 //Vue.use(BootstrapVue)
 

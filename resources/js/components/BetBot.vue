@@ -64,28 +64,12 @@
 
     <hr style="width: 42%">
 
-    <div class="row justify-content-lg-center hscroll">
-        <div class="">
-            <div class="card ">
-                <div class="card-header">Current Trades</div>
+    <table-list
+      tableId="customTable"
+      title="Trades"
+      perPage="7">
+    </table-list>
 
-                <b-table id="trade-table" striped hover
-                    :items="trades">
-                  <template v-slot:cell(payload)="data">
-                    <span class="small-text" v-html="data.value"></span>
-                  </template>
-                  <template v-slot:cell(final_prices)="data">
-                    <span v-html="data.value"></span>
-                  </template>
-                </b-table>
-
-
-                <div class="card-body">
-                </div>
-            </div>
-        </div>
-    </div>
-    <button type="button" class="btn"  v-on:click="makeTrades">make trades</button>
 
     <hr style="width: 42%">
 
@@ -149,7 +133,8 @@
       this.final_prices = final_prices;
     }
 
-   import BetComponent from './BetComponent.vue';
+    import BetComponent from './BetComponent.vue';
+    import TableList from './TableList.vue';
 
     export default {
         mounted() {

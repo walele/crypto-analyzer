@@ -1,9 +1,11 @@
 import BetBot from './components/BetBot.vue';
+import TableList from './components/TableList.vue';
 import { BTable, BPagination } from 'bootstrap-vue'
 
 const betbot = document.getElementById( "betbot" );
 Vue.component('b-table', BTable);
 Vue.component('b-pagination', BPagination);
+Vue.component('table-list', TableList);
 
 if(betbot){
   init(betbot);
@@ -17,6 +19,7 @@ function init(el){
 
     components: {
       BetBot,
+      TableList,
       BTable,
       BPagination
     },
