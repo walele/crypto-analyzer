@@ -16,6 +16,7 @@ use Rubix\ML\CrossValidation\HoldOut;
 use Rubix\ML\NeuralNet\Optimizers\Adam;
 use Rubix\ML\NeuralNet\CostFunctions\CrossEntropy;
 use Rubix\ML\Kernels\Distance\Manhattan;
+use Rubix\ML\Transformers\L1Normalizer;
 
 
 class LearnerBot
@@ -81,6 +82,12 @@ class LearnerBot
 
     // Get training data
     $dataset = $this->getTrainDataset();
+
+    // tranform data
+  //  $transformer = new L1Normalizer();
+    //$dataset->apply($transformer);
+
+    //podd($dataset);
   //  $estimator->train($trainDataset);
 
     // Evaluate
@@ -177,7 +184,14 @@ class LearnerBot
 
     foreach( $bets as $key => $bet){
       if( $predictions[$key] === 'success'){
-        $success[] = $bet;
+
+        // Custom condition
+        $payload = unserialize($bet->payload);
+        $lastPriceUp = $payload['LastPricesUpRatio_7'] ?? 0;
+        if($lastPriceUp == 1){
+          $success[] = $bet;
+        }
+
       }
     }
 
