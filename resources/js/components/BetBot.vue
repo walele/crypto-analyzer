@@ -67,7 +67,7 @@
     <table-list
       tableId="customTable"
       title="Trades"
-      perPage="7">
+      perPage="20">
     </table-list>
 
 
