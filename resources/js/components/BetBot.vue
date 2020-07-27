@@ -40,11 +40,6 @@
                     </p>
                 </div>
 
-                <p>Estimator stats</p>
-                <p v-for="stat in statsTrades">
-                  <b>{{ stat.label }}</b> {{ stat.text }}
-                </p>
-
             </div>
         </div>
 
