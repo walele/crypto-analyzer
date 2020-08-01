@@ -3,6 +3,7 @@
 namespace App\Crypto;
 
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class Helpers
 {
@@ -48,4 +49,22 @@ class Helpers
     return number_format( ( ($endPrice - $startPrice) / $endPrice) * 100, 4);
 
   }
+
+  public static function parsePayload($data)
+  {
+
+    $payload = [];
+    $pl = unserialize($data);
+    foreach($pl as $key => $value){
+      $id = Str::slug($key, '_');
+      $payload[] = [
+        'label' => $id,
+        'value' => number_format($value, 2)
+      ];
+    }
+
+    return $payload;
+
+  }
+
 }

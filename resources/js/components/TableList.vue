@@ -13,7 +13,11 @@
                     :per-page="perPage"
                     :currentPage="currentPage">
                   <template v-slot:cell(payload)="data">
-                    <span class="small-text" v-html="data.value"></span>
+                    <div class="small-text">
+                      <p v-for="indic in data.value">
+                        <b>{{ indic.label }}</b> {{ indic.value }}
+                      </p>
+                    </div>
                   </template>
                   <template v-slot:cell(final_prices)="data">
                     <span v-html="data.value"></span>
@@ -66,20 +70,21 @@
     },
     methods: {
       getData(val) {
+        console.log(this.apiUrl);
         axios({
           method: 'get',
-          url: '/api/trades'
+          url: this.apiUrl
         }).then(res => {
           console.log(res.data);
-          //res.data.forEach(item => this.items.push(item));
+          res.data.data.forEach(item => this.items.push(item));
           console.log(this.items)
-          res.data.forEach(trade => this.items.push(new Trade(trade)));
+          //res.data.data.forEach(trade => this.items.push(new Trade(trade)));
 
         });
 
       }
     },
-    props: ['tableId', 'title', 'perPage'],
+    props: ['tableId', 'title', 'perPage', 'apiUrl'],
     mounted() {
       //this.currentPage = 0;
       this.getData()

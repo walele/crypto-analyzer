@@ -62,71 +62,23 @@
     <table-list
       tableId="customTable"
       title="Trades"
+      apiUrl="/api/trades"
       perPage="20">
     </table-list>
 
+    <table-list
+      tableId="table-bets"
+      title="Bets"
+      apiUrl="/api/bets"
+      perPage="20">
+    </table-list>
 
     <hr style="width: 42%">
-
-    <div class="row justify-content-lg-center hscroll">
-        <div class="">
-            <div class="card ">
-                <div class="card-header">Current bets</div>
-
-                <div class="card-body">
-
-                  <b-table id="bet-table" striped hover
-                      :items="bets"
-                      :fields="fields"
-                      :per-page="perPage"
-                      :currentPage="currentPage">
-                    <template v-slot:cell(payload)="data">
-                      <span class="small-text" v-html="data.value"></span>
-                    </template>
-                    <template v-slot:cell(final_prices)="data">
-                      <span v-html="data.value"></span>
-                    </template>
-                  </b-table>
-
-                  <b-pagination
-                    v-model="currentPage"
-                    :total-rows="rows"
-                    :per-page="perPage"
-                    aria-controls="bet-table"
-                  ></b-pagination>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
 
   </div>
 </template>
 
 <script>
-
-  function Bet({ id, market, created_at, active, success, payload, final_prices, buy_price}) {
-     this.id = id;
-     this.market = market;
-     this.created_at = created_at;
-     this.active = active;
-     this.success = success;
-     this.payload = payload;
-     this.final_prices = final_prices;
-     this.buy_price = buy_price;
-
-   }
-
-   function Trade({ id, market, created_at, active, success, buy_price, final_prices}) {
-      this.id = id;
-      this.market = market;
-      this.created_at = created_at;
-      this.active = active;
-      this.success = success;
-      this.buy_price = buy_price;
-      this.final_prices = final_prices;
-    }
 
     import BetComponent from './BetComponent.vue';
     import TableList from './TableList.vue';
@@ -198,19 +150,6 @@
         },
         methods: {
           async read() {
-            axios({
-              method: 'get',
-              url: '/api/bets'
-            }).then(res => {
-              res.data.data.forEach(bet => this.bets.push(new Bet(bet)));
-            });
-
-            axios({
-              method: 'get',
-              url: '/api/trades'
-            }).then(res => {
-              res.data.forEach(trade => this.trades.push(new Trade(trade)));
-            });
 
             axios({
               method: 'get',

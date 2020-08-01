@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Bet;
 use App\Trade;
 use App\Http\Resources\Bets;
+use App\Http\Resources\Trade as TradeResource;
+use App\Http\Resources\TradeCollection;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Binance;
@@ -17,6 +19,7 @@ use Rubix\ML\CrossValidation\HoldOut;
 use Rubix\ML\Classifiers\KNearestNeighbors;
 use Rubix\ML\CrossValidation\Metrics\Accuracy;
 
+
 class TradeController extends Controller
 {
     /**
@@ -26,7 +29,8 @@ class TradeController extends Controller
      */
     public function index()
     {
-      return (Trade::orderBy('id', 'desc')->get());
+
+      return TradeCollection::make(Trade::orderBy('id', 'desc')->get());
 
     }
 

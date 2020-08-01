@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Bet;
 use App\Http\Resources\Bets;
+use App\Http\Resources\BetCollection;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -16,7 +17,9 @@ class BetController extends Controller
      */
     public function index()
     {
-        return new Bets(Bet::orderBy('id', 'desc')->get());
+        return BetCollection::make(Bet::orderBy('id', 'desc')->limit(200)->get());
+
+        //return new Bets(Bet::orderBy('id', 'desc')->get());
     }
 
     public function csv()
