@@ -18,6 +18,7 @@ use Rubix\ML\CrossValidation\HoldOut;
 use Rubix\ML\Classifiers\KNearestNeighbors;
 use Rubix\ML\CrossValidation\Metrics\Accuracy;
 use Rubix\ML\Kernels\Distance\Manhattan;
+use Illuminate\Support\Facades\DB;
 
 class TradeBot
 {
@@ -88,6 +89,11 @@ class TradeBot
     return $r;
   }
 
+  private function markTradedBets()
+  {
+    $tradded = DB::table('bets')
+              ->update(['traded' => true]);
+  }
 
   /**
   * Make trade from currents bets
@@ -113,6 +119,7 @@ class TradeBot
     // Place trades from succes bets
     $this->placeTrades($success);
     $this->validateTrades();
+    $this->markTradedBets();
 
     $data = [
       'logs' => $predictions,
