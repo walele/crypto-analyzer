@@ -20,7 +20,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::apiResources ([
   'bets' => 'API\BetController',
-  'trades' => 'API\TradeController'
+  'trades' => 'API\TradeController',
+  'orders' => 'API\OrderController'
   ]);
 
 Route::prefix('bot')->group(function () {
@@ -32,6 +33,7 @@ Route::prefix('bot')->group(function () {
   Route::get('/bets-and-trades', 'API\BotController@makeBetsAndTrades');
   Route::get('/make-bets', 'API\BotController@makeBets');
   Route::get('/make-trades', 'API\BotController@makeTrades');
+  Route::get('/trades-and-orders', 'API\BotController@makeTradesAndOrders');
 
   Route::get('/ml/evaluate/{estimator}', 'API\BotController@evaluateEstimator');
 });

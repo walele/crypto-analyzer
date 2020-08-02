@@ -60,6 +60,13 @@
     <hr style="width: 42%">
 
     <table-list
+      tableId="table-order"
+      title="Orders"
+      apiUrl="/api/orders"
+      perPage="20">
+    </table-list>
+
+    <table-list
       tableId="customTable"
       title="Trades"
       apiUrl="/api/trades"

@@ -73,7 +73,7 @@ class LearnerBot
 
     // Instanciate estimator
     if( $estimatorName === 'knn'){
-      $estimator = new KNearestNeighbors(42, true, new Manhattan());
+      $estimator = new KNearestNeighbors(50, true, new Manhattan());
     } else if ( $estimatorName === 'logistic_regression') {
       $estimator = new LogisticRegression(64, new Adam(0.001), 1e-4, 100, 1e-4, 5, new CrossEntropy());
     } else {

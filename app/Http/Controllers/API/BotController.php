@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Binance;
 use App\Crypto\BetBot\BetBot;
 use App\Crypto\BetBot\TradeBot;
+use App\Crypto\BetBot\OrderBot;
 use App\Crypto\BetBot\LearnerBot;
 use App\Crypto\Bettor;
 use App\Crypto\Stats;
@@ -88,16 +89,25 @@ class BotController extends Controller
       return $success;
     }
 
+
     /**
     * Make Bets & trades
     */
-    public function makeBetsAndTrades(BetBot $bot, TradeBot $tradeBot)
+    public function makeBetsAndTrades(BetBot $bot, TradeBot $tradeBot, OrderBot $orderBot)
     {
       $bets = $bot->makeBets();
       $trades = $tradeBot->makeTrades();
+
+      // Get bets for orders
+      $testsTrade = Trade::orderBy('id', 'desc')->limit(2)->get();
+      $tradeForOrders = $trades['trades'];
+      //$tradeForOrders = $testsTrade;
+
+      $orders = $orderBot->makeOrders($tradeForOrders);
       $data = [
         'bets' => $bets,
-        'trades' => $trades
+        'trades' => $trades,
+        'orders' => $orders
       ];
 
       return $data;
