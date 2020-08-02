@@ -101,7 +101,7 @@ class BotController extends Controller
       // Get bets for orders
       $testsTrade = Trade::orderBy('id', 'desc')->limit(2)->get();
       $tradeForOrders = $trades['trades'];
-      //$tradeForOrders = $testsTrade;
+      $tradeForOrders = $testsTrade;
 
       $orders = $orderBot->makeOrders($tradeForOrders);
       $data = [

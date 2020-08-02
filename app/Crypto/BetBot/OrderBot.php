@@ -31,6 +31,7 @@ class OrderBot
   private $strategies = [];
   private $markets = [];
   private $binanceApi;
+  private $exchangeInfo;
   private $learnerBot;
   private $tradeBtcAmount = 0.002;
 
@@ -38,6 +39,7 @@ class OrderBot
   public function __construct()
   {
     $this->init();
+    $this->initExchangeInfo();
   }
 
 
@@ -63,6 +65,38 @@ class OrderBot
     $api_secret = config('binance.api_secret');
     $this->binanceApi = new Binance\API($api_key,$api_secret);
     $this->learnerBot = LearnerBot::getInstance();
+
+
+  }
+
+  private function initExchangeInfo()
+  {
+    $data = $this->binanceApi->exchangeInfo();
+    $symbols = $data['symbols'] ?? [];
+    $this->exchangeInfo = $symbols;
+  }
+
+  public function getMarketOrderPrecision($market)
+  {
+    $marketInfo = $this->exchangeInfo[$market] ?? [];
+    $filters = $marketInfo['filters'] ?? [];
+
+    $stepSize = 1;
+    foreach($filters as $filter){
+      $filterType = $filter['filterType'] ?? '';
+      if( $filterType == 'LOT_SIZE'){
+        $stepSize = $filter['stepSize'] ?? 1;
+      }
+    }
+
+    $stepSize = (float) $stepSize;
+    $r = 1.0 / $stepSize;
+    $i = (int) $r;
+    $s = (string) $i;
+
+    $zerolen = strlen($s) -1;
+
+    return $zerolen;
   }
 
   /**
@@ -138,9 +172,12 @@ class OrderBot
 
       $price = $this->binanceApi->price($market);
 
+      // Get precision float for market
+      $precision = $this->getMarketOrderPrecision($market);
+
       $buy_price = $price;
       $quantity = self::TRADE_BTC_AMOUNT / $buy_price ; #;
-      $quantity = number_format($quantity, 2);
+      $quantity = number_format($quantity, $precision);
       $btc_amount = $quantity * $buy_price;
       $type = 'MARKET';
 
@@ -163,7 +200,8 @@ class OrderBot
        'quantity' => $quantity,
        'btc_amount' => $btc_amount,
        'active' => true,
-       'trade_id' => $bet->id
+       'trade_id' => $bet->id,
+       'wallet_btc' => $this->getWalletBtc()
      ]);
     $bet->save();
 
@@ -228,7 +266,9 @@ class OrderBot
        'quantity' => $quantity,
        'btc_amount' => $btc_amount,
        'active' => true,
-       'trade_id' => $bet->id
+       'trade_id' => $bet->id,
+       'wallet_btc' => $this->getWalletBtc()
+
      ]);
     $bet->save();
 
