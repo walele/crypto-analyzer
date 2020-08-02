@@ -119,7 +119,7 @@ class TradeBot
     // Place trades from succes bets
     $this->placeTrades($success);
     $this->validateTrades();
-    $this->markTradedBets();
+    //$this->markTradedBets();
 
     $data = [
       'logs' => $predictions,
