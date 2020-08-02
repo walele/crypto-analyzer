@@ -63,21 +63,21 @@
       tableId="table-order"
       title="Orders"
       apiUrl="/api/orders"
-      perPage="20">
+      perPage="5">
     </table-list>
 
     <table-list
       tableId="customTable"
       title="Trades"
       apiUrl="/api/trades"
-      perPage="20">
+      perPage="16">
     </table-list>
 
     <table-list
       tableId="table-bets"
       title="Bets"
       apiUrl="/api/bets"
-      perPage="20">
+      perPage="16">
     </table-list>
 
     <hr style="width: 42%">
