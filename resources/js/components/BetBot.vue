@@ -66,12 +66,16 @@
       perPage="5">
     </table-list>
 
+    <hr style="width: 42%">
+
     <table-list
       tableId="customTable"
       title="Trades"
       apiUrl="/api/trades"
       perPage="16">
     </table-list>
+
+    <hr style="width: 42%">
 
     <table-list
       tableId="table-bets"
