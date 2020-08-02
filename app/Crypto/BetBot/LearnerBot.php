@@ -190,9 +190,9 @@ class LearnerBot
         // Custom condition
         $payload = unserialize($bet->payload);
         $lastPriceUp = $payload['LastPricesUpRatio_7'] ?? 0;
-        if($lastPriceUp == 1){
+      //  if($lastPriceUp == 1){
           $success[] = $bet;
-        }
+      //  }
 
       }
     }
