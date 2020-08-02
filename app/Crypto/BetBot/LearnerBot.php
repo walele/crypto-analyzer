@@ -194,7 +194,17 @@ class LearnerBot
           $success[] = $bet;
       //  }
 
+        // Mark succes bets
+        $bet->ml_status = 'success';
+        $bet->save();
+
+      }else {
+
+        // Mark fail bets
+        $bet->ml_status = 'fail';
+        $bet->save();
       }
+
     }
 
     return $success;
