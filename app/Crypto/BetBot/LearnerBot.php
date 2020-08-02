@@ -155,7 +155,7 @@ class LearnerBot
   public function getPredictDataset()
   {
     $res = new Bets(Bet::where('active', true)
-                      ->where('traded', '<>', true)
+                      ->where('traded', false)
                       ->orderBy('id', 'asc')->get());
 
     $data = $res->toCsv();
@@ -171,7 +171,7 @@ class LearnerBot
   public function getPredictMarkets()
   {
     $res = (Bet::where('active', true)
-                ->where('traded', '<>', true)
+                ->where('traded', false)
                 ->orderBy('id', 'asc')->get());
 
     return $res;
