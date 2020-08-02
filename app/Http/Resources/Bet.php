@@ -32,6 +32,7 @@ class Bet extends JsonResource
         'success' => $this->success,
         'payload' => $payload,
         'buy_price' => $this->buy_price,
+        'ml_status' => $this->ml_status,
         'final_prices' => $this->final_prices,
         ];
 
