@@ -283,7 +283,7 @@ class OrderBot
     if( $env === 'local'){
       $order = $this->binanceApi->sellTest($market, $quantity, $price, $type, $flag);
     } else if( $env === 'production'){
-      $order = $this->binanceApi->sell($market, $quantity, $price, $type, $flag);
+      $order = $this->binanceApi->sellTest($market, $quantity, $price, $type, $flag);
     }
 
     $bet->binance_payload = serialize($order);
