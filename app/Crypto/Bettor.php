@@ -104,7 +104,8 @@ class Bettor
           'market' => $market,
           'payload' => serialize($payload),
           'buy_price' => $price,
-          'active' => true
+          'active' => true,
+          'traded' => false
         ]);
         $bet->save();
       }
