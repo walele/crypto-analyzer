@@ -237,8 +237,8 @@ class OrderBot
       $price = floatval($price);
       $price = floatval($this->binanceApi->price($market));
 
-      $origQty  = $binance_order['origQty'] ?? 0.0;
-      $executedQty  = $binance_order['executedQty'] ?? 0.0;
+      $origQty  = $binance_order['origqty'] ?? 0.0;
+      $executedQty  = $binance_order['executedqty'] ?? 0.0;
 
       // Calc sell/stop price
       $sellPrice = $price + ($price * 0.015);
