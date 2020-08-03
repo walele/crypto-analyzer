@@ -147,7 +147,7 @@ class OrderBot
     for( $i=0; $i < $possibleTradeNb && $i < $nbBets ; $i++){
 
       $buyOrder = $this->placeBuyOrder($bets[$i]);
-      $status = $order['status'] ?? '';
+      $status = $buyOrder['status'] ?? '';
       if( $status === 'FILLED'){
         $sellOrder = $this->placeSellOrder($bets[$i], $buyOrder);
       }
