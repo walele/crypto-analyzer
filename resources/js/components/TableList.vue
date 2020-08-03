@@ -19,6 +19,13 @@
                       </p>
                     </div>
                   </template>
+                  <template v-slot:cell(binance_payload)="data">
+                    <div class="small-text">
+                      <p v-for="indic in data.value">
+                        <b>{{ indic.label }}</b> {{ indic.value }}
+                      </p>
+                    </div>
+                  </template>
                   <template v-slot:cell(final_prices)="data">
                     <span v-html="data.value"></span>
                   </template>

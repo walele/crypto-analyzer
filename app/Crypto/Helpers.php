@@ -67,4 +67,28 @@ class Helpers
 
   }
 
+  public static function parsePayloadRaw($data)
+  {
+
+    $payload = [];
+    try{
+      $pl = unserialize($data);
+    }catch (\Exception $e){
+      $pl = [
+        'error' => 'Cant unserialize'
+      ];
+    }
+    $pl = (array) $pl;
+    foreach($pl as $key => $value){
+      $id = Str::slug($key, '_');
+      $payload[] = [
+        'label' => $id,
+        'value' => $value
+      ];
+    }
+
+    return $payload;
+
+  }
+
 }
