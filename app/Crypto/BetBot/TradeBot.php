@@ -157,8 +157,7 @@ class TradeBot
           'market' => $trade->market,
           'payload' => serialize($trade->payload),
           'buy_price' => $price,
-          'active' => true,
-          'traded' => false
+          'active' => true
         ]);
         $bet->save();
       }
