@@ -231,8 +231,12 @@ class OrderBot
       $test = $env !== 'production';
 
       $market = $bet->market;
+
+      // Get base price
       $price  = $binance_order['price'] ?? 0.0;
       $price = floatval($price);
+      $price = floatval($this->binanceApi->price($market));
+
       $origQty  = $binance_order['origQty'] ?? 0.0;
       $executedQty  = $binance_order['executedQty'] ?? 0.0;
 
