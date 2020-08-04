@@ -4,6 +4,7 @@ namespace App\Crypto;
 
 use Carbon\Carbon;
 use Binance\API;
+use Illuminate\Support\Facades\Log;
 
 class BinanceOCO extends API
 {
@@ -67,7 +68,7 @@ class BinanceOCO extends API
 
   //    if ($type === "LIMIT" || $type === "STOP_LOSS_LIMIT" || $type === "TAKE_PROFIT_LIMIT") {
           $opt["price"] = $price;
-          $opt["timeInForce"] = "GTC";
+      //    $opt["timeInForce"] = "GTC";
     //  }
 
       if (isset($flags['stopPrice'])) {
@@ -81,6 +82,9 @@ class BinanceOCO extends API
       if (isset($flags['newOrderRespType'])) {
           $opt['newOrderRespType'] = $flags['newOrderRespType'];
       }
+
+      Log::info('OPT : ' . print_r($opt, true));
+
 
       $qstring = ($test === false) ? "v3/order/oco" : "v3/order/oco/test";
       return $this->httpRequest($qstring, "POST", $opt, true);
