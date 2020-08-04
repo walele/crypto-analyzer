@@ -263,7 +263,12 @@ class OrderBot
       $stopLimitPrice = number_format($stopLimitPrice, 8, '.', '');
 
       // Prep binance order
-      $quantity = $executedQty;
+      $quantity = $this->getCoinAvailable($market);
+      Log::info('$quantity : ' . print_r($quantity, true));
+
+      $quantity = $quantity['available'] ?? 0.0;
+
+
       $price = $sellPrice;        // Price for profit
       $stopPrice = $stopPrice;    // Price that trigger stop
       $flag = [
@@ -315,89 +320,23 @@ class OrderBot
   }
 
 
-  /**
-  *   Loop an array o trades and place
-  */
-  public function placeTrades($trades)
+
+
+
+  public function getCoinAvailable($market)
   {
-    foreach($trades as $trade){
-      $this->placeTrade($trade);
-    }
+    $name = str_replace('BTC', '', $market);
+    $api = $this->getBinanceApi();
+    $api->useServerTime();
+    $ticker = $api->prices(); // Make sure you have an updated ticker object for this to work
+    $balances = $api->balances($ticker);
+
+    $data = $balances[$name] ?? [];
+
+
+    return $data;
   }
 
-
-  /**
-  * Add a bet to db if no active bet for that market
-  */
-  public function placeTrade($trade)
-  {
-      $market = $trade->market;
-      $actives = $this->getActiveTrade($market);
-
-      $bet = null;
-      if( ! $actives->count() ){
-
-        $price = $this->binanceApi->price($market);
-
-        $bet = new Trade([
-          'market' => $trade->market,
-          'payload' => serialize($trade->payload),
-          'buy_price' => $price,
-          'active' => true
-        ]);
-        $bet->save();
-      }
-
-      return $bet;
-  }
-
-  /**
-  *  Validate current active bets to see if they are success
-  */
-  private function validateTrades()
-  {
-    $client = new MarketClient;
-    $betTimeout = 6;
-    $limit = (60/5) * $betTimeout;
-    $trades = Trade::where('active', true)
-                ->where('created_at', '<',
-                  Carbon::now()->subHours($betTimeout)->toDateTimeString() )
-                ->get();
-
-    //print_r($bets->toArray());
-    foreach($trades as $trade){
-
-      $buy_price = (float) $trade->buy_price;
-      $successPrice = $buy_price + ($buy_price * 0.015);
-
-      $prices = $client->getLastMarketPrices($trade->market, $limit);
-      $firstPrice = $prices->first();
-      $lastPrice = $prices->last();
-      $maxPrice = $prices->max('price');
-      $diff = Helpers::calcPercentageDiff($buy_price, $maxPrice);
-
-
-      $success = $maxPrice > $successPrice;
-
-      $trade->success = $success;
-      $trade->final_prices = $maxPrice;
-      $trade->active = false;
-      $trade->save();
-
-    }
-  }
-
-
-  /**
-  *  Get active bet for a market
-  */
-  public function getActiveTrade($market)
-  {
-    $actives = Trade::where('market', $market )
-                      ->where('active', 1);
-
-    return $actives;
-  }
 
 
 }
