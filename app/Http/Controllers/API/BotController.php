@@ -69,6 +69,17 @@ class BotController extends Controller
     }
 
     /**
+     * Get Coin info
+     */
+    public function coin(OrderBot $bot, $name)
+    {
+      $data = $bot->getCoinAvailable($name);
+
+
+      return $data;
+    }
+
+    /**
     * Make bets via BetBot
     */
     public function makeBets(BetBot $bot)

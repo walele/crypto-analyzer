@@ -29,6 +29,7 @@ Route::prefix('bot')->group(function () {
   Route::get('stats/bets', 'API\BotController@betsStats');
   Route::get('stats/trades', 'API\BotController@tradesStats');
   Route::get('wallet/', 'API\BotController@wallet');
+  Route::get('coin/{name}', 'API\BotController@coin');
 
   Route::get('/bets-and-trades', 'API\BotController@makeBetsAndTrades');
   Route::get('/make-bets', 'API\BotController@makeBets');
