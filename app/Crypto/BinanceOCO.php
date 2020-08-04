@@ -75,6 +75,17 @@ class BinanceOCO extends API
           $opt['stopPrice'] = $flags['stopPrice'];
       }
 
+
+      if (isset($flags['stopLimitPrice'])) {
+          $opt['stopLimitPrice'] = $flags['stopLimitPrice'];
+      }
+
+      if (isset($flags['stopLimitTimeInForce'])) {
+          $opt['stopLimitTimeInForce'] = $flags['stopLimitTimeInForce'];
+      }
+
+
+
       if (isset($flags['icebergQty'])) {
           $opt['icebergQty'] = $flags['icebergQty'];
       }

@@ -254,9 +254,9 @@ class OrderBot
       $executedQty  = $parsed_binance['executedqty'] ?? 0.0;
 
       // Calc sell/stop price
-      $sellPrice = $price + ($price * 0.019);
-      $stopPrice = $price - ($price * 0.007);
-      $stopLimitPrice = $price - ($price * 0.009);
+      $sellPrice = $price + ($price * 0.019);       // Price for profit
+      $stopPrice = $price - ($price * 0.007);       // Price that trigger stop
+      $stopLimitPrice = $price - ($price * 0.009);  // Price of sell after stop loss
 
       // Format price
       $stopPrice = number_format($stopPrice, 8, '.', '');
@@ -264,8 +264,8 @@ class OrderBot
 
       // Prep binance order
       $quantity = $executedQty;
-      $price = $sellPrice; // Try to sell it for 0.5 btc
-      $stopPrice = $stopPrice; // Sell immediately if price goes below 0.4 btc
+      $price = $sellPrice;        // Price for profit
+      $stopPrice = $stopPrice;    // Price that trigger stop
       $flag = [
         "stopPrice" => $stopPrice,
         "stopLimitPrice" => $stopLimitPrice,
@@ -303,8 +303,8 @@ class OrderBot
     if( $env === 'local'){
       $order = $this->binanceApi->sellOcoTest($market, $quantity, $price, $flag);
     } else if( $env === 'production'){
-      //$order = $this->binanceApi->sellOco($market, $quantity, $price, $flag);
-      $order = $this->binanceApi->sell($market, $quantity, $price);
+      $order = $this->binanceApi->sellOco($market, $quantity, $price, $flag);
+      //$order = $this->binanceApi->sell($market, $quantity, $price);
     }
 
     $bet->binance_payload = serialize($order);
