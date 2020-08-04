@@ -22,6 +22,7 @@ class Order extends JsonResource
       $created_at  =$created_at->toDateTimeString();
 
       $binance_payload = Helpers::parsePayloadRaw(($this->binance_payload));
+      $payload = Helpers::parsePayloadRaw(($this->payload));
 
       return [
         'id' => $this->id,
@@ -32,6 +33,7 @@ class Order extends JsonResource
         'price' => $this->price,
         'quantity' => $this->quantity,
         'btc_amount' => $this->btc_amount,
+        'payload' => $payload,
         'binance_payload' => $binance_payload,
         'trade_id' => $this->trade_id,
         ];
