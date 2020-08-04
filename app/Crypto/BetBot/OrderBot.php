@@ -21,6 +21,7 @@ use Rubix\ML\CrossValidation\HoldOut;
 use Rubix\ML\Classifiers\KNearestNeighbors;
 use Rubix\ML\CrossValidation\Metrics\Accuracy;
 use Rubix\ML\Kernels\Distance\Manhattan;
+use Illuminate\Support\Facades\Log;
 
 class OrderBot
 {
@@ -245,6 +246,8 @@ class OrderBot
         $parsedKey = strtolower($key);
         $parsed_binance[$parsedKey] = $binance_order[$key];
       }
+      Log::info('$parsed_binance : ' . print_r($parsed_binance, true));
+
 
       // Get qty
       $origQty  = $parsed_binance['origqty'] ?? 0.0;
