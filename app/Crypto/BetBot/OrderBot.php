@@ -13,6 +13,8 @@ use App\Http\Resources\Bets;
 use Carbon\Carbon;
 
 use Binance;
+use App\Crypto\BinanceOCO;
+
 use Rubix\ML\Datasets\Labeled;
 use Rubix\ML\Datasets\Unlabeled;
 use Rubix\ML\CrossValidation\HoldOut;
@@ -23,6 +25,8 @@ use Rubix\ML\Kernels\Distance\Manhattan;
 class OrderBot
 {
   const TRADE_SUCCESS_INC_PERC = 1.5;
+  const TRADE_STOP_PRICE = 0.7;
+  const TRADE_STOP_LIMIT_PRICE = 0.9;
   const TRADE_BTC_AMOUNT = 0.002;
 
   private static $instance = null;
@@ -63,10 +67,8 @@ class OrderBot
   {
     $api_key = config('binance.api_key');
     $api_secret = config('binance.api_secret');
-    $this->binanceApi = new Binance\API($api_key,$api_secret);
+    $this->binanceApi = new BinanceOCO($api_key,$api_secret);
     $this->learnerBot = LearnerBot::getInstance();
-
-
   }
 
   private function initExchangeInfo()
@@ -233,30 +235,38 @@ class OrderBot
       $market = $bet->market;
 
       // Get base price
-      $price  = $binance_order['price'] ?? 0.0;
+      $price = $binance_order['price'] ?? 0.0;
       $price = floatval($price);
       $price = floatval($this->binanceApi->price($market));
 
+      // Get qty
       $origQty  = $binance_order['origqty'] ?? 0.0;
       $executedQty  = $binance_order['executedqty'] ?? 0.0;
 
       // Calc sell/stop price
       $sellPrice = $price + ($price * 0.015);
-      $stopPrice = $price - ($price * 0.005);
+      $stopPrice = $price - ($price * 0.007);
+      $stopLimitPrice = $price - ($price * 0.009);
+
+      // Format price
+      $stopPrice = number_format($stopPrice, 8, '.', '');
+      $stopLimitPrice = number_format($stopLimitPrice, 8, '.', '');
 
       // Prep binance order
-      $type = "STOP_LOSS_LIMIT"; // Set the type STOP_LOSS (market) or STOP_LOSS_LIMIT, and TAKE_PROFIT (market) or TAKE_PROFIT_LIMIT
       $quantity = $executedQty;
       $price = $sellPrice; // Try to sell it for 0.5 btc
       $stopPrice = $stopPrice; // Sell immediately if price goes below 0.4 btc
-      $flag = ["stopPrice"=>$stopPrice];
+      $flag = [
+        "stopPrice" => $stopPrice,
+        "stopLimitPrice" => $stopLimitPrice,
+        "stopLimitTimeInForce" => "GTC"
+      ];
 
       // Create app order
       $btc_amount = $price * $quantity;
       $payload = [
         'quantity' => $quantity,
         'price' => $price,
-        'type' => $type,
         'flags' => $flag,
         'test' => $test
       ];
@@ -281,9 +291,9 @@ class OrderBot
       'null' => null
     ];
     if( $env === 'local'){
-      $order = $this->binanceApi->sellTest($market, $quantity, $price, $type, $flag);
+      $order = $this->binanceApi->sellOcoTest($market, $quantity, $price, $flag);
     } else if( $env === 'production'){
-      $order = $this->binanceApi->sellTest($market, $quantity, $price, $type, $flag);
+      $order = $this->binanceApi->sellOco($market, $quantity, $price, $flag);
     }
 
     $bet->binance_payload = serialize($order);
