@@ -244,9 +244,9 @@ class OrderBot
       $price = floatval($this->binanceApi->price($market));
 
       // Calc sell/stop price
-      $sellPrice = $price + ($price * 0.024);       // Price for profit
-      $stopPrice = $price - ($price * 0.007);       // Price that trigger stop
-      $stopLimitPrice = $price - ($price * 0.009);  // Price of sell after stop loss
+      $sellPrice = $price + ($price * 0.022);       // Price for profit
+      $stopPrice = $price - ($price * 0.009);       // Price that trigger stop
+      $stopLimitPrice = $price - ($price * 0.01);  // Price of sell after stop loss
 
       // Format price
       $stopPrice = number_format($stopPrice, 8, '.', '');
