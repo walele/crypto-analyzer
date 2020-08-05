@@ -235,6 +235,9 @@ class OrderBot
 
       $market = $bet->market;
 
+      // Get precision float for market
+      $precision = $this->getMarketOrderPrecision($market);
+
       // Get base price
       $price = $binance_order['price'] ?? 0.0;
       $price = floatval($price);
@@ -267,6 +270,7 @@ class OrderBot
       Log::info('$quantity : ' . print_r($quantity, true));
 
       $quantity = $quantity['available'] ?? 0.0;
+      $quantity = number_format($quantity, $precision);
 
 
       $price = $sellPrice;        // Price for profit
