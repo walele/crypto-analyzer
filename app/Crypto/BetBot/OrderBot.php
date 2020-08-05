@@ -257,7 +257,7 @@ class OrderBot
       $executedQty  = $parsed_binance['executedqty'] ?? 0.0;
 
       // Calc sell/stop price
-      $sellPrice = $price + ($price * 0.019);       // Price for profit
+      $sellPrice = $price + ($price * 0.025);       // Price for profit
       $stopPrice = $price - ($price * 0.007);       // Price that trigger stop
       $stopLimitPrice = $price - ($price * 0.009);  // Price of sell after stop loss
 
