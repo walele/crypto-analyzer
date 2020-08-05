@@ -182,7 +182,7 @@ class TradeBot
     foreach($trades as $trade){
 
       $buy_price = (float) $trade->buy_price;
-      $successPrice = $buy_price + ($buy_price * 0.015);
+      $successPrice = $buy_price + ($buy_price * 0.024);
 
       $prices = $client->getLastMarketPrices($trade->market, $limit);
       $firstPrice = $prices->first();
