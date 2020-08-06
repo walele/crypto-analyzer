@@ -276,8 +276,8 @@ class OrderBot
 
       // Calc sell/stop price
       $sellPrice = $price + ($price * 0.022);       // Price for profit
-      $stopPrice = $price - ($price * 0.009);       // Price that trigger stop
-      $stopLimitPrice = $price - ($price * 0.01);  // Price of sell after stop loss
+      $stopPrice = $price - ($price * 0.015);       // Price that trigger stop
+      $stopLimitPrice = $price - ($price * 0.017);  // Price of sell after stop loss
 
       // Format price
       $stopPrice = number_format($stopPrice, 8, '.', '');
