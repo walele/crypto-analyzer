@@ -145,14 +145,26 @@ class OrderBot
     $buyOrder = [];
     $sellOrder = [];
     $possibleTradeNb = $this->getPossibleTradeNb();
-    $nbBets = count($bets);
 
-    for( $i=0; $i < $possibleTradeNb && $i < $nbBets ; $i++){
+    $tradeMade = 0;
+    foreach($bets as $bet){
 
-      $buyOrder = $this->placeBuyOrder($bets[$i]);
-      $status = $buyOrder['status'] ?? '';
-      if( $status === 'FILLED'){
-        $sellOrder = $this->placeSellOrder($bets[$i], $buyOrder);
+      // Quantity condition for trading
+      if($this->getBuyingQty($bet->market) < 50){
+        continue;
+      }
+
+      // Create order if quota
+      if( $tradeMade < $possibleTradeNb){
+        $tradeMade++;
+
+        // Create orders for trading
+        $buyOrder = $this->placeBuyOrder($bet);
+        $status = $buyOrder['status'] ?? '';
+        if( $status === 'FILLED'){
+          $sellOrder = $this->placeSellOrder($bet, $buyOrder);
+        }
+
       }
 
     }
@@ -163,6 +175,22 @@ class OrderBot
     ];
 
     return $data;
+  }
+
+  /**
+  * GEt possible qauantity we can buy for a coin
+  */
+  public function getBuyingQty($market)
+  {
+    $price = $this->binanceApi->price($market);
+
+    // Get precision float for market
+    $precision = $this->getMarketOrderPrecision($market);
+
+    $quantity = self::TRADE_BTC_AMOUNT / $price ;
+    $quantity = number_format($quantity, $precision);
+
+    return $quantity;
   }
 
   /**
