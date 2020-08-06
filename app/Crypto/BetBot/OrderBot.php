@@ -150,7 +150,10 @@ class OrderBot
     foreach($bets as $bet){
 
       // Quantity condition for trading
-      if($this->getBuyingQty($bet->market) < 50){
+      $qty = $this->getBuyingQty($bet->market);
+      if($qty < 50){
+        Log::info('qty to low : ' . $bet->market . " $qty");
+
         continue;
       }
 
