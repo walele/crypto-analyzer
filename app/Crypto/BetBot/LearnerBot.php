@@ -32,8 +32,9 @@ class LearnerBot
   private $markets = [];
   private $binanceApi;
   private $tt = 0;
+  private $estimator;
 
-  public function __construct()
+  private function __construct()
   {
     $this->init();
   }
@@ -152,15 +153,18 @@ class LearnerBot
   /**
   * Get a dataset to predict with samples only
   */
-  public function getPredictDataset()
+  public function getPredictDataset($id = 0)
   {
-    $res = new Bets(Bet::where('active', true)
+    $request = Bet::where('active', true)
                       ->where('traded', false)
-                      ->orderBy('id', 'asc')->get());
+                      ->orderBy('id', 'asc');
+    if($id){
+      $request = $request->where('id', $id);
+    }
 
+    $res = new Bets($request->get());
     $data = $res->toCsv();
     $dataset = $this->createDataset($data, true);
-
 
     return $dataset;
   }
@@ -210,6 +214,29 @@ class LearnerBot
     }
 
     return $success;
+  }
+
+  public function trainFromBets()
+  {
+    // Get training data
+    $trainDataset = $this->getTrainDataset();
+
+    // Train with KNN
+    $this->estimator = new KNearestNeighbors(42, true, new Manhattan());
+    $this->estimator->train($trainDataset);
+  }
+
+  public function getBetPrediction($bet)
+  {
+    // Make predictions
+    $predictDataset = $this->getPredictDataset($bet->id);
+
+    $prediction = $this->estimator->predict($predictDataset);
+
+    $value = $prediction[0] ?? 'n/a';
+
+    return $value;
+    
   }
 
 }

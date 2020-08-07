@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Crypto\Strategies\Strategy;
 use App\Crypto\Bettor;
 use App\Crypto\MarketClient;
+use App\Crypto\Helpers;
 use App\Bet;
 
 class BetBot
@@ -16,6 +17,7 @@ class BetBot
   private $bets = [];
   private $strategies = [];
   private $markets = [];
+  private $learnerBot;
 
   private function __construct()
   {
@@ -41,6 +43,7 @@ class BetBot
   {
     $client = new MarketClient();
     $this->markets = $client->getTables();
+    $this->learnerBot = LearnerBot::getInstance();
   }
 
   /**
@@ -78,6 +81,7 @@ class BetBot
     $bets = $this->getBets();
 
     // Place new bets
+    $this->trainLearnBot();
     foreach($bets as $bet){
       $this->placeBet($bet);
     }
@@ -183,7 +187,8 @@ class BetBot
       if( ! $activeBet->count() ){
 
         $curPrice = $client->getLastMarketPrice($market);
-        $price = number_format($curPrice->price, 10);
+        $price = number_format($curPrice->price, 8);
+
 
         $bet = new Bet([
           'market' => $market,
@@ -193,9 +198,24 @@ class BetBot
           'traded' => false
         ]);
         $bet->save();
+
+        // Predict success via machine learning
+        $ml_status = $this->getBetPrediction($bet);
+        $bet->ml_status = $ml_status;
+        $bet->save();
       }
 
       return $bet;
+  }
+
+  public function trainLearnBot()
+  {
+    $this->learnerBot->trainFromBets();
+  }
+
+  private function getBetPrediction($bet)
+  {
+    return $this->learnerBot->getBetPrediction($bet);
   }
 
   /**
