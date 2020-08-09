@@ -80,6 +80,29 @@ class BotController extends Controller
     }
 
     /**
+     * Get Coin step info
+     */
+    public function coinStep(OrderBot $bot, $name)
+    {
+      $data = $bot->getCoinAvailable($name);
+
+
+      return $data;
+    }
+
+    /**
+     * Get Coin step info
+     */
+    public function binanceOrders(OrderBot $bot)
+    {
+        $data = $bot->getBinanceOrders();
+
+
+      return $data;
+    }
+
+
+    /**
     * Make bets via BetBot
     */
     public function makeBets(BetBot $bot)
@@ -93,11 +116,13 @@ class BotController extends Controller
     /**
     * Make trades via tradebot
     */
-    public function makeTrades(TradeBot $bot)
+    public function makeTrades()
     {
-      $success = $bot->makeTrades();
 
-      return $success;
+      $bot = TradeBot::getInstance();
+      $trades = $bot->makeTrades();
+
+      return $trades;
     }
 
 
