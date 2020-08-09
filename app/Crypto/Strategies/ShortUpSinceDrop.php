@@ -29,7 +29,7 @@ class ShortUpSinceDrop implements Strategy
 
     // LastPricesDiffPercCumul
     $lastPricesDiffPercCumul = new LastPricesDiffPercCumul;
-    $this->indicators['lastPricesDiffPercCumul'] = $lastPricesDiffPercCumul;
+    //$this->indicators['lastPricesDiffPercCumul'] = $lastPricesDiffPercCumul;
     $this->addIndicator('lastPricesDiffPercCumul', new LastPricesDiffPercCumul);
 
 
@@ -86,6 +86,13 @@ class ShortUpSinceDrop implements Strategy
     return $this->bets;
   }
 
+  public function addBet($market, $payload)
+  {
+    $this->bets[$market] = [
+      'market' => $market,
+      'payload' => $payload
+    ];
+  }
 
 
   /**
@@ -129,8 +136,13 @@ class ShortUpSinceDrop implements Strategy
 
       }
 
+      // Test mode
+      $test = false;
+      if( config('app.env') === "local"){
+        $test = (rand(0,14) == 5) ? true : false;
+      }
 
-      if($addRow){
+      if($addRow  || $test){
 
         // Get extra indicators values
         foreach($this->indicators as $key => $i){
@@ -144,10 +156,7 @@ class ShortUpSinceDrop implements Strategy
 
         $this->table->addRow($row);
 
-        $this->bets[$market] = [
-          'market' => $market,
-          'payload' => $payload
-        ];
+        $this->addBet($market, $payload);
       }
 
 

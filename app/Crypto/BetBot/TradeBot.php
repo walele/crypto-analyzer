@@ -2,33 +2,27 @@
 
 namespace App\Crypto\BetBot;
 
-use App\Crypto\Strategies\Strategy;
-use App\Crypto\Bettor;
-use App\Crypto\MarketClient;
-use App\Crypto\Helpers;
 use App\Bet;
 use App\Trade;
 use App\Http\Resources\Bets;
+use App\Crypto\MarketClient;
+use App\Crypto\Helpers;
 use Carbon\Carbon;
-
 use Binance;
-use Rubix\ML\Datasets\Labeled;
-use Rubix\ML\Datasets\Unlabeled;
-use Rubix\ML\CrossValidation\HoldOut;
-use Rubix\ML\Classifiers\KNearestNeighbors;
-use Rubix\ML\CrossValidation\Metrics\Accuracy;
-use Rubix\ML\Kernels\Distance\Manhattan;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
 class TradeBot
 {
+  const TRADE_BTC_AMOUNT = 0.002;
+
   private static $instance = null;
 
   private $bets = [];
-  private $strategies = [];
   private $markets = [];
   private $binanceApi;
   private $learnerBot;
+  private $orderBot;
   private $tt = 0;
 
   public function __construct()
@@ -59,6 +53,7 @@ class TradeBot
     $api_secret = config('binance.api_secret');
     $this->binanceApi = new Binance\API($api_key,$api_secret);
     $this->learnerBot = LearnerBot::getInstance();
+    $this->orderBot= OrderBot::getInstance();
   }
 
   /**
@@ -101,29 +96,68 @@ class TradeBot
   */
   public function makeTrades()
   {
-    // Get training data
-    $trainDataset = $this->learnerBot->getTrainDataset();
+    // Init possible trades variable
+    $trades = [];
+    $logs = [];
+    $betsToTrades = $this->getBetsToTrades();
+    $possibleTradeNb = $this->getPossibleTradeNb();
+    $tradeMade = 0;
 
-    // Train with KNN
-    $estimator = new KNearestNeighbors(42, true, new Manhattan());
-    $estimator->train($trainDataset);
+    // Loop possible trades
+    foreach($betsToTrades as $bet){
 
-    // Make predictions
-    $predictDataset = $this->learnerBot->getPredictDataset();
-    $predictMarket = $this->learnerBot->getPredictMarkets();
-    $predictions = $estimator->predict($predictDataset);
+      // Quantity condition for trading
+      $qty = $this->orderBot->getBuyingQty($bet->market);
+      if($qty < 50){
+        $log = sprintf("qty too low %s %s", $bet->market, $qty);
+        Log::info($log);
+        $logs[] = $log;
 
-    // Get success predictions
-    $success = $this->learnerBot->getSuccessBets($predictMarket, $predictions);
+        continue;
+      }
 
-    // Place trades from succes bets
-    $this->placeTrades($success);
-    $this->validateTrades();
+      // Create order if quota
+      if( $tradeMade < $possibleTradeNb){
+        $tradeMade++;
+
+        // Create trade
+        $trade = $this->createTrade($bet);
+
+        // Default sell order
+        $sell_order = [
+          'null' => true
+        ];
+
+        // Create buy order
+        $buy_order = $this->orderBot->placeBuyOrder($bet);
+        $trade->buy_order_id = $buy_order->id;
+
+        // Create sell order if buy is success
+        //if( $status === 'FILLED'){
+        if( $buy_order->success ){
+          $sell_order = $this->orderBot->placeSellOrder($bet, $buyOrder);
+          $trade->sell_order_id = $sell_order->id;
+        }
+
+        $trade->save();
+        $trades[] = $trade;
+
+      }else{
+        $log = sprintf("not enough btc to trade");
+        Log::info($log);
+        $logs[] = $log;
+      }
+
+    }
+
+
+    //$this->validateTrades();
     //$this->markTradedBets();
 
     $data = [
-      'logs' => $predictions,
-      'trades' => $success
+      'logs' => $logs,
+      'bets' => $betsToTrades->toArray(),
+      'trades' => $trades
     ];
 
     return $data;
@@ -143,26 +177,45 @@ class TradeBot
   /**
   * Add a bet to db if no active bet for that market
   */
-  public function placeTrade($trade)
+  public function placeTrade($payload)
   {
-      $market = $trade->market;
-      $actives = $this->getActiveTrade($market);
+    $bet = $payload['bet'];
+    $buy_order = $payload['buy_order'] ?? [];
+    $sell_order = $payload['sell_order'] ?? [];
+      //$actives = $this->getActiveTrade($market);
 
-      $bet = null;
-      if( ! $actives->count() ){
+    //  if( ! $actives->count() ){
 
-        $price = $this->binanceApi->price($market);
-
-        $bet = new Trade([
-          'market' => $trade->market,
-          'payload' => serialize($trade->payload),
-          'buy_price' => $price,
-          'active' => true
+        $trade = new Trade([
+          'market' => $bet->market,
+          'payload' => ($bet->payload),
+          'buy_price' => $bet->buy_price,
+          'sell_price' => $bet->sell_price,
+          'stop_price' => $bet->stop_price,
+          'active' => true,
+          'buy_order_payload' => serialize($buy_order),
+          'sell_order_payload' => serialize($sell_order),
         ]);
         $bet->save();
-      }
+    //  }
 
       return $bet;
+  }
+
+  public function createTrade($bet)
+  {
+
+    $trade = new Trade([
+      'market' => $bet->market,
+      'payload' => ($bet->payload),
+      'buy_price' => $bet->buy_price,
+      'sell_price' => $bet->sell_price,
+      'stop_price' => $bet->stop_price,
+      'active' => true
+    ]);
+    $trade->save();
+
+    return $trade;
   }
 
   /**
@@ -213,5 +266,44 @@ class TradeBot
     return $actives;
   }
 
+  /**
+  * Get bets with success ml status that havent been traded
+  */
+  public function getBetsToTrades()
+  {
+    $res = Bet::where('active', true)
+              ->where('ml_status', "success")
+              ->where('traded', false)
+              ->orderBy('id', 'asc')
+              ->get();
 
+    return $res;
+  }
+
+  /**
+  * get nb of trade we can make with btc wallter / min trade amount
+  */
+  public function getPossibleTradeNb()
+  {
+      $possibleTradeNb = 0;
+      $btc = $this->getWalletBtc();
+      $possibleTradeNb = floor($btc / self::TRADE_BTC_AMOUNT);
+
+      return $possibleTradeNb;
+  }
+
+  /**
+  * Get current wallet info
+  */
+  public function getWalletBtc()
+  {
+    $api = $this->getBinanceApi();
+    $api->useServerTime();
+    $ticker = $api->prices(); // Make sure you have an updated ticker object for this to work
+    $balances = $api->balances($ticker);
+
+    $btc = $balances['BTC']['available'] ?? 0;
+
+    return $btc;
+  }
 }

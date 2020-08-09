@@ -55,7 +55,7 @@ class OrderBot
   {
     if (self::$instance == null)
     {
-      self::$instance = new TradeBot();
+      self::$instance = new OrderBot();
     }
 
     return self::$instance;
@@ -142,17 +142,20 @@ class OrderBot
   */
   public function makeOrders($bets)
   {
-    $buyOrder = [];
-    $sellOrder = [];
+    $logs = [];
+    $buyOrders = [];
+    $sellOrders = [];
+    $trades = [];
     $possibleTradeNb = $this->getPossibleTradeNb();
-
     $tradeMade = 0;
     foreach($bets as $bet){
 
       // Quantity condition for trading
       $qty = $this->getBuyingQty($bet->market);
       if($qty < 50){
-        Log::info('qty to low : ' . $bet->market . " $qty");
+        $log = sprintf("qty too low %s %s", $bet->market, $qty);
+        Log::info($log);
+        $logs[] = $log;
 
         continue;
       }
@@ -162,19 +165,25 @@ class OrderBot
         $tradeMade++;
 
         // Create orders for trading
+        dd($bet);
         $buyOrder = $this->placeBuyOrder($bet);
         $status = $buyOrder['status'] ?? '';
         if( $status === 'FILLED'){
           $sellOrder = $this->placeSellOrder($bet, $buyOrder);
         }
 
+      }else{
+        $log = sprintf("not enough btc to trade");
+        Log::info($log);
+        $logs[] = $log;
       }
 
     }
 
     $data = [
-      'buyOrder' => $buyOrder,
-      'sellOrder' => $sellOrder,
+      'buyOrders' => $buyOrders,
+      'sellOrders' => $sellOrders,
+      'logs' => $logs
     ];
 
     return $data;
@@ -199,7 +208,7 @@ class OrderBot
   /**
   *   Make a buy order
   */
-  private function placeBuyOrder($bet)
+  public function placeBuyOrder($bet)
   {
       $env = config('app.env');
       $market = $bet->market;
@@ -226,7 +235,7 @@ class OrderBot
       ];
 
      // Create app order
-     $bet = new Order([
+     $order = new Order([
        'market' => $market,
        'type' => 'buy',
        'payload' => serialize($payload),
@@ -237,20 +246,39 @@ class OrderBot
        'trade_id' => $bet->id,
        'wallet_btc' => $this->getWalletBtc()
      ]);
-    $bet->save();
+    $order->save();
 
     // Create binance Order
-    $order = [
+    $bOrder = [
       'null' => null
     ];
     if( $env === 'local'){
-      $order = $this->binanceApi->marketBuyTest($market, $quantity);
+      $bOrder = $this->binanceApi->marketBuyTest($market, $quantity);
     } else if( $env === 'production'){
-      $order = $this->binanceApi->marketBuy($market, $quantity);
+      $bOrder = $this->binanceApi->marketBuy($market, $quantity);
     }
 
-    $bet->binance_payload = serialize($order);
-    $bet->save();
+    $order->binance_payload = serialize($bOrder);
+    $order->save();
+
+    // Parse order
+    $status = $bOrder['status'] ?? '';
+    if( $status === 'FILLED'){
+      $order->success = true;
+    }
+
+    // Parse fills info
+    $real_price = '';
+    $fills = $bOrder['fills'] ?? [];
+    foreach($fills as $fill){
+      $real_price = $fill['price'] ?? '';
+    }
+
+    $order->quantity = $bOrder['origQty'] ?? '';
+    $order->real_quantity = $bOrder['executedQty'] ?? '';
+    $order->price = $bOrder['price'] ?? '';
+    $order->real_price = $real_price;
+    $order->save();
 
     return $order;
 
@@ -259,7 +287,7 @@ class OrderBot
   /**
   *   Make a Sell order with stop limit
   */
-  private function placeSellOrder($bet, $binance_order)
+  public function placeSellOrder($bet, $binance_order)
   {
       $env = config('app.env');
       $test = $env !== 'production';
@@ -308,11 +336,11 @@ class OrderBot
       ];
 
      // Create app order
-     $bet = new Order([
+     $order = new Order([
        'market' => $market,
        'type' => 'sell',
        'payload' => serialize($payload),
-       'price' => $price,
+       'price' => number_format($price, 8),
        'quantity' => $quantity,
        'btc_amount' => $btc_amount,
        'active' => true,
@@ -320,30 +348,30 @@ class OrderBot
        'wallet_btc' => $this->getWalletBtc()
 
      ]);
-    $bet->save();
+    $order->save();
 
     // Create binance Order
-    $order = [
+    $bOrder = [
       'null' => null
     ];
     if( $env === 'local'){
-      $order = $this->binanceApi->sellOcoTest($market, $quantity, $price, $flag);
+      $bOrder = $this->binanceApi->sellOcoTest($market, $quantity, $price, $flag);
     } else if( $env === 'production'){
-      $order = $this->binanceApi->sellOco($market, $quantity, $price, $flag);
+      $bOrder = $this->binanceApi->sellOco($market, $quantity, $price, $flag);
       //$order = $this->binanceApi->sell($market, $quantity, $price);
     }
 
-    $bet->binance_payload = serialize($order);
-    $bet->save();
+    $order->binance_payload = serialize($bOrder);
+    $order->save();
 
     return $order;
 
   }
 
 
-
-
-
+  /**
+  * Get avaible coin on binance
+  */
   public function getCoinAvailable($market)
   {
     $name = str_replace('BTC', '', $market);
@@ -354,6 +382,17 @@ class OrderBot
 
     $data = $balances[$name] ?? [];
 
+
+    return $data;
+  }
+
+  /**
+  * Get binance orders
+  */
+  public function getBinanceOrders()
+  {
+    $api = $this->getBinanceApi();
+    $data = $api->getOrders("FIOBTC");
 
     return $data;
   }

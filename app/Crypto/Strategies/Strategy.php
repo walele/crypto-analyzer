@@ -21,6 +21,8 @@ interface Strategy
 
   public function getBets();
 
+  public function addBet($market, $payload);
+
   public function getDescription(): string;
 
 }

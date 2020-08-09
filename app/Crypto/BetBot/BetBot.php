@@ -11,7 +11,8 @@ use App\Bet;
 
 class BetBot
 {
-  CONST SUCCESS_PRICE = 0.024;
+  CONST SUCCESS_PRICE = 1.024;
+  CONST STOP_PRICE = 0.99;
   private static $instance = null;
 
   private $bets = [];
@@ -187,13 +188,18 @@ class BetBot
       if( ! $activeBet->count() ){
 
         $curPrice = $client->getLastMarketPrice($market);
-        $price = number_format($curPrice->price, 8);
+        $price = (float) $curPrice->price;
+        $buy_price = number_format($price, 8);
+        $sell_price = number_format(( $price * SELF::SUCCESS_PRICE ), 8);
+        $stop_price = number_format(( $price * SELF::STOP_PRICE ), 8);
 
 
         $bet = new Bet([
           'market' => $market,
           'payload' => serialize($payload),
-          'buy_price' => $price,
+          'buy_price' => $buy_price,
+          'sell_price' => $sell_price,
+          'stop_price' => $stop_price,
           'active' => true,
           'traded' => false
         ]);
@@ -235,12 +241,13 @@ class BetBot
     foreach($bets as $bet){
 
       $buy_price = (float) $bet->buy_price;
-      $successPrice = $buy_price + ($buy_price * SELF::SUCCESS_PRICE);
+      $successPrice = ($buy_price * SELF::SUCCESS_PRICE);
 
       $prices = $client->getLastMarketPrices($bet->market, $limit);
       $firstPrice = $prices->first();
       $lastPrice = $prices->last();
       $maxPrice = $prices->max('price');
+      $minPrice = $prices->min('price');
       $diff = Helpers::calcPercentageDiff($buy_price, $maxPrice);
 
       $finalPrices = sprintf('<small>%s <br> %s</small> %s (%s)',
@@ -249,6 +256,8 @@ class BetBot
 
 
       $bet->final_prices = $finalPrices;
+      $bet->final_min_price = $minPrice;
+      $bet->final_max_price = $maxPrice;
       $bet->success = $success;
       $bet->active = false;
       $bet->save();
