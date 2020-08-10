@@ -451,10 +451,8 @@ class OrderBot
 
     // Create parsd buy order
     $order = [
-      'id' => $orderId,
       'status' => $status,
       'updated' => true,
-      'side' => $side,
       'price' => $price,
       'qty' => $qty
     ];
