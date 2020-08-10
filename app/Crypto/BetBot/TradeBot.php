@@ -135,7 +135,7 @@ class TradeBot
         // Create sell order if buy is success
         //if( $status === 'FILLED'){
         if( $buy_order->success ){
-          $sell_order = $this->orderBot->placeSellOrder($bet, $buyOrder);
+          $sell_order = $this->orderBot->placeSellOrder($bet);
           $trade->sell_order_id = $sell_order->id;
         }
 
@@ -221,8 +221,12 @@ class TradeBot
   /**
   *  Validate current active bets to see if they are success
   */
-  private function validateTrades()
+  public function validateTrades()
   {
+
+    $orders = $this->orderBot->validateOrders();
+
+    return $orders;
     $client = new MarketClient;
     $betTimeout = 6;
     $limit = (60/5) * $betTimeout;

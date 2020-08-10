@@ -287,7 +287,7 @@ class OrderBot
   /**
   *   Make a Sell order with stop limit
   */
-  public function placeSellOrder($bet, $binance_order)
+  public function placeSellOrder($bet)
   {
       $env = config('app.env');
       $test = $env !== 'production';
@@ -298,8 +298,6 @@ class OrderBot
       $precision = $this->getMarketOrderPrecision($market);
 
       // Get base price
-      $price = $binance_order['price'] ?? 0.0;
-      $price = floatval($price);
       $price = floatval($this->binanceApi->price($market));
 
       // Calc sell/stop price
@@ -397,6 +395,22 @@ class OrderBot
     return $data;
   }
 
+  public function validateOrders()
+  {
+    $activeOrders = $this->getActiveOrders();
+
+    return $activeOrders;
+  }
+
+  /**
+  *  Get active bet for a market
+  */
+  public function getActiveOrders()
+  {
+    $actives = Order::where('active', 1)->get();
+
+    return $actives;
+  }
 
 
 }
