@@ -27,11 +27,13 @@ class Trade extends JsonResource
           'id' => $this->id,
           'market' => $this->market,
           'created_at' => $created_at,
+          'payload' => $payload,
           'active' => $this->active,
           'success' => $this->success,
-          'payload' => $payload,
           'buy_price' => $this->buy_price,
           'final_prices' => $this->final_prices,
+          'buy_order_id' => $this->buy_order_id,
+          'sell_order_id' => $this->sell_order_id,
         ];
 
         return parent::toArray($request);
