@@ -413,7 +413,7 @@ class OrderBot
         $order->real_price = $result['price'];
         $order->real_quantity = $result['qty'];
         $order->active = false;
-        $order->success = $result['success'];
+        $order->success = $result['success'] ?? false;
         $order->save();
 
       }
@@ -454,7 +454,8 @@ class OrderBot
       'status' => $status,
       'updated' => true,
       'price' => $price,
-      'qty' => $qty
+      'qty' => $qty,
+      'success' => true
     ];
 
     return $order;
