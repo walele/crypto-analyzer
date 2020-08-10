@@ -21,20 +21,22 @@ class Order extends JsonResource
       $created_at->setTimezone('America/New_York');
       $created_at  =$created_at->toDateTimeString();
 
+
       $binance_payload = Helpers::parsePayloadRaw(($this->binance_payload));
       $payload = Helpers::parsePayloadRaw(($this->payload));
 
       return [
         'id' => $this->id,
+        'created_at' => $created_at,
         'market' => $this->market,
         'type' => $this->type,
-        'created_at' => $created_at,
         'active' => $this->active,
-        'price' => $this->price,
-        'quantity' => $this->quantity,
+        'success' => $this->success,
+        'real_price' => $this->real_price,
+        'real_quantity' => $this->real_quantity,
         'btc_amount' => $this->btc_amount,
-        'payload' => $payload,
-        'binance_payload' => $binance_payload,
+        //'payload' => $payload,
+        //'binance_payload' => $binance_payload,
         'trade_id' => $this->trade_id,
         ];
     }

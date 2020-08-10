@@ -106,6 +106,11 @@ class TradeBot
     // Loop possible trades
     foreach($betsToTrades as $bet){
 
+      // Save traded state
+      $bet->traded = true;
+      $bet->save();
+
+
       // Quantity condition for trading
       $qty = $this->orderBot->getBuyingQty($bet->market);
       if($qty < 50){
@@ -150,9 +155,7 @@ class TradeBot
 
     }
 
-
-    //$this->validateTrades();
-    //$this->markTradedBets();
+    $this->validateTrades();
 
     $data = [
       'logs' => $logs,
@@ -163,45 +166,12 @@ class TradeBot
     return $data;
   }
 
-  /**
-  *   Loop an array o trades and place
-  */
-  public function placeTrades($trades)
-  {
-    foreach($trades as $trade){
-      $this->placeTrade($trade);
-    }
-  }
+
 
 
   /**
-  * Add a bet to db if no active bet for that market
+  * Create a trade from bets payload
   */
-  public function placeTrade($payload)
-  {
-    $bet = $payload['bet'];
-    $buy_order = $payload['buy_order'] ?? [];
-    $sell_order = $payload['sell_order'] ?? [];
-      //$actives = $this->getActiveTrade($market);
-
-    //  if( ! $actives->count() ){
-
-        $trade = new Trade([
-          'market' => $bet->market,
-          'payload' => ($bet->payload),
-          'buy_price' => $bet->buy_price,
-          'sell_price' => $bet->sell_price,
-          'stop_price' => $bet->stop_price,
-          'active' => true,
-          'buy_order_payload' => serialize($buy_order),
-          'sell_order_payload' => serialize($sell_order),
-        ]);
-        $bet->save();
-    //  }
-
-      return $bet;
-  }
-
   public function createTrade($bet)
   {
 
@@ -227,35 +197,7 @@ class TradeBot
     $orders = $this->orderBot->validateOrders();
 
     return $orders;
-    $client = new MarketClient;
-    $betTimeout = 6;
-    $limit = (60/5) * $betTimeout;
-    $trades = Trade::where('active', true)
-                ->where('created_at', '<',
-                  Carbon::now()->subHours($betTimeout)->toDateTimeString() )
-                ->get();
 
-    //print_r($bets->toArray());
-    foreach($trades as $trade){
-
-      $buy_price = (float) $trade->buy_price;
-      $successPrice = $buy_price + ($buy_price * 0.024);
-
-      $prices = $client->getLastMarketPrices($trade->market, $limit);
-      $firstPrice = $prices->first();
-      $lastPrice = $prices->last();
-      $maxPrice = $prices->max('price');
-      $diff = Helpers::calcPercentageDiff($buy_price, $maxPrice);
-
-
-      $success = $maxPrice > $successPrice;
-
-      $trade->success = $success;
-      $trade->final_prices = $maxPrice;
-      $trade->active = false;
-      $trade->save();
-
-    }
   }
 
 

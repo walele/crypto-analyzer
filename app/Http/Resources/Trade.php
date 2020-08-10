@@ -20,7 +20,8 @@ class Trade extends JsonResource
         $created_at = $created_at->toDateTimeString();
 
         // Payload format
-        $payload = Helpers::parsePayload(unserialize($this->payload));
+        $payload = ($this->payload);
+        $payload = Helpers::parsePayload($payload);
 
         return [
           'id' => $this->id,

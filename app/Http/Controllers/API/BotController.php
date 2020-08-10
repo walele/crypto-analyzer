@@ -125,6 +125,15 @@ class BotController extends Controller
       return $trades;
     }
 
+    public function validateTrades()
+    {
+      $bot = TradeBot::getInstance();
+      $trades = $bot->validateTrades();
+
+      return $trades;
+
+    }
+
 
     /**
     * Make Bets & trades
@@ -135,15 +144,15 @@ class BotController extends Controller
       $trades = $tradeBot->makeTrades();
 
       // Get bets for orders
-      $testsTrade = Trade::orderBy('id', 'desc')->limit(2)->get();
-      $tradeForOrders = $trades['trades'];
+      //$testsTrade = Trade::orderBy('id', 'desc')->limit(2)->get();
+    //  $tradeForOrders = $trades['trades'];
       //$tradeForOrders = $testsTrade;
 
-      $orders = $orderBot->makeOrders($tradeForOrders);
+    //  $orders = $orderBot->makeOrders($tradeForOrders);
       $data = [
         'bets' => $bets,
         'trades' => $trades,
-        'orders' => $orders
+      //  'orders' => $orders
       ];
 
       return $data;

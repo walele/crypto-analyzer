@@ -387,19 +387,43 @@ class OrderBot
   /**
   * Get binance orders
   */
-  public function getBinanceOrders()
+  public function getBinanceOrders($market, $limit = 10)
   {
     $api = $this->getBinanceApi();
-    $data = $api->getOrders("FIOBTC");
+    $data = $api->getOrders($market, $limit);
 
     return $data;
   }
 
   public function validateOrders()
   {
+    $valided = [];
     $activeOrders = $this->getActiveOrders();
 
-    return $activeOrders;
+    // Loop active orders
+    foreach($activeOrders as  $order){
+
+      // Validate orders results with binance orders
+      $binance_payload = unserialize($order->binance_payload);
+      $result = $this->validateBinanceOrders($binance_payload);
+
+      // If orders have update
+      $updated = $result['updated'] ?? false;
+      if($updated){
+        $order->real_price = $result['price'];
+        $order->real_quantity = $result['qty'];
+        $order->active = false;
+        $order->success = $result['success'];
+        $order->save();
+
+      }
+
+      $valided[$order->id] = $result;
+
+    }
+
+
+    return $valided;
   }
 
   /**
@@ -412,5 +436,129 @@ class OrderBot
     return $actives;
   }
 
+  public function validateBuyOrder($payload)
+  {
+    $status = $payload['status'] ?? '';
+    $price = 0;
+    $qty = 0;
+
+    // Parse fills
+    $fills = $payload['fills'] ?? [];
+    foreach( $fills as $fill){
+      $price = $fill['price'];
+      $qty += $fill['qty'];
+    }
+
+    // Create parsd buy order
+    $order = [
+      'id' => $orderId,
+      'status' => $status,
+      'updated' => true,
+      'side' => $side,
+      'price' => $price,
+      'qty' => $qty
+    ];
+
+    return $order;
+  }
+
+  /**
+  *   Validate sell order result from binance
+  */
+  public function validateSellOrder($payload)
+  {
+    // Default order
+    // Create parsd buy order
+    $orderResult = [
+      'success' => false,
+      'updated' => false,
+      'price' => '',
+      'qty' => ''
+    ];
+
+    // Get binance orders info
+    $market = $payload["symbol"];
+    $orderReports = $payload['orderReports'] ?? [];
+    $ordersIds = [];
+
+    // Get binance orders id
+    foreach( $orderReports as $rep){
+      $orderId = $rep['orderId'] ?? '';
+      $ordersIds[] = $orderId;
+    }
+
+    // Fetch last binance orders for market
+    $binance_orders = $this->getBinanceOrders($market);
+
+
+    // Loop binance id for findig match
+    foreach($binance_orders as $order){
+      if( in_array($order['orderId'], $ordersIds )){
+
+        // Get the stop_lost or imit_maker order that was filled
+        $status = $order['status'];
+        if( $status === 'FILLED'){
+
+          $type = $order['type'];
+          if( $type != "STOP_LOSS_LIMIT"){
+            $orderResult['success'] = true;
+          }
+          $orderResult['price'] = $order['price'];
+          $orderResult['qty'] =  $order['executedQty'];
+          $orderResult['updated'] =  true;
+
+        }
+
+      }
+    }
+
+    return $orderResult;
+  }
+
+
+  /**
+  *  Get order type based on payload
+  */
+  public function getOrderType($payload)
+  {
+    $type = '';
+    $orderId = $payload['orderId'] ?? '';
+    $side = $payload['side'] ?? '';
+    if( $orderId && $side === 'BUY'){
+      $type = 'buy';
+    }
+
+    $orderListId = $payload['orderListId'] ?? '';
+    $orderReports = $payload['orderReports'] ?? [];
+    if( $orderListId && count($orderReports) ){
+      $type = 'sell';
+    }
+
+    return $type;
+  }
+
+  /**
+  *   Validate an order from binance
+  */
+  public function validateBinanceOrders($payload)
+  {
+    $res = [
+      'updated' => false
+    ];
+    $type = $this->getOrderType($payload);
+
+    // Parse Buy order
+    if( $type === 'buy' ){
+      $res = $this->validateBuyOrder($payload);
+    }
+
+    // Parse Sell order
+    if( $type === 'sell' ){
+      $res = $this->validateSellOrder($payload);
+    }
+
+    return $res;
+
+  }
 
 }

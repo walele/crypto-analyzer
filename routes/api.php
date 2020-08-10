@@ -30,10 +30,13 @@ Route::prefix('bot')->group(function () {
   Route::get('stats/trades', 'API\BotController@tradesStats');
   Route::get('wallet/', 'API\BotController@wallet');
   Route::get('coin/{name}', 'API\BotController@coin');
+  Route::get('coin-step/{name}', 'API\BotController@coinStep');
+  Route::get('binance-orders', 'API\BotController@binanceOrders');
 
   Route::get('/bets-and-trades', 'API\BotController@makeBetsAndTrades');
   Route::get('/make-bets', 'API\BotController@makeBets');
   Route::get('/make-trades', 'API\BotController@makeTrades');
+  Route::get('/validate-trades', 'API\BotController@validateTrades');
   Route::get('/trades-and-orders', 'API\BotController@makeTradesAndOrders');
 
   Route::get('/ml/evaluate/{estimator}', 'API\BotController@evaluateEstimator');

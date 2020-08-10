@@ -101,4 +101,13 @@ class BinanceOCO extends API
       return $this->httpRequest($qstring, "POST", $opt, true);
   }
 
+  public function getOrders(string $symbol, int $limit = 50, int $orderId =0) {
+      $params["symbol"] = $symbol;
+      $params["limit"] = $limit;
+    //  $params["orderId"] = $orderId;
+    //  if ( $fromOrderId ) $params["orderId"] = $fromOrderId;
+
+      return $this->httpRequest("v3/allOrders", "GET", $params, true);
+  }
+
 }

@@ -55,6 +55,8 @@ class Helpers
 
     $payload = [];
     $pl = unserialize($data);
+    $pl = is_string($pl) ? unserialize($pl) : $pl;
+
     foreach($pl as $key => $value){
       $id = Str::slug($key, '_');
       $payload[] = [

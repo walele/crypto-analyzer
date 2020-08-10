@@ -63,7 +63,7 @@
       tableId="table-order"
       title="Orders"
       apiUrl="/api/orders"
-      perPage="5">
+      perPage="16">
     </table-list>
 
     <hr style="width: 42%">
