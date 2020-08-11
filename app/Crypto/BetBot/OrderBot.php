@@ -325,7 +325,7 @@ class OrderBot
       ];
 
       // Create app order
-      $btc_amount = $price * $quantity;
+      //$btc_amount = $price * $quantity;
       $payload = [
         'quantity' => $quantity,
         'price' => $price,
@@ -340,7 +340,7 @@ class OrderBot
        'payload' => serialize($payload),
        'price' => number_format($price, 8),
        'quantity' => $quantity,
-       'btc_amount' => $btc_amount,
+      // 'btc_amount' => $btc_amount,
        'active' => true,
        'trade_id' => $bet->id,
        'wallet_btc' => $this->getWalletBtc()
