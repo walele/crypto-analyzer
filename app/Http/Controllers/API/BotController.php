@@ -52,8 +52,8 @@ class BotController extends Controller
     /**
     * Return trades stats
     */
-    public function tradesStats(){
-      $data = Stats::getTradesStats();
+    public function mlBetsStats(){
+      $data = Stats::getMlBetsStats();
 
       return $data;
     }

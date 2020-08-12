@@ -32,10 +32,10 @@
 
         <div class="col-sm">
             <div class="card">
-                <div class="card-header">Trades Stats</div>
+                <div class="card-header">ML Bets Stats</div>
 
                 <div class="card-body">
-                    <p v-for="stat in statsTrades">
+                    <p v-for="stat in statsMlBets">
                       <b>{{ stat.label }}</b> {{ stat.text }}
                     </p>
                 </div>
@@ -178,9 +178,9 @@
 
             axios({
               method: 'get',
-              url: '/api/bot/stats/trades'
+              url: '/api/bot/stats/mlbets'
             }).then(res => {
-              this.statsTrades = res.data.stats
+              this.statsMlBets = res.data.stats
             });
 
 

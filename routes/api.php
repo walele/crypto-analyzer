@@ -27,7 +27,7 @@ Route::apiResources ([
 Route::prefix('bot')->group(function () {
   Route::get('/', 'API\BotController@index');
   Route::get('stats/bets', 'API\BotController@betsStats');
-  Route::get('stats/trades', 'API\BotController@tradesStats');
+  Route::get('stats/mlbets', 'API\BotController@mlBetsStats');
   Route::get('wallet/', 'API\BotController@wallet');
   Route::get('coin/{name}', 'API\BotController@coin');
   Route::get('coin-step/{name}', 'API\BotController@coinStep');
