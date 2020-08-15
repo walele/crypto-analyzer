@@ -395,6 +395,9 @@ class OrderBot
     return $data;
   }
 
+  /**
+  * Validate orders with binance result
+  */
   public function validateOrders()
   {
     $valided = [];
@@ -446,7 +449,7 @@ class OrderBot
     $fills = $payload['fills'] ?? [];
     foreach( $fills as $fill){
       $price = $fill['price'];
-      $qty += $fill['qty'];
+      $qty += (float) $fill['qty'];
     }
 
     // Create parsd buy order
@@ -504,6 +507,7 @@ class OrderBot
           }
           $orderResult['price'] = $order['price'];
           $orderResult['qty'] =  $order['executedQty'];
+          $orderResult['cummulativeQuoteQty'] = $order['cummulativeQuoteQty'] ?? '';
           $orderResult['updated'] =  true;
 
         }
@@ -558,6 +562,94 @@ class OrderBot
 
     return $res;
 
+  }
+
+  public function getOrderInfo($market, $id)
+  {
+    $binance_orders = $this->getBinanceOrders($market);
+    // Loop binance id for findig match
+    foreach($binance_orders as $order){
+      if( $order['orderId'] == $id ){
+        return $order;
+      }
+    }
+  }
+
+  /**
+  * Fix real values from binance order
+  */
+  public function fixRealValues()
+  {
+    $fixed = [];
+    $orders = Order::whereNull('real_btc_amount')
+                    ->get();
+
+
+    foreach($orders as $order){
+
+      $binance_payload = unserialize($order->binance_payload);
+
+      // Fix real values for buy orders
+      if( $order->type == 'buy'){
+          $order_id = $binance_payload['orderId'] ?? '';
+          if( ! $order_id){
+            continue;
+          }
+
+          $cummulativeQuoteQty = $binance_payload['cummulativeQuoteQty'] ?? '';
+          if($cummulativeQuoteQty){
+            $order->real_btc_amount = $cummulativeQuoteQty;
+            $order->save();
+            $fixed[] = $order->toArray();
+          }
+      }
+
+
+
+      // Fix real values for sell orders
+      if( $order->type == 'sell'){
+          $order_id = $binance_payload['orderListId'] ?? '';
+          if( ! $order_id){
+            continue;
+          }
+
+          // Fetch last binance orders for market
+          $orderReports = $binance_payload['orderReports'] ?? [];
+          $ordersIds = [];
+
+          // Get binance orders id
+          foreach( $orderReports as $rep){
+            $orderId = $rep['orderId'] ?? '';
+            $ordersIds[] = $orderId;
+          }
+
+          // Get latest orders from binance
+          $binance_orders = $this->getBinanceOrders($order->market);
+          foreach($binance_orders as $b_order){
+            if( in_array($b_order['orderId'], $ordersIds )){
+
+              // Get the stop_lost or imit_maker order that was filled
+              $status = $b_order['status'];
+              if( $status === 'FILLED'){
+                $cummulativeQuoteQty = $b_order['cummulativeQuoteQty'] ?? '';
+                if($cummulativeQuoteQty){
+                  $order->real_btc_amount = $cummulativeQuoteQty;
+                  $order->save();
+                  $fixed[] = $order->toArray();
+                }
+              }
+            }
+         }
+
+      }
+
+    }
+
+
+
+    $data = $fixed;
+
+    return $data;
   }
 
 }

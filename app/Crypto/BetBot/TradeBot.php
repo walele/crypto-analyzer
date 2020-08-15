@@ -194,9 +194,18 @@ class TradeBot
   public function validateTrades()
   {
 
-    $orders = $this->orderBot->validateOrders();
+    //$orders = $this->orderBot->validateOrders();
+    $trades = $this->getActiveTrades();
+    foreach ($trades as $trade) {
+      // code...
+    }
 
-    return $orders;
+    $data = [
+      'orders' => $orders ?? [],
+
+    ];
+
+    return $data;
 
   }
 
@@ -204,7 +213,7 @@ class TradeBot
   /**
   *  Get active bet for a market
   */
-  public function getActiveTrade($market)
+  public function getActiveTrades($market)
   {
     $actives = Trade::where('market', $market )
                       ->where('active', 1);

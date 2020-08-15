@@ -80,6 +80,16 @@ class BotController extends Controller
     }
 
     /**
+     * Get Coin info
+     */
+    public function order(OrderBot $bot, $name, $id)
+    {
+      $data = $bot->getOrderInfo($name, $id);
+
+      return $data;
+    }
+
+    /**
      * Get Coin step info
      */
     public function coinStep(OrderBot $bot, $name)
@@ -174,4 +184,10 @@ class BotController extends Controller
       return $data;
     }
 
+    public function fixRealValues( OrderBot $orderBot)
+    {
+      $data = $orderBot->fixRealValues();
+
+      return $data;
+    }
 }

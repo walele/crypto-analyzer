@@ -30,6 +30,7 @@ Route::prefix('bot')->group(function () {
   Route::get('stats/mlbets', 'API\BotController@mlBetsStats');
   Route::get('wallet/', 'API\BotController@wallet');
   Route::get('coin/{name}', 'API\BotController@coin');
+  Route::get('order/{name}/{id}', 'API\BotController@order');
   Route::get('coin-step/{name}', 'API\BotController@coinStep');
   Route::get('binance-orders', 'API\BotController@binanceOrders');
 
@@ -41,6 +42,11 @@ Route::prefix('bot')->group(function () {
 
   Route::get('/ml/evaluate/{estimator}', 'API\BotController@evaluateEstimator');
 });
+
+Route::prefix('fix')->group(function () {
+  Route::get('/fix-real-values', 'API\BotController@fixRealValues');
+});
+
 
 //Route::get('stats/', 'API\BetController@stats');
 //Route::get('wallet/', 'API\TradesController@wallet');

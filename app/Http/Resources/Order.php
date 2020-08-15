@@ -22,7 +22,12 @@ class Order extends JsonResource
       $created_at  =$created_at->toDateTimeString();
 
 
+      // Binance payload, only print payload with code
       $binance_payload = Helpers::parsePayloadRaw(($this->binance_payload));
+      if( count($binance_payload) > 2 ){
+        $binance_payload = [];
+      }
+
       $payload = Helpers::parsePayloadRaw(($this->payload));
 
       return [
@@ -35,8 +40,9 @@ class Order extends JsonResource
         'real_price' => $this->real_price,
         'real_quantity' => $this->real_quantity,
         'btc_amount' => $this->btc_amount,
+        'real_btc_amount' => $this->real_btc_amount,
         //'payload' => $payload,
-        //'binance_payload' => $binance_payload,
+        'binance_payload' => $binance_payload,
         'trade_id' => $this->trade_id,
         ];
     }
