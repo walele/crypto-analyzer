@@ -25,7 +25,7 @@ class AlwaysUp implements Strategy
   {
     // LastPricesUpRatio indicator & condition
     $lastPricesUp = new LastPricesUpRatioScore;
-    $condition = new Condition (0.5, Condition::BIGGER, $lastPricesUp);
+    $condition = new Condition (0.67, Condition::BIGGER, $lastPricesUp);
     $this->addCondition('lastPricesUpScore', $condition);
 
 
