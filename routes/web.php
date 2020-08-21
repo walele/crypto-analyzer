@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Crypto\BinanceOCO;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -50,6 +50,53 @@ Route::get('csv/bets2', 'API\BetController@csv2');
 
 
 Route::get('/crypto', function () {
+
+    $api_key = config('binance.api_key');
+    $api_secret = config('binance.api_secret');
+    $client = new BinanceOCO($api_key,$api_secret);
+
+    $market = 'PNTBTC';
+
+    // Calc qty
+    $orderBot = new \App\Crypto\BetBot\OrderBot;
+    $precision = $orderBot->getMarketOrderPrecision($market);
+    $quantity = $orderBot->getCoinAvailable($market);
+    $quantity = $quantity['available'] ?? 0.0;
+    $quantity = bcdiv($quantity, 1,($precision-1));
+
+    $price = number_format(0.00011248350000000001, 8); // Try to sell it for 0.5 btc
+    $stopLimitPrice = number_format(0.00010875, 8); // Try to sell it for 0.5 btc
+    $stopPrice = number_format(0.00010897, 8); // Sell immediately if price goes below 0.4 btc
+
+    $flag = [
+      "stopPrice" => $stopPrice,
+      "stopLimitPrice" => $stopLimitPrice,
+      "stopLimitTimeInForce" => "GTC"
+    ];
+    // OCO Order
+    $order = $client->sellOco($market, $quantity, $price, $flag);
+
+    dd($order);
+
+    // LIMIT_MAKER = order for profit
+    $type = 'LIMIT_MAKER';
+    $price = number_format(0.0000487403, 8); // Try to sell it for 0.5 btc
+    $flag = [];
+    $order1 = $client->sell($market, $quantity, $price, $type, $flag);
+
+    // STOP_LOSS_LIMIT = order for risk management
+    $type = 'STOP_LOSS_LIMIT';
+    $price = number_format(0.00004759, 8); // Try to sell it for 0.5 btc
+    $stopPrice = number_format(0.00004768, 8); // Sell immediately if price goes below 0.4 btc
+    $quantity = 41;
+    $flag = [
+      "stopPrice" => $stopPrice,
+    ];
+    $order2 = $client->sell($market, $quantity, $price, $type, $flag);
+
+
+
+    dd([$order1, $order2]);
 
     return 'ok';
 });

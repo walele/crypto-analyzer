@@ -195,9 +195,11 @@ class TradeBot
   {
 
     //$orders = $this->orderBot->validateOrders();
-    $trades = $this->getActiveTrades();
+    $trades = Trade::where('active', 1)
+                    ->get();
     foreach ($trades as $trade) {
       // code...
+      dd($trade->toArray());
     }
 
     $data = [

@@ -35,7 +35,6 @@ class Bet extends JsonResource
         'buy_price' => $this->buy_price,
         'sell_price' => $this->sell_price,
         'stop_price' => $this->stop_price,
-        'final_prices' => $this->final_prices,
         ];
 
     }

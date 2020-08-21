@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Crypto\BetBot\BetBot;
 use App\Crypto\Strategies\ShortUpSinceDrop;
+use App\Crypto\Strategies\AlwaysUp;
 
 class BetBotProvider extends ServiceProvider
 {
@@ -18,7 +19,7 @@ class BetBotProvider extends ServiceProvider
       $this->app->singleton(BetBot::class, function ($app) {
 
           $bot =  BetBot::getInstance();
-          $bot->addStrategy(new ShortUpSinceDrop);
+          $bot->addStrategy(new AlwaysUp);
 
           return $bot;
       });

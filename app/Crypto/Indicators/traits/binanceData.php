@@ -6,10 +6,10 @@ use App\Crypto\BinanceClient;
 use App\Crypto\Helpers;
 use Carbon\Carbon;
 
-trait getMovingAverage
+trait binanceData
 {
 
-  private function getMovingAverage(array $data, int $ma, int $offset = 0)
+  private function initBinanceClient(array $data, int $ma, int $offset = 0)
   {
     $nb = count($data);
     $closePrices = [];

@@ -12,6 +12,7 @@ class MovingAverageComp implements Indicator
   use getMovingAverage;
 
   const LOWER = 1;
+  const HIGHER = 2;
   private $interval = '5m';
   private $ma1 = 5;
   private $ma2 = 22;
@@ -34,6 +35,10 @@ class MovingAverageComp implements Indicator
     if($this->comparison == self::LOWER){
       $compStr = 'lower';
     }
+    if($this->comparison == self::HIGHER){
+      $compStr = 'higher';
+    }
+
     $str = sprintf("%s MA(%s) %s percentage of MA(%s)",
       $this->interval, $this->ma1, $compStr, $this->ma2  );
     return $str;
@@ -63,7 +68,7 @@ class MovingAverageComp implements Indicator
     $html = '';
 
     // Get last binance candlestick data
-    $client = new BinanceClient;
+    $client = BinanceClient::getInstance();
     $data = $client->getCandleSticksData($market, $this->interval);
 
     // Calc first MA
@@ -74,9 +79,13 @@ class MovingAverageComp implements Indicator
     $ma2 = $this->getMovingAverage($data, $this->ma2);
     $html .= $market . ' MA' . $this->interval . ' ' . $this->ma2 . " $ma2";
 
-    $diff =  ( ($ma2 - $ma1) / $ma2) * 100;
     if( $this->comparison === SELF::LOWER ){
+
       $diff =  ( ($ma2 - $ma1) / $ma2) * 100;
+    }
+    else if( $this->comparison === SELF::HIGHER ){
+
+        $diff =  ( ($ma1 - $ma2) / $ma1) * 100;
     }
 
     $diff = (float) number_format($diff, 2);

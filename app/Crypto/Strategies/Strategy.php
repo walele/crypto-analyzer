@@ -7,6 +7,8 @@ use App\Crypto\Indicators\Indicator;
 
 interface Strategy
 {
+  public function getName(): string;
+
   public function addIndicator(string $name, Indicator $indicator);
 
   public function getIndicators(): array;
@@ -17,7 +19,7 @@ interface Strategy
 
   public function run(array $markets);
 
-  public function getTable(): Table;
+  public function getActiveTime(): int;
 
   public function getBets();
 

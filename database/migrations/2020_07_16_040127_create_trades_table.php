@@ -18,11 +18,23 @@ class CreateTradesTable extends Migration
             $table->timestamps();
             $table->string('market');
             $table->string('payload', 2048)->nullable();
-            $table->string('log', 2048)->nullable();
-            $table->string('buy_price')->nullable();
+            $table->string('strategy', 200)->nullable();
+
             $table->boolean('active')->nullable();
             $table->boolean('success')->nullable();
-            $table->string('final_prices')->nullable();
+
+            $table->string('buy_price', 50)->nullable();
+            $table->string('sell_price', 50)->nullable();
+            $table->string('stop_price', 50)->nullable();
+
+            $table->string('final_min_price', 50)->nullable();
+            $table->string('final_max_price', 50)->nullable();
+
+          //  $table->foreignId('buy_order_id')->references('id')->on('orders')->nullable();
+          //  $table->foreignId('sell_order_id')->references('id')->on('orders')->nullable();
+            $table->bigInteger('buy_order_id')->nullable();
+            $table->bigInteger('sell_order_id')->nullable();
+
         });
     }
 

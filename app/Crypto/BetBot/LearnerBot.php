@@ -220,7 +220,9 @@ class LearnerBot
   {
     // Get training data
     $trainDataset = $this->getTrainDataset();
-
+    if( ! $trainDataset->labels()){
+      return false;
+    }
     // Train with KNN
     $this->estimator = new KNearestNeighbors(42, true, new Manhattan());
     $this->estimator->train($trainDataset);
@@ -228,6 +230,10 @@ class LearnerBot
 
   public function getBetPrediction($bet)
   {
+    if(! $this->estimator ){
+        return 'n/a';
+    }
+
     // Make predictions
     $predictDataset = $this->getPredictDataset($bet->id);
 
@@ -236,7 +242,7 @@ class LearnerBot
     $value = $prediction[0] ?? 'n/a';
 
     return $value;
-    
+
   }
 
 }

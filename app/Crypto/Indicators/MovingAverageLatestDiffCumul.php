@@ -68,7 +68,7 @@ class MovingAverageLatestDiffCumul implements Indicator
     $cumul = 0;
 
     // Get last binance candlestick data
-    $client = new BinanceClient;
+    $client = BinanceClient::getInstance();
     $data = $client->getCandleSticksData($market, $this->interval);
 
 

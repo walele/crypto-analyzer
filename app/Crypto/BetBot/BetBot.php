@@ -182,6 +182,7 @@ class BetBot
       $market = $bet['market'];
       $payload = $bet['payload'];
       $client = new MarketClient;
+      $strategy = $bet['strategy'] ?? '';
 
       $activeBet = $this->getActiveBet($market);
 
@@ -197,6 +198,7 @@ class BetBot
         $bet = new Bet([
           'market' => $market,
           'payload' => serialize($payload),
+          'strategy' => $strategy,
           'buy_price' => $buy_price,
           'sell_price' => $sell_price,
           'stop_price' => $stop_price,
@@ -231,6 +233,9 @@ class BetBot
   {
     $client = new MarketClient;
     $betTimeout = 6;
+    foreach($this->strategies as $s){
+      $betTimeout = $s->getActiveTime();
+    }
     $limit = (60/5) * $betTimeout;
     $bets = Bet::where('active', true)
                 ->where('created_at', '<',
@@ -241,21 +246,15 @@ class BetBot
     foreach($bets as $bet){
 
       $buy_price = (float) $bet->buy_price;
-      $successPrice = ($buy_price * SELF::SUCCESS_PRICE);
+      $successPrice = (float) $bet->sell_price;
 
+      // Get last prices from db
       $prices = $client->getLastMarketPrices($bet->market, $limit);
-      $firstPrice = $prices->first();
-      $lastPrice = $prices->last();
-      $maxPrice = $prices->max('price');
-      $minPrice = $prices->min('price');
-      $diff = Helpers::calcPercentageDiff($buy_price, $maxPrice);
+      $maxPrice = (float) $prices->max('price');
+      $minPrice = (float) $prices->min('price');
 
-      $finalPrices = sprintf('<small>%s <br> %s</small> %s (%s)',
-                  $lastPrice->timestamp, $firstPrice->timestamp, $maxPrice, $diff);
       $success = $maxPrice > $successPrice;
 
-
-      $bet->final_prices = $finalPrices;
       $bet->final_min_price = $minPrice;
       $bet->final_max_price = $maxPrice;
       $bet->success = $success;

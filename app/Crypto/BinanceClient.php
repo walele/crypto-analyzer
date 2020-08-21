@@ -12,35 +12,24 @@ class BinanceClient
 
   private $tables = [];
   private $cache = [];
+  private static $instance = null;
 
-
-  public function getMovingAverage($market, $interval, $ma)
+  private function __construct()
   {
-    echo $market;
-    $data = $this->getCandleSticksData($market, $interval);
-    $nb = count($data);
-    $closePrices = [];
-    $closeTimes = [];
+  }
 
-    // Loop from more recent
-    for( $i=$nb-1; $i > ($nb-$ma); $i--){
-      print_r($data[$i]);
-
-      $closePrices[] = $data[$i][4];
-
-      $timestamp = $data[$i][6];
-      $timestamp = (int) ($timestamp / 1000);
-      var_dump($timestamp);
-      $date = new Carbon($timestamp);
-      $date->setTimezone('America/New_York');
-      $str = $date->format('j F H:i');
-      $closeTimes[] = $str;
-
+  // The object is created from within the class itself
+  // only if the class has no instance.
+  public static function getInstance()
+  {
+    if (self::$instance == null)
+    {
+      self::$instance = new BinanceClient();
     }
 
-    print_r($closeTimes);
-    print_r($closePrices);
+    return self::$instance;
   }
+
 
   public function getCandleSticksData($market, $interval)
   {
