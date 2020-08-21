@@ -54,8 +54,12 @@ class MovingAverageComp implements Indicator
   */
   public function getPayloadKey(): string
   {
-    $key = sprintf("macomp_lower_of_ma%s_ma%s_in_%s",
-      $this->ma1, $this->ma2, $this->interval  );
+    $comparison = 'lower';
+    if($this->comparison == self::HIGHER){
+      $comparison = 'higher';
+    }
+    $key = sprintf("macomp_%s_of_ma%s_ma%s_in_%s",
+      $comparison, $this->ma1, $this->ma2, $this->interval  );
 
     return $key;
   }
@@ -88,6 +92,7 @@ class MovingAverageComp implements Indicator
         $diff =  ( ($ma1 - $ma2) / $ma1) * 100;
     }
 
+    //$diff = $diff * 1.0 / 100.0; 
     $diff = (float) number_format($diff, 2);
 
     return $diff;

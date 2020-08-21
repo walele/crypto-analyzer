@@ -86,6 +86,8 @@ class MovingAverageLatestDiffCumul implements Indicator
 
     }
 
+    $cumul = (float) number_format($cumul, 2);
+
     return $cumul;
 
   }

@@ -22,6 +22,8 @@ interface Strategy
   public function getActiveTime(): int;
 
   public function getBets();
+  
+  public function getLogs();
 
   public function addBet($market, $payload);
 

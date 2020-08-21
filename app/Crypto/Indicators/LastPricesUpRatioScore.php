@@ -23,7 +23,7 @@ class LastPricesUpRatioScore implements Indicator
   */
   public function getPayloadKey(): string
   {
-    $key = 'LastPricesUpRatio_' .  $this->number;
+    $key = 'LastPricesUpRatioScore';
     return $key;
   }
 
@@ -66,8 +66,9 @@ class LastPricesUpRatioScore implements Indicator
       $iteration = 1;
     }
 
-    //$ratio = $ratio * 1.0 / $iteration;
-
+    $ratio = $ratio * 1.0 / $iteration;
+    $ratio = number_format($ratio, 2);
+    
     return $ratio;
 
   }

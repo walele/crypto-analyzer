@@ -151,7 +151,7 @@ class BotController extends Controller
     public function makeBetsAndTrades(BetBot $bot, TradeBot $tradeBot, OrderBot $orderBot)
     {
       $bets = $bot->makeBets();
-      $trades = $tradeBot->makeTrades();
+      //$trades = $tradeBot->makeTrades();
 
       // Get bets for orders
       //$testsTrade = Trade::orderBy('id', 'desc')->limit(2)->get();
@@ -161,7 +161,7 @@ class BotController extends Controller
     //  $orders = $orderBot->makeOrders($tradeForOrders);
       $data = [
         'bets' => $bets,
-        'trades' => $trades,
+      //  'trades' => $trades,
       //  'orders' => $orders
       ];
 

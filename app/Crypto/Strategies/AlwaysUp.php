@@ -14,6 +14,7 @@ class AlwaysUp implements Strategy
 
   private $table;
   private $bets = [];
+  private $logs = [];
 
   use StrategyConditions;
 
@@ -24,14 +25,14 @@ class AlwaysUp implements Strategy
   {
     // LastPricesUpRatio indicator & condition
     $lastPricesUp = new LastPricesUpRatioScore;
-    $condition = new Condition (33, Condition::BIGGER, $lastPricesUp);
-    $this->addCondition('lastPricesUp', $condition);
+    $condition = new Condition (0.5, Condition::BIGGER, $lastPricesUp);
+    $this->addCondition('lastPricesUpScore', $condition);
 
 
     // MovingAverageComp
     $ma1hComp7higher22 = new MovingAverageComp('1h', 7, 22, MovingAverageComp::HIGHER);
     $condition = new Condition (0.0, Condition::BIGGER, $ma1hComp7higher22);
-    $this->addCondition('1hMA7LowerThanMA22Percentage', $condition);
+    $this->addCondition('ma1hComp7higher22', $condition);
 
     // MovingAverageLatestDiffCumul 15min
     $ma1hLatestCumul = new MovingAverageLatestDiffCumul('1h', 7, 7);
@@ -79,6 +80,14 @@ class AlwaysUp implements Strategy
     return $this->bets;
   }
 
+  /**
+  * Get logs
+  */
+  public function getLogs()
+  {
+    return $this->logs;
+  }
+
   public function addBet($market, $payload)
   {
     $this->bets[$market] = [
@@ -95,11 +104,11 @@ class AlwaysUp implements Strategy
   */
   public function run(array $markets)
   {
-    $html = '';
-    $html .= sprintf("<h3>%s </h3>", 'Run ShortUp Strategy') ;
 
     foreach($markets as $market){
-      $html .= sprintf("%s %s<br>", 'Run ShortUp Strategy on market', $market) ;
+
+      // init log
+      $this->logs[$market] = [];
 
       $row = [$market];
       $addRow = true;
@@ -115,11 +124,14 @@ class AlwaysUp implements Strategy
         $value = $indicator->getValue($market);
 
         // Log
-        $html .= sprintf("<small> - Indicator %s as value %s</small><br/>", $key, $value) ;
+        $html = sprintf("Indicator %s as value %s", $key, $value);
+        $this->logs[$market][$key] = $html;
 
         // If we dont satify condition
         if( ! $c->checkCondition($value)) {
-          $html .= sprintf("<small> - Fail condition for %s. Value: %s</small><br/>", $name, $value) ;
+          $html = sprintf("Fail condition for %s. Value: %s", $name, $value) ;
+          $this->logs[$market][$key . '_result'] = $html;
+
           $addRow = false;
           break;
         }
@@ -136,7 +148,9 @@ class AlwaysUp implements Strategy
         foreach($this->indicators as $key => $i){
 
           $value = $i->getValue($market);
-          $html .= sprintf("<small> - Indicator %s as value %s</small><br/>", $key, $value) ;
+
+          $html = sprintf("Indicator %s as value %s", $key, $value) ;
+          $this->logs[$market][$key] = $html;
 
           $row[] = $value;
           $payload[$i->getPayloadKey()] = $value;
@@ -149,7 +163,7 @@ class AlwaysUp implements Strategy
 
     }
 
-    return $html;
+    return true;
   }
 
 

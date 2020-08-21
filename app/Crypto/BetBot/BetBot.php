@@ -16,6 +16,7 @@ class BetBot
   private static $instance = null;
 
   private $bets = [];
+  private $logs = [];
   private $strategies = [];
   private $markets = [];
   private $learnerBot;
@@ -25,8 +26,9 @@ class BetBot
     $this->init();
   }
 
-  // The object is created from within the class itself
-  // only if the class has no instance.
+  /**
+  * Singleton pattern
+  */
   public static function getInstance()
   {
     if (self::$instance == null)
@@ -60,14 +62,13 @@ class BetBot
   */
   private function run()
   {
-    $html = '';
-
     foreach($this->strategies as $s){
-      $html .= $s->run($this->markets);
+      $s->run($this->markets);
       $this->bets = $s->getBets();
+      $this->logs = $s->getLogs();
     }
 
-    return $html;
+    return true;
   }
 
 
@@ -76,10 +77,10 @@ class BetBot
   */
   public function makeBets()
   {
-
     // Run bot strategy
-    $output = $this->run();
-    $bets = $this->getBets();
+    $this->run();
+    $bets = $this->bets;
+    $logs = $this->logs;
 
     // Place new bets
     $this->trainLearnBot();
@@ -91,7 +92,7 @@ class BetBot
     $this->validateBets();
 
     $data = [
-      'logs' => $output,
+      'logs' => $logs,
       'bets' => array_values($bets)
     ];
 
@@ -183,6 +184,8 @@ class BetBot
       $payload = $bet['payload'];
       $client = new MarketClient;
       $strategy = $bet['strategy'] ?? '';
+      $successPerc = $bet['success_percentage'] ?? '';
+      $stopPerc = $bet['stop_percentage'] ?? '';
 
       $activeBet = $this->getActiveBet($market);
 
