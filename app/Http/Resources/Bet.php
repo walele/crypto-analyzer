@@ -24,6 +24,19 @@ class Bet extends JsonResource
       // Payload format
       $payload = Helpers::parsePayload($this->payload);
 
+      // Prices
+      $bet_prices = [
+        'buy' => $this->buy_price,
+        'sell' => $this->sell_price,
+        'stop' => $this->stop_price,
+      ];
+
+      // Final prices
+      $final_prices = [
+        'min' => number_format($this->final_min_price, 8),
+        'max' => number_format($this->final_max_price, 8),
+      ];
+
       return [
         'id' => $this->id,
         'market' => $this->market,
@@ -32,9 +45,8 @@ class Bet extends JsonResource
         'ml_status' => $this->ml_status,
         'active' => $this->active,
         'success' => $this->success,
-        'buy_price' => $this->buy_price,
-        'sell_price' => $this->sell_price,
-        'stop_price' => $this->stop_price,
+        'bet_prices' => $bet_prices,
+        'final_prices' => $final_prices
         ];
 
     }

@@ -44,16 +44,6 @@ class AlwaysUp implements Strategy
     $condition = new Condition (0.0, Condition::BIGGER, $ma1dLatestCumul);
     $this->addCondition('ma1dLatestCumul', $condition);
 
-
-    // Init Table with columns
-    $this->table = new Table('Bot strategy');
-    $this->table->addColumn( 'Market' );
-    foreach($this->conditions as $key => $i){
-      $this->table->addColumn( $i->getName() );
-    }
-    foreach($this->indicators as $key => $i){
-      $this->table->addColumn( $i->getName() );
-    }
   }
 
   public function getName(): string

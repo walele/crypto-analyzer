@@ -59,6 +59,12 @@ class Stats
     $bets = Bet::where('active', false)
                 ->where('ml_status', 'success')
                 ->get();
+
+    // Return empty if no bets
+    if( ! $bets->count() ){
+      return [];
+    }
+
     $data[] = [
       'label' => 'Total',
       'text' => $bets->count()
@@ -104,6 +110,10 @@ class Stats
 
     $bets = Bet::where('active', false)
     ->get();
+
+    if( ! $bets->count() ){
+      return [];
+    }
 
     $data[] = [
       'label' => 'Total',

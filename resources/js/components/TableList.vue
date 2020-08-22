@@ -26,8 +26,19 @@
                       </p>
                     </div>
                   </template>
+                  <template v-slot:cell(bet_prices)="data">
+                    <div class="small-text">
+                      <p v-for="(value, name) in data.value">
+                        <b>{{ name }}</b> {{ value }}
+                      </p>
+                    </div> 
+                  </template>
                   <template v-slot:cell(final_prices)="data">
-                    <span v-html="data.value"></span>
+                    <div class="small-text">
+                      <p v-for="(value, name) in data.value">
+                        <b>{{ name }}</b> {{ value }}
+                      </p>
+                    </div>
                   </template>
                 </b-table>
 
