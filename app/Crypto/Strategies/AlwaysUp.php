@@ -25,7 +25,7 @@ class AlwaysUp implements Strategy
   {
     // LastPricesUpRatio indicator & condition
     $lastPricesUp = new LastPricesUpRatioScore;
-    $condition = new Condition (0.67, Condition::BIGGER, $lastPricesUp);
+    $condition = new Condition (0.47, Condition::BIGGER, $lastPricesUp);
     $this->addCondition('lastPricesUpScore', $condition);
 
 
@@ -61,6 +61,16 @@ class AlwaysUp implements Strategy
     return 12;
   }
 
+  public function getSucessPerc(): float
+  {
+    return 1.03;
+  }
+
+
+  public function getStopPerc(): float
+  {
+    return 0.97;
+  }
 
   /**
   * Get bets
@@ -83,7 +93,9 @@ class AlwaysUp implements Strategy
     $this->bets[$market] = [
       'market' => $market,
       'payload' => $payload,
-      'strategy' => $this->getName()
+      'strategy' => $this->getName(),
+      'success_perc' => $this->getSucessPerc(),
+      'stop_perc' => $this->getStopPerc(),
     ];
   }
 
@@ -145,8 +157,6 @@ class AlwaysUp implements Strategy
           $row[] = $value;
           $payload[$i->getPayloadKey()] = $value;
         }
-
-        $this->table->addRow($row);
 
         $this->addBet($market, $payload);
       }

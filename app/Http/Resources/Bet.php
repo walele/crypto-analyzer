@@ -32,9 +32,14 @@ class Bet extends JsonResource
       ];
 
       // Final prices
+      $min_perc = Helpers::calcPercentageDiff($this->buy_price, $this->final_min_price);
+      $max_perc = Helpers::calcPercentageDiff($this->buy_price, $this->final_max_price);
+
       $final_prices = [
         'min' => number_format($this->final_min_price, 8),
         'max' => number_format($this->final_max_price, 8),
+        'min_perc' => $min_perc,
+        'max_perc' => $max_perc,
       ];
 
       return [

@@ -21,8 +21,12 @@ interface Strategy
 
   public function getActiveTime(): int;
 
+  public function getSucessPerc(): float;
+
+  public function getStopPerc(): float;
+
   public function getBets();
-  
+
   public function getLogs();
 
   public function addBet($market, $payload);

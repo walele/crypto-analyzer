@@ -184,8 +184,8 @@ class BetBot
       $payload = $bet['payload'];
       $client = new MarketClient;
       $strategy = $bet['strategy'] ?? '';
-      $successPerc = $bet['success_percentage'] ?? '';
-      $stopPerc = $bet['stop_percentage'] ?? '';
+      $successPerc = $bet['success_perc'] ?? self::SUCCESS_PRICE;
+      $stopPerc = $bet['stop_perc'] ?? self::STOP_PRICE;
 
       $activeBet = $this->getActiveBet($market);
 
@@ -194,8 +194,8 @@ class BetBot
         $curPrice = $client->getLastMarketPrice($market);
         $price = (float) $curPrice->price;
         $buy_price = number_format($price, 8);
-        $sell_price = number_format(( $price * SELF::SUCCESS_PRICE ), 8);
-        $stop_price = number_format(( $price * SELF::STOP_PRICE ), 8);
+        $sell_price = number_format(( $price * $successPerc ), 8);
+        $stop_price = number_format(( $price * $stopPerc ), 8);
 
 
         $bet = new Bet([
