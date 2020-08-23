@@ -296,7 +296,7 @@ class BetBot
       $minPrice = (float) $prices->min('price');
 
       $success = $maxPrice > $successPrice;
-      $fail = $minPrice < $stopPrice;
+      $fail = ($minPrice) && ( $minPrice < $stopPrice );
 
       if($success || $fail){
         $bet->final_min_price = $minPrice;
