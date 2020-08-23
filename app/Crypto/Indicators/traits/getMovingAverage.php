@@ -31,7 +31,6 @@ trait getMovingAverage
       $closeTimes[] = $str;
 
     }
-
     $collect = collect($closePrices);
 
     $avg = $collect->avg();

@@ -71,7 +71,6 @@ class MovingAverageLatestDiffCumul implements Indicator
     $client = BinanceClient::getInstance();
     $data = $client->getCandleSticksData($market, $this->interval);
 
-
     for($i=0; $i < $this->nb; $i++)
     {
       $ma1 = $this->getMovingAverage($data, $this->ma, $i);
@@ -80,12 +79,15 @@ class MovingAverageLatestDiffCumul implements Indicator
       $ma2 = $this->getMovingAverage($data, $this->ma, $i+1);
       $html .= $market . ' MA' . $this->interval . ' ' . $this->ma . " $ma2 \n\n";
 
+      // If ma2=0, it's probably because not enough data.
+      if( $ma2 == 0){
+        return 0;
+      }
+
       $diff = Helpers::calcPercentageDiff($ma2, $ma1);
       $diff = (float) $diff;
       $cumul += $diff;
-
     }
-
     $cumul = number_format($cumul, 2);
 
     return $cumul;
