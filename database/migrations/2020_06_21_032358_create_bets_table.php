@@ -16,6 +16,7 @@ class CreateBetsTable extends Migration
         Schema::create('bets', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->timestamp('end_at')->nullable();
             $table->string('market');
             $table->string('strategy')->nullable();
             $table->string('payload', 2048)->nullable();

@@ -89,6 +89,7 @@ class BetBot
     }
 
     // Validate current bet
+    $this->validateBets2();
     $this->validateBets();
 
     $data = [
@@ -262,7 +263,46 @@ class BetBot
       $bet->final_max_price = $maxPrice;
       $bet->success = $success;
       $bet->active = false;
+      $bet->end_at = Carbon::now();
       $bet->save();
+
+    }
+  }
+
+  /**
+  *   Check if active bet are due to check
+  */
+  public function validateBets2()
+  {
+    $client = new MarketClient;
+
+    $bets = Bet::where('active', true)
+                  ->get();
+
+    foreach($bets as $bet){
+
+      $created_at =  $bet->created_at;
+      $created_at = $created_at->setTimezone('America/New_York');
+      $buy_price = (float) $bet->buy_price;
+      $successPrice = (float) $bet->sell_price;
+
+
+
+      // Get last prices from db
+      $prices = $client->getMarketPricesAfter($bet->market, $created_at);
+      $maxPrice = (float) $prices->max('price');
+      $minPrice = (float) $prices->min('price');
+
+      $success = $maxPrice > $successPrice;
+
+      if($success){
+        $bet->final_min_price = $minPrice;
+        $bet->final_max_price = $maxPrice;
+        $bet->end_at = Carbon::now();
+        $bet->success = $success;
+        $bet->active = false;
+        $bet->save();
+      }
 
     }
   }

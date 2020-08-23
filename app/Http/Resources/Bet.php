@@ -18,7 +18,7 @@ class Bet extends JsonResource
     {
       // Date format
       $created_at = $this->created_at;
-      $created_at->setTimezone('America/New_York');
+    //  $created_at->setTimezone('America/New_York');
       $created_at = $created_at->toDateTimeString();
 
       // Payload format
