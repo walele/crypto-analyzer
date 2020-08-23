@@ -286,6 +286,7 @@ class BetBot
       $created_at = $created_at->setTimezone('America/New_York');
       $buy_price = (float) $bet->buy_price;
       $successPrice = (float) $bet->sell_price;
+      $stopPrice = (float) $bet->stop_price;
 
 
 
@@ -295,8 +296,9 @@ class BetBot
       $minPrice = (float) $prices->min('price');
 
       $success = $maxPrice > $successPrice;
+      $fail = $minPrice < $stopPrice;
 
-      if($success){
+      if($success || $fail){
         $bet->final_min_price = $minPrice;
         $bet->final_max_price = $maxPrice;
         $bet->end_at = Carbon::now();
