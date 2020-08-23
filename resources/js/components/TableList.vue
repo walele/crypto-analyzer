@@ -31,9 +31,16 @@
                       <p v-for="(value, name) in data.value">
                         <b>{{ name }}</b> {{ value }}
                       </p>
-                    </div> 
+                    </div>
                   </template>
                   <template v-slot:cell(final_prices)="data">
+                    <div class="small-text">
+                      <p v-for="(value, name) in data.value">
+                        <b>{{ name }}</b> {{ value }}
+                      </p>
+                    </div>
+                  </template>
+                  <template v-slot:cell(times)="data">
                     <div class="small-text">
                       <p v-for="(value, name) in data.value">
                         <b>{{ name }}</b> {{ value }}

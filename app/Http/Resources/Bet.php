@@ -18,11 +18,14 @@ class Bet extends JsonResource
     {
       // Date format
       $created_at = $this->created_at;
-    //  $created_at->setTimezone('America/New_York');
       $created_at = $created_at->toDateTimeString();
 
       // Payload format
       $payload = Helpers::parsePayload($this->payload);
+      $times = [
+          'start' => $created_at,
+          'end' => $this->end_at
+      ];
 
       // Prices
       $bet_prices = [
@@ -45,7 +48,7 @@ class Bet extends JsonResource
       return [
         'id' => $this->id,
         'market' => $this->market,
-        'created_at' => $created_at,
+        'times' => $times,
         'payload' => $payload,
         'ml_status' => $this->ml_status,
         'active' => $this->active,
