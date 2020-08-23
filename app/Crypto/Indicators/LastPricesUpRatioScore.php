@@ -8,7 +8,7 @@ use App\Crypto\Helpers;
 class LastPricesUpRatioScore implements Indicator
 {
 
-  private $number = 42;
+  private $number = 420;
 
   /**
   * Get indicator key
@@ -65,7 +65,7 @@ class LastPricesUpRatioScore implements Indicator
       $iteration = 1;
     }
 
-    $ratio = $ratio * 1.0 / 10.0;
+    $ratio = $ratio * 1.0 / 100.0;
     $ratio = number_format($ratio, 2);
 
     return $ratio;
