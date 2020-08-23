@@ -52,11 +52,10 @@ class LastPricesUpRatioScore implements Indicator
     for($i =0; $i<$iteration; $i++) {
       $last1 = $prices->get($i)->price;
       $last2 = $prices->get($i+1)->price;
-      if($last1 > $last2){
-        $ratio++;
-      }
 
-      $timeDiff = Helpers::getTimeDiff($prices->last()->timestamp, $prices->first()->timestamp);
+      $diff = Helpers::calcPercentageDiff($last2, $last1);
+      $diff = (float) $diff;
+      $ratio += $diff;
 
       $pricesStr .= "$last2  - $last1" . ' <br>';
     }
@@ -66,9 +65,9 @@ class LastPricesUpRatioScore implements Indicator
       $iteration = 1;
     }
 
-    $ratio = $ratio * 1.0 / $iteration;
+    $ratio = $ratio * 1.0 / 100.0;
     $ratio = number_format($ratio, 2);
-    
+
     return $ratio;
 
   }
