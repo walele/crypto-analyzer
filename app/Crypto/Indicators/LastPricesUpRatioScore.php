@@ -65,7 +65,7 @@ class LastPricesUpRatioScore implements Indicator
       $iteration = 1;
     }
 
-    $ratio = $ratio * 1.0 / 100.0;
+    $ratio = $ratio * 1.0 / 10.0;
     $ratio = number_format($ratio, 2);
 
     return $ratio;
