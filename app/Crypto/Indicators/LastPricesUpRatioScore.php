@@ -8,7 +8,7 @@ use App\Crypto\Helpers;
 class LastPricesUpRatioScore implements Indicator
 {
 
-  private $number = 84;
+  private $number = 67;
 
   /**
   * Get indicator key
