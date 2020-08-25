@@ -71,7 +71,7 @@ class AlwaysUp implements Strategy
 
   public function getActiveTime(): int
   {
-    return 12;
+    return 36;
   }
 
   public function getSucessPerc(): float
