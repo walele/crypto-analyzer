@@ -47,6 +47,9 @@ Route::prefix('fix')->group(function () {
   Route::get('/fix-real-values', 'API\BotController@fixRealValues');
 });
 
+Route::prefix('test')->group(function () {
+  Route::get('/indicator', 'API\BetController@testIndicator');
+});
 
 //Route::get('stats/', 'API\BetController@stats');
 //Route::get('wallet/', 'API\TradesController@wallet');

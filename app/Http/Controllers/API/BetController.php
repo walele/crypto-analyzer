@@ -7,6 +7,7 @@ use App\Http\Resources\Bets;
 use App\Http\Resources\BetCollection;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Crypto\Indicators\MovingAverageCompAvgPrice;
 
 class BetController extends Controller
 {
@@ -37,6 +38,13 @@ class BetController extends Controller
         return '';
     }
 
+    public function testIndicator()
+    {
+      $indicator = new MovingAverageCompAvgPrice( '1d', 99);
+      $value = $indicator->getValue('STRATBTC');
+
+      return $value;
+    }
 
     /**
      * Store a newly created resource in storage.

@@ -11,19 +11,13 @@ class MovingAverageCompAvgPrice implements Indicator
 {
   use getMovingAverage;
 
-  const LOWER = 1;
-  const HIGHER = 2;
   private $interval = '5m';
-  private $ma1 = 5;
-  private $ma2 = 22;
-  private $comparison = 1;
+  private $ma = 5;
 
-  public function __construct(string $interval, int $ma1, int $comp)
+  public function __construct(string $interval, int $ma)
   {
     $this->interval = $interval;
-    $this->ma1 = $ma1;
-    $this->ma2 = $ma2;
-    $this->comparison = $comp;
+    $this->ma = $ma;
   }
 
   /**
@@ -31,22 +25,15 @@ class MovingAverageCompAvgPrice implements Indicator
   */
   public function getName(): string
   {
-    $compStr = '';
-    if($this->comparison == self::LOWER){
-      $compStr = 'lower';
-    }
-    if($this->comparison == self::HIGHER){
-      $compStr = 'higher';
-    }
+    $str = sprintf("Current price vs %s MA(%s) ",
+      $this->interval, $this->ma );
 
-    $str = sprintf("%s MA(%s) %s percentage of MA(%s)",
-      $this->interval, $this->ma1, $compStr, $this->ma2  );
     return $str;
   }
 
   public function getKey(): string
   {
-    return 'MovingAverageComp';
+    return 'MovingAverageCompAvgPrice';
   }
 
   /**
@@ -54,12 +41,9 @@ class MovingAverageCompAvgPrice implements Indicator
   */
   public function getPayloadKey(): string
   {
-    $comparison = 'lower';
-    if($this->comparison == self::HIGHER){
-      $comparison = 'higher';
-    }
-    $key = sprintf("macomp_%s_of_ma%s_ma%s_in_%s",
-      $comparison, $this->ma1, $this->ma2, $this->interval  );
+
+    $key = sprintf("avg_price_vs_ma%s_in_%s",
+       $this->ma, $this->interval  );
 
     return $key;
   }
@@ -69,28 +53,18 @@ class MovingAverageCompAvgPrice implements Indicator
   */
   public function getValue(string $market)
   {
-    $html = '';
-
     // Get last binance candlestick data
     $client = BinanceClient::getInstance();
+
+    // get cur prices
+    $last_price = $client->getPrice($market);
+    $last_price = (float) $last_price->price;
+
+    // Get moving average
     $data = $client->getCandleSticksData($market, $this->interval);
+    $ma = (float) $this->getMovingAverage($data, $this->ma);
 
-    // Calc first MA
-    $ma1 = $this->getMovingAverage($data, $this->ma1);
-    $html = $market . ' MA' . $this->interval . ' ' . $this->ma1 . " $ma1";
-
-    // Calc second MA
-    $ma2 = $this->getMovingAverage($data, $this->ma2);
-    $html .= $market . ' MA' . $this->interval . ' ' . $this->ma2 . " $ma2";
-
-    if( $this->comparison === SELF::LOWER ){
-
-      $diff =  ( ($ma2 - $ma1) / $ma2) * 100;
-    }
-    else if( $this->comparison === SELF::HIGHER ){
-
-        $diff =  ( ($ma1 - $ma2) / $ma1) * 100;
-    }
+    $diff = Helpers::calcPercentageDiff($ma, $last_price);
 
     //$diff = $diff * 1.0 / 100.0;
     $diff = number_format($diff, 2);

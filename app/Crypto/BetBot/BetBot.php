@@ -8,7 +8,6 @@ use App\Crypto\Bettor;
 use App\Crypto\MarketClient;
 use App\Crypto\Helpers;
 use App\Bet;
-use App\Crypto\Indicators\MovingAverageLatestDiffCumul;
 
 class BetBot
 {

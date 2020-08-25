@@ -9,6 +9,7 @@ class BinanceClient
 {
   const API_URL = 'https://api.binance.com/';
   const CANDLESTICK_URL = 'api/v3/klines';
+  const PRICE_URL = 'api/v3/ticker/price';
 
   private $tables = [];
   private $cache = [];
@@ -40,6 +41,22 @@ class BinanceClient
 
     $params = sprintf("?symbol=%s&interval=%s&limit=200", $market, $interval);
     $url = self::API_URL . self::CANDLESTICK_URL . $params;
+    $response = Http::get($url);
+    $data = json_decode($response->body());
+    $this->setCache($cacheKey, $data);
+
+    return $data;
+  }
+
+  public function getPrice($market)
+  {
+    $cacheKey = 'getPrice_'.$market;
+    if($cache = $this->getCache($cacheKey)){
+      return $cache;
+    }
+
+    $params = sprintf("?symbol=%s", $market);
+    $url = self::API_URL . self::PRICE_URL . $params;
     $response = Http::get($url);
     $data = json_decode($response->body());
     $this->setCache($cacheKey, $data);

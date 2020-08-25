@@ -7,6 +7,8 @@ use App\Crypto\Indicators\MovingAverage;
 use App\Crypto\Indicators\MovingAverageComp;
 use App\Crypto\Indicators\MovingAverageLatestDiffCumul;
 use App\Crypto\Indicators\LastPricesDiffPercCumul;
+use App\Crypto\Indicators\MovingAverageCompAvgPrice;
+
 use App\Crypto\Table;
 
 class AlwaysUp implements Strategy
@@ -47,6 +49,12 @@ class AlwaysUp implements Strategy
     // MovingAverageLatestDiffCumul 1d
     $ma1dLatestCumul = new MovingAverageLatestDiffCumul('1d', 7, 7);
     $condition = new Condition (0.0, Condition::BIGGER, $ma1dLatestCumul);
+    $this->addCondition('ma1dLatestCumul', $condition);
+
+
+    // MovingAverageCompAvgPrice
+    $maCompAvgPrice = new MovingAverageCompAvgPrice('1d', 7);
+    $condition = new Condition (4.0, Condition::LOWER, $maCompAvgPrice);
     $this->addCondition('ma1dLatestCumul', $condition);
 
   }
