@@ -274,6 +274,7 @@ class BetBot
   */
   public function validateBets2()
   {
+    $data = [];
     $client = new MarketClient;
 
     $bets = Bet::where('active', true)
@@ -286,8 +287,6 @@ class BetBot
       $buy_price = (float) $bet->buy_price;
       $successPrice = (float) $bet->sell_price;
       $stopPrice = (float) $bet->stop_price;
-
-
 
       // Get last prices from db
       $prices = $client->getMarketPricesAfter($bet->market, $created_at);
@@ -306,7 +305,17 @@ class BetBot
         $bet->save();
       }
 
+      $data[$bet->market] = [
+          'buy_price' => $buy_price,
+          'stopPrice' => $stopPrice,
+          'maxPrice' => $maxPrice,
+          'minPrice' => $minPrice,
+          'fail' => $fail,
+          'success' => $success
+        ];
     }
+
+    return $data;
   }
 
 
