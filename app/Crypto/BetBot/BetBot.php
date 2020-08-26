@@ -308,6 +308,7 @@ class BetBot
       $data[$bet->market] = [
           'buy_price' => $buy_price,
           'stopPrice' => $stopPrice,
+          'successPrice' => $successPrice,
           'maxPrice' => $maxPrice,
           'minPrice' => $minPrice,
           'fail' => $fail,
