@@ -16,6 +16,14 @@ class Bet extends JsonResource
      */
     public function toArray($request)
     {
+      // market link
+      $market_link = str_replace('BTC', '_BTC', $this->market);
+      $market_link = 'https://www.binance.com/en/trade/' . $market_link;
+      $market = [
+        'name' => $this->market,
+        'link' => $market_link
+      ];
+
       // Date format
       $created_at = $this->created_at;
       $created_at = $created_at->toDateTimeString();
@@ -45,9 +53,10 @@ class Bet extends JsonResource
         'max_perc' => $max_perc,
       ];
 
+
       return [
         'id' => $this->id,
-        'market' => $this->market,
+        'market' => $market,
         'times' => $times,
         'payload' => $payload,
         'ml_status' => $this->ml_status,

@@ -13755,6 +13755,10 @@ body .main {
   margin: 2px;
 }
 
+a {
+  color: #11ece5;
+}
+
 .hscroll {
   overflow-x: auto;
   /* Horizontal */

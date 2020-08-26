@@ -47,6 +47,11 @@
                       </p>
                     </div>
                   </template>
+                  <template v-slot:cell(market)="data">
+                    <div class="small-text">
+                      <a target='_blank' :href="data.value.link">{{ data.value.name }}</a>
+                    </div>
+                  </template>
                 </b-table>
 
                 <b-pagination
