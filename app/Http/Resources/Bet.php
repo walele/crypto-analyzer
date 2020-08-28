@@ -18,7 +18,7 @@ class Bet extends JsonResource
     {
       // market link
       $market_link = str_replace('BTC', '_BTC', $this->market);
-      $market_link = 'https://www.binance.com/en/trade/' . $market_link;
+      $market_link = 'https://www.binance.com/en/trade/' . $market_link . '?layout=pro';
       $market = [
         'name' => $this->market,
         'link' => $market_link
