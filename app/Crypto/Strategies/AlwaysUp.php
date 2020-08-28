@@ -75,13 +75,13 @@ class AlwaysUp implements Strategy
 
   public function getSucessPerc(): float
   {
-    return 1.09;
+    return 1.05;
   }
 
 
   public function getStopPerc(): float
   {
-    return 0.91;
+    return 0.977;
   }
 
   /**
