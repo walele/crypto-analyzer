@@ -34,7 +34,8 @@ class BotController extends Controller
       $data['strategy'] = [
         'indicators' => $indicators,
         'conditions' => $conditions,
-        'description' => $bot->strategyToString()
+        'description' => $bot->strategyToString(),
+        'strat_keys' => $bot->strategyKeyToString()
       ];
 
       return $data;

@@ -33,8 +33,8 @@ class RSI implements Indicator
   */
   public function getPayloadKey(): string
   {
-    $key = sprintf("malatestdiffcumul_%s_ma%s_last_%s",
-      $this->interval, $this->ma, $this->nb  );
+    $key = sprintf("rsi_%s_%s",
+      $this->interval, $this->length  );
 
     return $key;
   }

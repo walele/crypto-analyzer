@@ -83,7 +83,7 @@ class BetBot
     $logs = $this->logs;
 
     // Place new bets
-    $this->trainLearnBot();
+    $this->trainLearnBot($bets);
     foreach($bets as $bet){
       $this->placeBet($bet);
     }
@@ -135,6 +135,21 @@ class BetBot
 
       return $str;
   }
+
+  /**
+  * Current strategy key
+  */
+  public function strategyKeyToString(): string
+  {
+      $str = '';
+
+      foreach($this->strategies as $s){
+        $str .= ($s->getKey());
+      }
+
+      return $str;
+  }
+
 
   /**
   *  Get indicators used by strategies
@@ -220,9 +235,15 @@ class BetBot
       return $bet;
   }
 
-  public function trainLearnBot()
+  public function trainLearnBot($bets)
   {
-    $this->learnerBot->trainFromBets();
+    $strategy_key = '';
+
+    foreach($bets as $bet){
+      $strategy_key = $bet['strategy'] ?? '';
+    }
+
+    $this->learnerBot->trainFromBets($strategy_key);
   }
 
   private function getBetPrediction($bet)

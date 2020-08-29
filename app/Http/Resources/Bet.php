@@ -59,6 +59,7 @@ class Bet extends JsonResource
         'market' => $market,
         'times' => $times,
         'payload' => $payload,
+        'strategy' => $this->strategy,
         'ml_status' => $this->ml_status,
         'active' => $this->active,
         'success' => $this->success,

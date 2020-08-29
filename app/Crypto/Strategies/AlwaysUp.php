@@ -8,6 +8,7 @@ use App\Crypto\Indicators\MovingAverageComp;
 use App\Crypto\Indicators\MovingAverageLatestDiffCumul;
 use App\Crypto\Indicators\LastPricesDiffPercCumul;
 use App\Crypto\Indicators\MovingAverageCompAvgPrice;
+use App\Crypto\Indicators\RSI;
 
 use App\Crypto\Table;
 
@@ -56,11 +57,29 @@ class AlwaysUp implements Strategy
     $condition = new Condition (55.0, Condition::LOWER, $maCompAvgPrice);
     $this->addCondition('ma1hCompAvgPrice', $condition);
 
+    // RSI
+    $rsi = new RSI('15m', 14);
+    $condition = new Condition (110.0, Condition::LOWER, $rsi);
+    $this->addCondition('rsi', $condition);
+
+
   }
 
   public function getName(): string
   {
     return 'alwaysup';
+  }
+
+  public function getKey(): string
+  {
+    $str = '';
+    foreach($this->conditions as $c){
+      $str .= $c->getName();
+    }
+
+    $key = 'alwaysup_' . md5($str);
+
+    return $key;
   }
 
   public function getDescription(): string
@@ -105,7 +124,7 @@ class AlwaysUp implements Strategy
     $this->bets[$market] = [
       'market' => $market,
       'payload' => $payload,
-      'strategy' => $this->getName(),
+      'strategy' => $this->getKey(),
       'success_perc' => $this->getSucessPerc(),
       'stop_perc' => $this->getStopPerc(),
     ];

@@ -137,9 +137,10 @@ class LearnerBot
   /**
   *   Get train Datasets with samples & labels
   */
-  public function getTrainDataset()
+  public function getTrainDataset($strategy)
   {
     $res = new Bets(Bet::where('active', false)
+                      ->where('strategy', $strategy)
                       ->orderBy('id', 'asc')->get());
 
     $data = $res->toCsv();
@@ -216,10 +217,10 @@ class LearnerBot
     return $success;
   }
 
-  public function trainFromBets()
+  public function trainFromBets($strategy)
   {
     // Get training data
-    $trainDataset = $this->getTrainDataset();
+    $trainDataset = $this->getTrainDataset($strategy);
     if( ! $trainDataset->labels()){
       return false;
     }
@@ -237,7 +238,12 @@ class LearnerBot
     // Make predictions
     $predictDataset = $this->getPredictDataset($bet->id);
 
-    $prediction = $this->estimator->predict($predictDataset);
+    try{
+      $prediction = $this->estimator->predict($predictDataset);
+
+    }catch(\Exception $e){
+      return  'n/a';
+    }
 
     $value = $prediction[0] ?? 'n/a';
 

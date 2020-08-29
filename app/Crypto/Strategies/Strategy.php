@@ -9,6 +9,8 @@ interface Strategy
 {
   public function getName(): string;
 
+  public function getKey(): string;
+
   public function addIndicator(string $name, Indicator $indicator);
 
   public function getIndicators(): array;
