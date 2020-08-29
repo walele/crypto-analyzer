@@ -98,6 +98,8 @@ class RSI implements Indicator
     $relative_strength = ($avgUpward / $avgDownward);
     $rsi = 100.0 - (100.0 / ($relative_strength+1.0) );
 
+    $rsi = number_format($rsi, 2);
+
     return $rsi;
 
   }
