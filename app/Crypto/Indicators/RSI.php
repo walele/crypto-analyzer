@@ -95,6 +95,10 @@ class RSI implements Indicator
     $mvtDownwards = collect($mvtDownwards);
     $avgDownward = $mvtDownwards->avg();
 
+    if($avgDownward == 0){
+      return 0;
+    }
+
     $relative_strength = ($avgUpward / $avgDownward);
     $rsi = 100.0 - (100.0 / ($relative_strength+1.0) );
 
