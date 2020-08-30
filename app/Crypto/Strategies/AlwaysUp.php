@@ -39,7 +39,7 @@ class AlwaysUp implements Strategy
 
     // MovingAverageComp
     $ma15mComp7lower22 = new MovingAverageComp('15m', 7, 22, MovingAverageComp::HIGHER);
-    $condition = new Condition (1.0, Condition::LOWER, $ma15mComp7lower22);
+    $condition = new Condition (10.0, Condition::LOWER, $ma15mComp7lower22);
     $this->addCondition('ma15mComp7lower22', $condition);
 
     // MovingAverageLatestDiffCumul 15min
