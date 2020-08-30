@@ -24,6 +24,9 @@ class LastPricesUpRatioScore implements Indicator
   public function getPayloadKey(): string
   {
     $key = 'LastPricesUpRatioScore';
+    $key = sprintf("Last_%s_PricesUpRatioScore",
+       $this->number  );
+
     return $key;
   }
 
