@@ -58,9 +58,9 @@ class AlwaysUp implements Strategy
     $this->addCondition('ma1dLatestCumul', $condition);
 
     // MovingAverageCompAvgPrice
-    $maCompAvgPrice = new MovingAverageCompAvgPrice('1h', 67);
+    $maCompAvgPrice = new MovingAverageCompAvgPrice('15m', 7);
     $condition = new Condition (55.0, Condition::LOWER, $maCompAvgPrice);
-    $this->addCondition('ma1hCompAvgPrice', $condition);
+    $this->addCondition('ma15mCompAvgPrice', $condition);
 
     // RSI
     $rsi = new RSI('15m', 14);
