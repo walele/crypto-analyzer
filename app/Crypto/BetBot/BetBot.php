@@ -89,7 +89,7 @@ class BetBot
     $bets = $this->bets;
     $logs = $this->logs;
 
-    Log::info('bets : ' . print_r($bets, true));
+    Log::info('bets : ' . print_r($logs, true));
 
 
     // Place new bets
