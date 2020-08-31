@@ -8,6 +8,7 @@ use App\Crypto\Bettor;
 use App\Crypto\MarketClient;
 use App\Crypto\Helpers;
 use App\Bet;
+use Illuminate\Support\Facades\Log;
 
 class BetBot
 {
@@ -77,10 +78,19 @@ class BetBot
   */
   public function makeBets()
   {
+
+    // Validate current bet
+    $this->validateBets2();
+    $this->validateBets();
+
+
     // Run bot strategy
     $this->run();
     $bets = $this->bets;
     $logs = $this->logs;
+
+    Log::info('bets : ' . print_r($bets, true));
+
 
     // Place new bets
     $this->trainLearnBot($bets);
@@ -88,9 +98,6 @@ class BetBot
       $this->placeBet($bet);
     }
 
-    // Validate current bet
-    $this->validateBets2();
-    $this->validateBets();
 
     $data = [
       'logs' => $logs,
