@@ -83,6 +83,11 @@ class MovingAverageComp implements Indicator
     $ma2 = $this->getMovingAverage($data, $this->ma2);
     $html .= $market . ' MA' . $this->interval . ' ' . $this->ma2 . " $ma2";
 
+    // safe check division by 0
+    if($ma1 == 0 || $ma2 == 0){
+      return 0;
+    }
+
     if( $this->comparison === SELF::LOWER ){
 
       $diff =  ( ($ma2 - $ma1) / $ma2) * 100;
