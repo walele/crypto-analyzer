@@ -63,8 +63,11 @@ class BetBot
   */
   private function run()
   {
+    $active_markets = $this->getActiveMarketBets();
+    $inactive_markets = array_diff($this->markets, $active_markets);
+
     foreach($this->strategies as $s){
-      $s->run($this->markets);
+      $s->run($inactive_markets);
       $this->bets = $s->getBets();
       $this->logs = $s->getLogs();
 
@@ -204,6 +207,17 @@ class BetBot
     return $activeBet;
   }
 
+  /**
+  *  Get active bets for a market
+  */
+  public function getActiveMarketBets()
+  {
+    $activeBets = Bet::where('active', 1)
+                      ->pluck('market')
+                      ->toArray();
+
+    return $activeBets;
+  }
 
   /**
   * Add a bet to db if no active bet for that market
