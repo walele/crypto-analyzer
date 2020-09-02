@@ -84,6 +84,13 @@
       perPage="16">
     </table-list>
 
+    <table-list
+      tableId="table-logs"
+      title="Logs"
+      apiUrl="/api/logs"
+      perPage="16">
+    </table-list>
+
     <hr style="width: 42%">
 
   </div>

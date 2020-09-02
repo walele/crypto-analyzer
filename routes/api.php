@@ -21,7 +21,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::apiResources ([
   'bets' => 'API\BetController',
   'trades' => 'API\TradeController',
-  'orders' => 'API\OrderController'
+  'orders' => 'API\OrderController',
+  'logs' => 'API\LogController'
   ]);
 
 Route::prefix('bot')->group(function () {

@@ -8,7 +8,7 @@ use App\Crypto\Bettor;
 use App\Crypto\MarketClient;
 use App\Crypto\Helpers;
 use App\Bet;
-use Illuminate\Support\Facades\Log;
+use App\Log;
 
 class BetBot
 {
@@ -67,6 +67,13 @@ class BetBot
       $s->run($this->markets);
       $this->bets = $s->getBets();
       $this->logs = $s->getLogs();
+
+      // Log
+      $log = new Log([
+        'type' => 'bet',
+        'payload' => serialize($this->logs),
+      ]);
+      $log->save();
     }
 
     return true;
@@ -89,7 +96,7 @@ class BetBot
     $bets = $this->bets;
     $logs = $this->logs;
 
-    Log::info('bets : ' . print_r($logs, true));
+    //Log::info('bets : ' . print_r($logs, true));
 
 
     // Place new bets

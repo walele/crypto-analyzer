@@ -52,6 +52,16 @@
                       <a target='_blank' :href="data.value.link">{{ data.value.name }}</a>
                     </div>
                   </template>
+                  <template v-slot:cell(logs)="data">
+                    <div class="small-text">
+                      <div v-for="log in data.value">
+                        <p>{{ log.created_at }}</p>
+                        <span v-for="(value, name) in log.log">
+                          <b>{{ name }}</b> {{ value }} <br/>
+                        </span>
+                      </div>
+                    </div>
+                  </template>
                 </b-table>
 
                 <b-pagination
