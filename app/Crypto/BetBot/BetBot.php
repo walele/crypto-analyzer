@@ -348,4 +348,12 @@ class BetBot
   }
 
 
+  public function fixOldMarkets()
+  {
+    $client = new MarketClient();
+    $data = $client->fixOldMarkets();
+
+    return $data;
+  }
+
 }

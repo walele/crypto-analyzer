@@ -2,6 +2,8 @@
 
 namespace App\Crypto;
 
+use Illuminate\Support\Facades\Schema;
+
 class MarketClient
 {
 
@@ -96,4 +98,29 @@ class MarketClient
 
     return $results;
   }
+
+
+  public function fixOldMarkets()
+  {
+    $client = BinanceClient::getInstance();
+    $active_markets = $client->getMarkets();
+    $markets = $this->getTables();
+
+    $deleted_markets = [];
+    foreach( $markets as $market){
+      if( !in_array($market, $active_markets)){
+
+        $this->deleteMarket($market);
+        $deleted_markets[] = $market;
+      }
+    }
+
+    return $deleted_markets;
+  }
+
+  private function deleteMarket($market)
+  {
+    Schema::dropIfExists($market);
+  }
+
 }

@@ -10,6 +10,7 @@ class BinanceClient
   const API_URL = 'https://api.binance.com/';
   const CANDLESTICK_URL = 'api/v3/klines';
   const PRICE_URL = 'api/v3/ticker/price';
+  const EXCHANGE_INFO = 'api/v3/exchangeInfo';
 
   private $tables = [];
   private $cache = [];
@@ -31,7 +32,9 @@ class BinanceClient
     return self::$instance;
   }
 
-
+  /**
+  * Get candle stick
+  */
   public function getCandleSticksData($market, $interval)
   {
     $cacheKey = 'getCandleSticksData_'.$market.$interval;
@@ -48,6 +51,9 @@ class BinanceClient
     return $data;
   }
 
+  /**
+  * Get Price
+  */
   public function getPrice($market)
   {
     $cacheKey = 'getPrice_'.$market;
@@ -63,6 +69,27 @@ class BinanceClient
 
     return $data;
   }
+
+  /**
+  * Get active markets
+  */
+  public function getMarkets()
+  {
+    $url = self::API_URL . self::EXCHANGE_INFO;
+    $response = Http::get($url);
+    $data = json_decode($response->body());
+    $symbols = $data->symbols ?? [];
+
+    $markets = [];
+    foreach($symbols as $symbol){
+      if($symbol->quoteAsset == 'BTC' && $symbol->status == 'TRADING'){
+          $markets[] = $symbol->symbol;
+      }
+    }
+
+    return $markets;
+  }
+
 
   private function getCache($key){
     return $this->cache[$key] ?? null;

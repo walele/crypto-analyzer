@@ -200,4 +200,12 @@ class BotController extends Controller
 
       return $data;
     }
+
+
+    public function fixOldMarkets( BetBot $bot)
+    {
+      $data = $bot->fixOldMarkets();
+
+      return $data;
+    }
 }

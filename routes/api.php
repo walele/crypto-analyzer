@@ -46,6 +46,7 @@ Route::prefix('bot')->group(function () {
 
 Route::prefix('fix')->group(function () {
   Route::get('/fix-real-values', 'API\BotController@fixRealValues');
+  Route::get('/fix-old-markets', 'API\BotController@fixOldMarkets');
 });
 
 Route::prefix('test')->group(function () {
