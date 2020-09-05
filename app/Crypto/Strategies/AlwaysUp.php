@@ -49,7 +49,7 @@ class AlwaysUp implements Strategy
 
     // MovingAverageCompAvgPrice
     $maCompAvgPrice = new MovingAverageCompAvgPrice('15m', 22);
-    $condition = new Condition (2.0, Condition::LOWER, $maCompAvgPrice);
+    $condition = new Condition (1.0, Condition::LOWER, $maCompAvgPrice);
     $this->addCondition('ma15mCompAvgPrice', $condition);
 
   }
