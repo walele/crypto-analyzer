@@ -23,12 +23,13 @@
                   <template v-slot:row-details="row">
                     <div class="stripped-row" >
                       <div class="row" v-for="item in row.item.bets">
-                        
+
                         <div class="col-sm small-text large-col">
                           <p class="title-small">Info</p>
                           <p><b>id</b>: {{ item.id }}</p>
                           <p><b>start</b>: {{ item.times.start }}</p>
                           <p><b>end</b>: {{ item.times.end }}</p>
+                          <p><a target='_blank' :href="item.market.link">market link</a></p>
 
                           <br>
 
