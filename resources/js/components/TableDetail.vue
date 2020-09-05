@@ -29,7 +29,7 @@
                           <p><b>id</b>: {{ item.id }}</p>
                           <p><b>start</b>: {{ item.times.start }}</p>
                           <p><b>end</b>: {{ item.times.end }}</p>
-                          <p><a target='_blank' :href="item.market.link">market link</a></p>
+                          <p><a target='_blank' :href="item.market.link">{{ item.market.name }} link</a></p>
 
                           <br>
 
