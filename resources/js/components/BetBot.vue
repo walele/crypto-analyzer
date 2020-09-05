@@ -65,7 +65,6 @@
       apiUrl="/api/orders"
       perPage="16">
     </table-list>
-
     <hr style="width: 42%">
 
     <table-list
@@ -74,15 +73,23 @@
       apiUrl="/api/trades"
       perPage="16">
     </table-list>
-
     <hr style="width: 42%">
 
     <table-list
       tableId="table-bets"
-      title="Bets"
-      apiUrl="/api/bets"
+      title="Active Bets"
+      apiUrl="/api/bets/actives"
       perPage="16">
     </table-list>
+    <hr style="width: 42%">
+
+    <table-detail
+      tableId="table-betss"
+      title="Old Bets"
+      apiUrl="/api/bets/grouped"
+      perPage="16">
+    </table-detail>
+    <hr style="width: 42%">
 
     <table-list
       tableId="table-logs"
@@ -90,7 +97,6 @@
       apiUrl="/api/logs"
       perPage="16">
     </table-list>
-
     <hr style="width: 42%">
 
   </div>
@@ -100,6 +106,7 @@
 
     import BetComponent from './BetComponent.vue';
     import TableList from './TableList.vue';
+  //  import TableDetail from './TableDetail.vue';
 
     export default {
         mounted() {

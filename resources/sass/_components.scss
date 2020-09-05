@@ -32,3 +32,22 @@
   padding: 2px;
   font-size: 0.8em;
 }
+
+.button{
+  border-radius: 0px;
+  color: $bright;
+  background: $darksoft;
+}
+
+.large-col{
+  min-width: 320px;
+}
+
+.stripped-row{
+  .row{
+    padding:20px;
+  }
+}
+.stripped-row>div:nth-of-type(odd) {
+  background: $darksoft2;
+}

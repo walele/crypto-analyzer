@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Bet;
 use App\Http\Resources\Bets;
 use App\Http\Resources\BetCollection;
+use App\Http\Resources\BetGroupCollection;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Crypto\Indicators\MovingAverageCompAvgPrice;
@@ -23,6 +24,18 @@ class BetController extends Controller
 
         //return new Bets(Bet::orderBy('id', 'desc')->get());
     }
+
+    public function actives()
+    {
+      return BetCollection::make(Bet::where('active', 1)->orderBy('id', 'desc')->limit(200)->get());
+    }
+
+
+    public function grouped()
+    {
+      return BetGroupCollection::make(Bet::orderBy('id', 'desc')->limit(200)->get());
+    }
+
 
     public function csv()
     {

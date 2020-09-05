@@ -13741,6 +13741,24 @@ a.text-dark:focus {
   font-size: 0.8em;
 }
 
+.button {
+  border-radius: 0px;
+  color: #91aace;
+  background: #1d2636;
+}
+
+.large-col {
+  min-width: 320px;
+}
+
+.stripped-row .row {
+  padding: 20px;
+}
+
+.stripped-row > div:nth-of-type(odd) {
+  background: #232d40;
+}
+
 body .main {
   background: #0f1724;
   color: #91aace;
@@ -13753,6 +13771,12 @@ body .main {
 
 .small-text p {
   margin: 2px;
+}
+
+.title-small {
+  font-size: 1.3em;
+  font-weight: bold;
+  padding: 4px 0px;
 }
 
 a {

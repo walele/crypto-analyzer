@@ -1,6 +1,6 @@
 <template>
 
-  <div class="row justify-content-lg-center hscroll">
+  <div class="row justify-content-md-center hscroll">
       <div class="">
           <div class="card ">
               <div class="card-header">{{ title }}</div>
@@ -115,11 +115,7 @@
           method: 'get',
           url: this.apiUrl
         }).then(res => {
-          console.log(res.data);
           res.data.data.forEach(item => this.items.push(item));
-          console.log(this.items)
-          //res.data.data.forEach(trade => this.items.push(new Trade(trade)));
-
         });
 
       }

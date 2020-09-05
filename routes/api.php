@@ -18,6 +18,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::prefix('bets')->group(function () {
+  Route::get('/actives', 'API\BetController@actives');
+  Route::get('/grouped', 'API\BetController@grouped');
+});
 Route::apiResources ([
   'bets' => 'API\BetController',
   'trades' => 'API\TradeController',

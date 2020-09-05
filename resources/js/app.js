@@ -7,6 +7,12 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('bet-component', require('./components/BetComponent.vue').default);
+console.log(typeof  require('./components/TableDetail.vue').default);
+Vue.component('table-detail', require('./components/TableDetail.vue').default);
+
+
 require('./betbot.js');
 //import {   BTable } from 'bootstrap-vue'
 /**
@@ -21,9 +27,7 @@ require('./betbot.js');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 // Install BootstrapVue
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-Vue.component('bet-component', require('./components/BetComponent.vue').default);
-//Vue.component('table-list', require('./components/TableList.vue').default);
+
 //Vue.component('b-table', BTable);
 //Vue.use(BootstrapVue)
 
