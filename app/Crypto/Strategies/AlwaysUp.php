@@ -31,42 +31,26 @@ class AlwaysUp implements Strategy
     $condition = new Condition (0.33, Condition::BIGGER, $lastPricesUp);
     $this->addCondition('lastPricesUpScore', $condition);
 
-
-    // MovingAverageComp
-    $ma1hComp7higher22 = new MovingAverageComp('1h', 7, 22, MovingAverageComp::HIGHER);
-    $condition = new Condition (-1.0, Condition::BIGGER, $ma1hComp7higher22);
-    $this->addCondition('ma1hComp7higher22', $condition);
-
-    // MovingAverageComp
-    $ma15mComp7lower22 = new MovingAverageComp('15m', 7, 22, MovingAverageComp::HIGHER);
-    $condition = new Condition (10.0, Condition::LOWER, $ma15mComp7lower22);
-    $this->addCondition('ma15mComp7lower22', $condition);
-
-    // MovingAverageLatestDiffCumul 15min
-    $ma15mLatestCumul = new MovingAverageLatestDiffCumul('15m', 7, 7);
-    $condition = new Condition (-1.0, Condition::BIGGER, $ma15mLatestCumul);
-    $this->addCondition('ma15mLatestCumul', $condition);
+    // MovingAverageLatestDiffCumul 1d
+    $ma1dLatestCumul = new MovingAverageLatestDiffCumul('1d', 7, 7);
+    $condition = new Condition (-1.0, Condition::BIGGER, $ma1dLatestCumul);
+    $this->addCondition('ma1dLatestCumul', $condition);
 
     // MovingAverageLatestDiffCumul 1h
     $ma1hLatestCumul = new MovingAverageLatestDiffCumul('1h', 7, 7);
     $condition = new Condition (-1.0, Condition::BIGGER, $ma1hLatestCumul);
     $this->addCondition('ma1hLatestCumul', $condition);
 
-    // MovingAverageLatestDiffCumul 1d
-    $ma1dLatestCumul = new MovingAverageLatestDiffCumul('1d', 7, 7);
-    $condition = new Condition (-1.0, Condition::BIGGER, $ma1dLatestCumul);
-    $this->addCondition('ma1dLatestCumul', $condition);
+    // MovingAverageComp
+    $ma1hComp7higher22 = new MovingAverageComp('1h', 7, 22, MovingAverageComp::HIGHER);
+    $condition = new Condition (-1.0, Condition::BIGGER, $ma1hComp7higher22);
+    $this->addCondition('ma1hComp7higher22', $condition);
+
 
     // MovingAverageCompAvgPrice
     $maCompAvgPrice = new MovingAverageCompAvgPrice('15m', 22);
-    $condition = new Condition (55.0, Condition::LOWER, $maCompAvgPrice);
+    $condition = new Condition (2.0, Condition::LOWER, $maCompAvgPrice);
     $this->addCondition('ma15mCompAvgPrice', $condition);
-
-    // RSI
-    $rsi = new RSI('15m', 14);
-    $condition = new Condition (110.0, Condition::LOWER, $rsi);
-    $this->addCondition('rsi', $condition);
-
 
   }
 
