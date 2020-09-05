@@ -81,7 +81,7 @@ class MovingAverageLatestDiffCumul implements Indicator
 
       // If ma2=0, it's probably because not enough data.
       if( $ma2 == 0){
-        return 0;
+        return false;
       }
 
       $diff = Helpers::calcPercentageDiff($ma2, $ma1);

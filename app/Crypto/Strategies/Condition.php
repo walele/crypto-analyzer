@@ -37,6 +37,11 @@ class Condition
 
   public function checkCondition($value): bool
   {
+    // If indicator as false value return false
+    if($value === false){
+      return false;
+    }
+
     if($this->condition === self::LOWER)
     {
       return $value < $this->value;
