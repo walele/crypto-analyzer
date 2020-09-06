@@ -13765,6 +13765,10 @@ input {
   background: #232d40;
 }
 
+pre {
+  color: #11ece5;
+}
+
 body .main {
   background: #0f1724;
   color: #91aace;
