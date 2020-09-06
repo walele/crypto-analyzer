@@ -25,7 +25,7 @@ trait StrategyConditions
     return $str;
   }
 
-  public function addCondition(string $name, Condition $condition)
+  public function addCondition(string $name, ConditionInterface $condition)
   {
     $this->conditions[$name] = $condition;
   }

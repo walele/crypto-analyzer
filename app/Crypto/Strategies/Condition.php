@@ -5,7 +5,7 @@ namespace App\Crypto\Strategies;
 use App\Crypto\Table;
 use App\Crypto\Indicators\Indicator;
 
-class Condition
+class Condition implements ConditionInterface
 {
   const LOWER = '<';
   const BIGGER = '>';

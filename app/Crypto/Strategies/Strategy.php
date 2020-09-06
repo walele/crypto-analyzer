@@ -15,7 +15,7 @@ interface Strategy
 
   public function getIndicators(): array;
 
-  public function addCondition(string $name, Condition $condition);
+  public function addCondition(string $name, ConditionInterface $condition);
 
   public function getConditions(): array;
 

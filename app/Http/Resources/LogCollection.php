@@ -26,12 +26,21 @@ class LogCollection extends ResourceCollection
 
           foreach($payload as $market => $log){
 
+            // Create log container
             if( !isset($parsed[$market])){
-              $parsed[$market] = [
+
+              // market link
+              $market_link = url('/log/' . $market);
+              $name_link = [
                 'name' => $market,
+                'link' => $market_link
+              ];
+              $parsed[$market] = [
+                'name_link' => $name_link,
                 'logs' => []
               ];
             }
+
             $parsed[$market]['logs'][] = [
                 'created_at' => $created_at,
                 'log' => $log,

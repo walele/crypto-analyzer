@@ -14,7 +14,7 @@ class Log extends JsonResource
      * @return array
      */
     public function toArray($request)
-    {
+    {        
         // Date format
         $created_at = $this->created_at;
         $created_at->setTimezone('America/New_York');

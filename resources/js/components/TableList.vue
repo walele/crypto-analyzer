@@ -1,15 +1,25 @@
 <template>
 
-  <div class="row justify-content-md-center hscroll">
+  <div class="row justify-content-center hscroll">
       <div class="">
           <div class="card ">
-              <div class="card-header">{{ title }}</div>
+              <div class="card-header">
+                <h6>{{ title }}</h6>
+                filter
+                <b-form-input
+                  v-model="filter"
+                  type="search"
+                  placeholder="Type to Search"
+                ></b-form-input>
+              </div>
 
               <div class="card-body">
 
                 <b-table :id="tableId" striped hover
                     :items="items"
                     :fields="fields"
+                    :filter="filter"
+                    :filterIncludedFields="filterOn"
                     :per-page="perPage"
                     :currentPage="currentPage">
                   <template v-slot:cell(payload)="data">
@@ -47,7 +57,7 @@
                       </p>
                     </div>
                   </template>
-                  <template v-slot:cell(market)="data">
+                  <template v-slot:cell(name_link)="data">
                     <div class="small-text">
                       <a target='_blank' :href="data.value.link">{{ data.value.name }}</a>
                     </div>
@@ -105,7 +115,9 @@
     data() {
       return {
         currentPage: 1,
-        items: []
+        items: [],
+        filter: null,
+        filterOn: ['name_link'],
       }
     },
     methods: {
