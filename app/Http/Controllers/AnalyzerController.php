@@ -15,7 +15,7 @@ class AnalyzerController extends Controller
   public function log($market)
   {
     $result = [];
-    $logs = LogCollection::make(Log::orderBy('id', 'desc')->limit(50)->get());
+    $logs = LogCollection::make(Log::orderBy('id', 'desc')->limit(100)->get());
     $logs =$logs->toArray(null);
     foreach($logs as $log){
       $name = $log['name_link']['name'] ?? '';

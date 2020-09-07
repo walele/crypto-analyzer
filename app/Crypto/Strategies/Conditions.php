@@ -44,22 +44,29 @@ class Conditions implements ConditionInterface
       return false;
     }
 
+    $result = false;
+
     foreach($this->conditions as $cond){
       $condition = $cond[1];
       $condition_value = $cond[0];
 
       if($condition === self::LOWER)
       {
-        return $value < $condition_value;
+        $result = $value < $condition_value;
       }
       else if ( $condition === self::BIGGER)
       {
-        return $value > $condition_value;
+        $result = $value > $condition_value;
+      }
+
+      // If a condition is false, return false
+      if($result == false){
+        return $result;
       }
     }
 
 
-    return false;
+    return $result;
 
   }
 }
