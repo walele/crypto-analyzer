@@ -7,15 +7,15 @@ use App\Crypto\Helpers;
 use Carbon\Carbon;
 use App\Crypto\Indicators\traits\getMovingAverage;
 
-class Volume implements Indicator
+class VolumeAvgCompCur implements Indicator
 {
-  use getMovingAverage;
-
   private $interval = '5m';
   private $length = 14;
 
-  public function __construct()
+  public function __construct($interval, $length)
   {
+    $this->interval = $interval;
+    $this->length = $length;
   }
 
   /**
@@ -23,7 +23,7 @@ class Volume implements Indicator
   */
   public function getKey(): string
   {
-    return 'RSI';
+    return 'VolumeAvgCompCur';
   }
 
   /**
@@ -31,7 +31,7 @@ class Volume implements Indicator
   */
   public function getPayloadKey(): string
   {
-    $key = sprintf("rsi_%s_%s",
+    $key = sprintf("VolumeAvgCompCur_%s_%s",
       $this->interval, $this->length  );
 
     return $key;
@@ -42,7 +42,11 @@ class Volume implements Indicator
   */
   public function getName(): string
   {
-    return 'RSI'. $this->interval;
+    $name = sprintf('%s %s avg volume vs current ',
+              $this->interval,
+              $this->length);
+              
+    return $name;
   }
 
   /**
@@ -56,28 +60,20 @@ class Volume implements Indicator
     $data = $client->getCandleSticksData($market, $this->interval);
 
     $nb = count($data);
-    $closePrices = [];
-    $mvtUpwards = [];
-    $mvtDownwards = [];
+    $volumes = [];
     $closeTimes = [];
 
     // Loop from more recent
     $start = $nb-1;
     $end = ($nb-$this->length-1);
 
+    // Get first volume
+    $cur_volume = (float) $data[$start-1][5];
+
     for( $i=$start; $i > $end && $i > 0; $i--){
 
-      $priceA = (float) $data[$i][4];     // Current time
-      $priceB = (float) $data[$i][1];    // oldest time
-
-      if($priceA > $priceB){
-        $mvtUpwards[] = ($priceA-$priceB);
-        $mvtDownwards[] = 0;
-      }else{
-        $mvtDownwards[] = ($priceB-$priceA);
-        $mvtUpwards[] = 0;
-      }
-
+      $volume = (float) $data[$i][5];     // Volume
+      $volumes[] = $volume;
       $timestamp = $data[$i][6];
       $timestamp = (int) ($timestamp / 1000);
       $date = new Carbon($timestamp);
@@ -87,22 +83,13 @@ class Volume implements Indicator
 
     }
 
-    $mvtUpwards = collect($mvtUpwards);
-    $avgUpward = $mvtUpwards->avg();
+    $volumes = collect($volumes);
+    $avg = $volumes->avg();
+    $diff = Helpers::calcPercentageDiff($avg, $cur_volume);
 
-    $mvtDownwards = collect($mvtDownwards);
-    $avgDownward = $mvtDownwards->avg();
+    //     $diff = number_format($diff, 2);
 
-    if($avgDownward == 0){
-      return 0;
-    }
-
-    $relative_strength = ($avgUpward / $avgDownward);
-    $rsi = 100.0 - (100.0 / ($relative_strength+1.0) );
-
-    $rsi = number_format($rsi, 2);
-
-    return $rsi;
+    return $diff;
 
   }
 

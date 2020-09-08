@@ -9,7 +9,7 @@ use App\Http\Resources\BetGroupCollection;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Crypto\Indicators\MovingAverageCompAvgPrice;
-use App\Crypto\Indicators\RSI;
+use App\Crypto\Indicators\Volume;
 
 class BetController extends Controller
 {
@@ -54,8 +54,8 @@ class BetController extends Controller
 
     public function testIndicator()
     {
-      $indicator = new RSI( '15m', 14);
-      $value = $indicator->getValue('YFIBTC');
+      $indicator = new Volume( '5m', 100);
+      $value = $indicator->getValue('RDNBTC');
 
       return $value;
     }
