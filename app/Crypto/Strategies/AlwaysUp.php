@@ -8,7 +8,7 @@ use App\Crypto\Indicators\MovingAverageComp;
 use App\Crypto\Indicators\MovingAverageLatestDiffCumul;
 use App\Crypto\Indicators\LastPricesDiffPercCumul;
 use App\Crypto\Indicators\MovingAverageCompAvgPrice;
-use App\Crypto\Indicators\VolumeAvgCompCur;
+use App\Crypto\Indicators\VolumeBTC;
 
 use App\Crypto\Table;
 
@@ -37,9 +37,9 @@ class AlwaysUp implements Strategy
     //$this->addCondition('ma1dLatestCumul', $condition);
 
     // Volume 5 min
-    $volumeComp = new VolumeAvgCompCur('5m', 100);
-    $condition = new Condition (10.0, Condition::BIGGER, $volumeComp);
-    $this->addCondition('volumeAvgCompCur', $condition);
+    $volumeComp = new VolumeBTC('1d', 1);
+    $condition = new Condition (60.0, Condition::BIGGER, $volumeComp);
+    $this->addCondition('VolumeBTC', $condition);
 
     // MovingAverageLatestDiffCumul 1h
     $ma1hLatestCumul = new MovingAverageLatestDiffCumul('1h', 3, 5);

@@ -9,7 +9,7 @@ use App\Http\Resources\BetGroupCollection;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Crypto\Indicators\MovingAverageCompAvgPrice;
-use App\Crypto\Indicators\Volume;
+use App\Crypto\Indicators\VolumeBTC;
 
 class BetController extends Controller
 {
@@ -54,8 +54,8 @@ class BetController extends Controller
 
     public function testIndicator()
     {
-      $indicator = new Volume( '5m', 100);
-      $value = $indicator->getValue('RDNBTC');
+      $indicator = new VolumeBTC( '1d', 4);
+      $value = $indicator->getValue('ONGBTC');
 
       return $value;
     }
