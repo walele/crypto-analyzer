@@ -9,8 +9,8 @@ require('./bootstrap');
 window.Vue = require('vue');
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('bet-component', require('./components/BetComponent.vue').default);
-console.log(typeof  require('./components/TableDetail.vue').default);
 Vue.component('table-detail', require('./components/TableDetail.vue').default);
+Vue.component('bet-row', require('./components/BetRow.vue').default);
 
 
 require('./betbot.js');

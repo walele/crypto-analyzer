@@ -69,6 +69,16 @@
                   <p>Bet time {{ stats.daily_wins.bet_time }}h</p>
                   <p>Start time {{ stats.daily_wins.start_time }}</p>
                   <p>Count {{ stats.daily_wins.count }}</p>
+
+                  <div class="stripped-row">
+                    <bet-row
+                      v-for="item in stats.daily_wins.bets"
+                      v-bind:key="item.id"
+                      v-bind:item="item"
+                    ></bet-row>
+
+                  </div>
+
                 </div>
             </div>
           </div>
@@ -133,7 +143,9 @@
           return {
             bets : [],
             trades : [],
-            stats : [],
+            stats : {
+              daily_wins: {}
+            },
             strategy: '',
             statsBets: [],
             statsTrades: [],

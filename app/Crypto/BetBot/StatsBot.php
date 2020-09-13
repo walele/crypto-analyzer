@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Binance;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\BetCollection;
 
 class StatsBot
 {
@@ -38,11 +39,14 @@ class StatsBot
                   $start_time )
                 ->get();
 
+    $bets = BetCollection::make($daily_win);
+
+
     $data = [
       'bet_time' => $bet_time,
       'start_time' => $start_time,
       'count' => $daily_win->count(),
-      'bets' => $daily_win->toArray()
+      'bets' => $bets
     ];
 
     return $data;
