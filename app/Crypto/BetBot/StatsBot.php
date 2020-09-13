@@ -26,6 +26,45 @@ class StatsBot
   }
 
 
+  public function getWinStats()
+  {
+      $data = [];
+
+      // Get startegy key
+      $strategies = $this->betBot->getStrategies();
+      foreach($strategies as $strat){
+        $strat_key = $strat->getKey();
+      }
+
+      // Get win bets for strategy
+      $bets = Bet::where('strategy', $strat_key )
+                  ->where('success', true)
+                    ->get();
+
+      $average_success_time = '';
+      $bets_times = [];
+      $durations = [];
+      foreach($bets as $bet){
+
+        $end_at = Carbon::parse($bet->end_at);
+        $duration = $bet->created_at->diffInHours($end_at);
+        $durations[] = $duration;
+      }
+
+      $durations = collect($durations);
+
+      $data = [
+        'average_success_time' => $durations->avg(),
+        'count' => $bets->count(),
+        'strat_key' => $strat_key
+      ];
+
+      return $data;
+  }
+
+  /**
+  *
+  */
   public function getLastIntervalWins()
   {
     $strategies = $this->betBot->getStrategies();
@@ -33,7 +72,7 @@ class StatsBot
       $bet_time = $strat->getActiveTime();
     }
 
-    $start_time = Carbon::now()->subHours($bet_time * 3)->toDateTimeString();
+    $start_time = Carbon::now()->subHours($bet_time)->toDateTimeString();
     $daily_win = Bet::where('success', true)
                 ->where('created_at', '>',
                   $start_time )
