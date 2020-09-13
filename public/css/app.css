@@ -13779,6 +13779,10 @@ body .main {
   padding: 10px;
 }
 
+p {
+  margin-bottom: 0.5rem;
+}
+
 .small-text {
   font-size: 0.8em;
 }

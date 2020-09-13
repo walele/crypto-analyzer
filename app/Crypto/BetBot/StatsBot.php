@@ -45,7 +45,9 @@ class StatsBot
       $bets_times = [];
       $durations = [];
       $min_percs = [];
+      $markets_win = [];
 
+      // win bets for strategy
       foreach($bets as $bet){
 
         // calc duration
@@ -56,16 +58,24 @@ class StatsBot
         // calc min perc
         $min_perc = Helpers::calcPercentageDiff($bet->buy_price, $bet->final_min_price);
         $min_percs[] = $min_perc;
+
+        // markets win
+        if( isset($markets_win[$bet->market])){
+          $markets_win[$bet->market] += 1;
+        } else{
+          $markets_win[$bet->market] =1;
+        }
       }
 
       $durations = collect($durations);
       $min_percs = collect($min_percs);
 
       $data = [
-        'average_success_time' => $durations->avg(),
-        'average_min_perc' => $min_percs->avg(),
+        'average_success_time' => number_format($durations->avg(), 2),
+        'average_min_perc' => number_format($min_percs->avg(), 2),
         'count' => $bets->count(),
-        'strat_key' => $strat_key
+        'strat_key' => $strat_key,
+        'markets_win' => $markets_win
       ];
 
       return $data;

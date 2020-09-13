@@ -62,13 +62,14 @@
     <div class="row justify-content-center">
         <div class="col-sm">
             <div class="card">
-                <div class="card-header">Stats</div>
+                <div class="card-header">Daily Stats</div>
 
                 <div class="card-body">
                   <p>Last 24h Bets</p>
                   <p>Bet time {{ stats.daily_wins.bet_time }}h</p>
                   <p>Start time {{ stats.daily_wins.start_time }}</p>
                   <p>Count {{ stats.daily_wins.count }}</p>
+
 
                   <button class="button" v-on:click="statsBetsHide = !statsBetsHide">Show/Hide</button>
                   <div class="stripped-row" v-bind:class="{ 'hide' : statsBetsHide }">
@@ -79,6 +80,16 @@
                     ></bet-row>
 
                   </div>
+
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Success Stats</div>
+                <div class="card-body">
+                  <p v-for="(value, name) in stats.win_stats">
+                    <b>{{ name }}</b> {{ value }}
+                  </p>
 
                 </div>
             </div>
