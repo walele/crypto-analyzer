@@ -49,6 +49,11 @@ Route::prefix('bot')->group(function () {
   Route::get('/ml/evaluate/{estimator}', 'API\BotController@evaluateEstimator');
 });
 
+Route::prefix('stats')->group(function () {
+  Route::get('/', 'API\StatsController@index');
+  Route::get('/daily', 'API\StatsController@daily');
+});
+
 Route::prefix('fix')->group(function () {
   Route::get('/fix-real-values', 'API\BotController@fixRealValues');
   Route::get('/fix-old-markets', 'API\BotController@fixOldMarkets');

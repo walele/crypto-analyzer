@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use App\Crypto\Table;
 use App\Bet;
 use App\Trade;
+use App\Crypto\BetBot\BetBot;
 
 class Stats
 {
@@ -148,5 +149,22 @@ class Stats
 
     return $r;
 
+  }
+
+  /**
+  * Daily stats
+  */
+  public static function getDailyWin()
+  {
+
+    $daily_win = Bet::where('success', true)
+                ->where('created_at', '>',
+                  Carbon::now()->subHours(24)->toDateTimeString() )
+                ->get();
+
+
+    $data = $daily_win->toArray();
+
+    return $data;
   }
 }

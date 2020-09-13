@@ -59,6 +59,14 @@ class BetBot
   }
 
   /**
+  * Get strategies
+  */
+  public function getStrategies()
+  {
+      return $this->strategies;
+  }
+
+  /**
   * Fun all strategies and make bets
   */
   private function run()

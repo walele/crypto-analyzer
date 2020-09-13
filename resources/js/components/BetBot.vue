@@ -59,6 +59,26 @@
 
     <hr style="width: 42%">
 
+    <div class="row justify-content-center">
+        <div class="col-sm">
+            <div class="card">
+                <div class="card-header">Stats</div>
+
+                <div class="card-body">
+                  <p>Last 24h Bets</p>
+                  <ul class="small-list">
+                    <li v-for="bet in stats.daily_wins">
+                       - {{ bet }}
+                    </li>
+                  </ul>
+
+                </div>
+            </div>
+          </div>
+      </div>
+
+    <hr style="width: 42%">
+
     <table-list
       tableId="table-order"
       title="Orders"
@@ -116,6 +136,7 @@
           return {
             bets : [],
             trades : [],
+            stats : [],
             strategy: '',
             statsBets: [],
             statsTrades: [],
@@ -195,6 +216,13 @@
               url: '/api/bot/stats/mlbets'
             }).then(res => {
               this.statsMlBets = res.data.stats
+            });
+
+            axios({
+              method: 'get',
+              url: '/api/stats/'
+            }).then(res => {
+              this.stats = res.data.stats
             });
 
 
