@@ -70,7 +70,8 @@
                   <p>Start time {{ stats.daily_wins.start_time }}</p>
                   <p>Count {{ stats.daily_wins.count }}</p>
 
-                  <div class="stripped-row">
+                  <button class="button" v-on:click="statsBetsHide = !statsBetsHide">Show/Hide</button>
+                  <div class="stripped-row" v-bind:class="{ 'hide' : statsBetsHide }">
                     <bet-row
                       v-for="item in stats.daily_wins.bets"
                       v-bind:key="item.id"
@@ -146,6 +147,7 @@
             stats : {
               daily_wins: {}
             },
+            statsBetsHide: true,
             strategy: '',
             statsBets: [],
             statsTrades: [],
@@ -201,7 +203,9 @@
         components() {
           BetComponent,
           BTable,
-          BPagination
+          BPagination,
+          BButton,
+          BCollapse
         },
         methods: {
           async read() {

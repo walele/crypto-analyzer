@@ -13769,6 +13769,10 @@ pre {
   color: #11ece5;
 }
 
+.hide {
+  display: none;
+}
+
 body .main {
   background: #0f1724;
   color: #91aace;

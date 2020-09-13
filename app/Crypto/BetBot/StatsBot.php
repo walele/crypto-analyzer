@@ -33,7 +33,7 @@ class StatsBot
       $bet_time = $strat->getActiveTime();
     }
 
-    $start_time = Carbon::now()->subHours($bet_time)->toDateTimeString();
+    $start_time = Carbon::now()->subHours($bet_time * 3)->toDateTimeString();
     $daily_win = Bet::where('success', true)
                 ->where('created_at', '>',
                   $start_time )
