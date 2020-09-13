@@ -368,6 +368,7 @@ class BetBot
           'successPrice' => $successPrice,
           'maxPrice' => $maxPrice,
           'minPrice' => $minPrice,
+          'prices' => $prices->toArray(),
           'fail' => $fail,
           'success' => $success
         ];
