@@ -346,7 +346,7 @@ class BetBot
       $stopPrice = (float) $bet->stop_price;
 
       // Get last prices from db
-      $prices = $client->getMarketPricesAfter($bet->market, $created_at);
+      $prices = $client->getMarketPricesAfter($bet->market, $created_at, 500);
       $maxPrice = (float) $prices->max('price');
       $minPrice = (float) $prices->min('price');
 
@@ -368,7 +368,7 @@ class BetBot
           'successPrice' => $successPrice,
           'maxPrice' => $maxPrice,
           'minPrice' => $minPrice,
-          'prices' => $prices->toArray(),
+        //  'prices' => $prices->toArray(),
           'fail' => $fail,
           'success' => $success
         ];
