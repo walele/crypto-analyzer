@@ -44,17 +44,26 @@ class StatsBot
       $average_success_time = '';
       $bets_times = [];
       $durations = [];
+      $min_percs = [];
+
       foreach($bets as $bet){
 
+        // calc duration
         $end_at = Carbon::parse($bet->end_at);
         $duration = $bet->created_at->diffInHours($end_at);
         $durations[] = $duration;
+
+        // calc min perc
+        $min_perc = Helpers::calcPercentageDiff($bet->buy_price, $bet->final_min_price);
+        $min_percs[] = $min_perc;
       }
 
       $durations = collect($durations);
+      $min_percs = collect($min_percs);
 
       $data = [
         'average_success_time' => $durations->avg(),
+        'average_min_perc' => $min_percs->avg(),
         'count' => $bets->count(),
         'strat_key' => $strat_key
       ];
