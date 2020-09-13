@@ -29,17 +29,21 @@ class StatsBot
   {
     $strategies = $this->betBot->getStrategies();
     foreach($strategies as $strat){
-      $betTime = $strat->getActiveTime();
+      $bet_time = $strat->getActiveTime();
     }
 
+    $start_time = Carbon::now()->subHours($bet_time)->toDateTimeString();
     $daily_win = Bet::where('success', true)
                 ->where('created_at', '>',
-                  Carbon::now()->subHours($betTime)->toDateTimeString() )
+                  $start_time )
                 ->get();
 
-
-    $data = $daily_win->toArray();
-
+    $data = [
+      'bet_time' => $bet_time,
+      'start_time' => $start_time,
+      'count' => $daily_win->count(),
+      'bets' => $daily_win->toArray()
+    ];
 
     return $data;
   }

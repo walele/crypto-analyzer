@@ -66,12 +66,9 @@
 
                 <div class="card-body">
                   <p>Last 24h Bets</p>
-                  <ul class="small-list">
-                    <li v-for="bet in stats.daily_wins">
-                       - {{ bet }}
-                    </li>
-                  </ul>
-
+                  <p>Bet time {{ stats.daily_wins.bet_time }}h</p>
+                  <p>Start time {{ stats.daily_wins.start_time }}</p>
+                  <p>Count {{ stats.daily_wins.count }}</p>
                 </div>
             </div>
           </div>
