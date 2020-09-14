@@ -67,6 +67,10 @@ class StatsBot
         }
       }
 
+      //print_r($markets_win);
+      arsort($markets_win);
+      //print_r($markets_win);
+
       $durations = collect($durations);
       $min_percs = collect($min_percs);
 
