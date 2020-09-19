@@ -2,7 +2,8 @@
   <div class="row bet-card">
     <div class="col-sm large-col">
       <p>
-        [{{ item.id }} ]<a target='_blank' :href="item.name_link.link">{{ item.name_link.name }}</a>
+        <small>[{{ item.id }}]</small>
+        <a target='_blank' :href="item.name_link.link">{{ item.name_link.name }}</a>
         <span v-if="item.success == 1">Success 🔥</span>
         <span v-else>Fail 😢</span>
       </p>
