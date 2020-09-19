@@ -3,10 +3,12 @@
     <div class="col-sm large-col">
       <p>
         <a target='_blank' :href="item.name_link.link">{{ item.name_link.name }}</a>
-        <span v-if="item.success">Success 🔥</span>
+        <span v-if="item.success == 1">Success 🔥</span>
         <span v-else>Fail 😢</span>
       </p>
       <p class="subtle-text">{{ item.times.short }}</p>
+      <p><b>id</b> {{ item.id }}</p>
+      <p><b>success</b> {{ item.success }}</p>
       <p><b>min</b> {{ item.final_prices.min_perc }}%</p>
       <p><b>max</b> {{ item.final_prices.max_perc }}%</p>
     </div>

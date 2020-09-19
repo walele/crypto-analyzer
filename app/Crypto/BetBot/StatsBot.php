@@ -149,7 +149,7 @@ class StatsBot
 
 
       // Get strategies's bet
-      $start_time = Carbon::now()->subHours(24)->toDateTimeString();
+      $start_time = Carbon::now()->subHours(24 )->toDateTimeString();
       $strat_key = $strat->getKey();
       $bets = Bet::where('strategy', $strat_key )
                   ->where('active', false)
