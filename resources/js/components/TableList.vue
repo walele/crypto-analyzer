@@ -1,7 +1,7 @@
 <template>
 
-  <div class="row justify-content-center hscroll">
-      <div class="">
+  <div class="row hscroll">
+      <div class="container-center">
           <div class="card ">
               <div class="card-header">
                 <h6>{{ title }}</h6>
