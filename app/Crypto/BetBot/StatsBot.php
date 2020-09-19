@@ -75,14 +75,37 @@ class StatsBot
       $min_percs = collect($min_percs);
 
       $data = [
-        'average_success_time' => number_format($durations->avg(), 2),
-        'average_min_perc' => number_format($min_percs->avg(), 2),
-        'count' => $bets->count(),
-        'strat_key' => $strat_key,
-        'markets_win' => $markets_win
+        'stats' => [
+          'average_success_time' => number_format($durations->avg(), 2),
+          'average_min_perc' => number_format($min_percs->avg(), 2),
+          'count' => $bets->count(),
+        ],
+        'bets' => $markets_win
       ];
 
       return $data;
+  }
+
+  public function getMarketsStats()
+  {
+    $data = [];
+
+    // Get startegy key
+    $strategies = $this->betBot->getStrategies();
+    foreach($strategies as $strat){
+      $strat_key = $strat->getKey();
+    }
+
+    // Get win bets for strategy
+    $bets = Bet::where('strategy', $strat_key )
+                  ->get();
+
+    foreach($bets as $bet){
+      if( $bet->success){
+
+      }
+    }
+
   }
 
   /**
@@ -97,8 +120,7 @@ class StatsBot
 
     $start_time = Carbon::now()->subHours($bet_time)->toDateTimeString();
     $daily_win = Bet::where('success', true)
-                ->where('created_at', '>',
-                  $start_time )
+                ->where('created_at', '>',  $start_time )
                 ->get();
 
     $bets = BetCollection::make($daily_win);
@@ -113,4 +135,59 @@ class StatsBot
 
     return $data;
   }
+
+  /**
+  * Get last 24h stats by strategies
+  */
+  public function getStrategiesDailyStats()
+  {
+    $data = [];
+
+    // Loop strategies
+    $strategies = $this->betBot->getStrategies();
+    foreach($strategies as $strat){
+
+
+      // Get strategies's bet
+      $start_time = Carbon::now()->subHours(24)->toDateTimeString();
+      $strat_key = $strat->getKey();
+      $bets = Bet::where('strategy', $strat_key )
+                  ->where('active', false)
+                  ->where('created_at', '>',  $start_time )
+                  ->get();
+
+
+
+      // Init strategies's stats object
+      $total = $bets->count();
+
+      // Get win stats
+      $filtered = $bets->where('success', true);
+      $win = $filtered->count();
+      $win_bets = BetCollection::make($filtered);
+
+      // Get loss stats
+      $filtered = $bets->where('success', false);
+      $loss = $filtered->count();
+      $loss_bets = BetCollection::make($filtered);
+      $bets = BetCollection::make($bets);
+
+      $item = [
+        'name' =>  $strat->getName(),
+        'date' => $start_time,
+        'stats' => [
+          'total' => $total,
+          'win' => $win,
+          'loss' => $loss,
+        ],
+        'bets' => $bets
+      ];
+
+      $data[] = $item;
+    }
+
+
+    return $data;
+  }
+
 }

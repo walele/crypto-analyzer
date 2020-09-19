@@ -65,3 +65,15 @@ pre{
 .hide{
   display: none;
 }
+
+.subtle-text{
+  margin: 5px 0px;
+  color: $grey;
+}
+
+.float-box{
+  float: left;
+  border: 1px solid $grey;
+  padding: 2px 6px;
+  margin: 6px;
+}

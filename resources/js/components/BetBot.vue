@@ -65,21 +65,12 @@
                 <div class="card-header">Daily Stats</div>
 
                 <div class="card-body">
-                  <p>Last 24h Bets</p>
-                  <p>Bet time {{ stats.daily_wins.bet_time }}h</p>
-                  <p>Start time {{ stats.daily_wins.start_time }}</p>
-                  <p>Count {{ stats.daily_wins.count }}</p>
 
-
-                  <button class="button" v-on:click="statsBetsHide = !statsBetsHide">Show/Hide</button>
-                  <div class="stripped-row" v-bind:class="{ 'hide' : statsBetsHide }">
-                    <bet-row
-                      v-for="item in stats.daily_wins.bets"
-                      v-bind:key="item.id"
-                      v-bind:item="item"
-                    ></bet-row>
-
-                  </div>
+                  <strategy-stats
+                    v-for="item in stats.daily_stats"
+                    v-bind:key="item.name"
+                    v-bind:item="item"
+                  ></strategy-stats>
 
                 </div>
             </div>
@@ -87,9 +78,15 @@
             <div class="card">
                 <div class="card-header">Success Stats</div>
                 <div class="card-body">
-                  <p v-for="(value, name) in stats.win_stats">
+                  <p v-for="(value, name) in stats.win_stats.stats">
                     <b>{{ name }}</b> {{ value }}
                   </p>
+
+                  <div >
+                    <div class="float-box" v-for="(value, name) in stats.win_stats.bets">
+                      <span>{{ name }}</span> {{ value }}
+                    </div>
+                  </div>
 
                 </div>
             </div>

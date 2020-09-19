@@ -18,8 +18,9 @@ class StatsController extends Controller
     public function index( StatsBot $bot)
     {
       $data['stats'] = [
+        'daily_stats' => $bot->getStrategiesDailyStats(),
         'win_stats' => $bot->getWinStats(),
-        'daily_wins' => $bot->getLastIntervalWins(),
+        'markets_stats' => $bot->getMarketsStats(),
       ];
 
       return $data;

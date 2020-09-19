@@ -46,7 +46,7 @@ class Helpers
       return 0;
     }
 
-    return number_format( ( ($endPrice - $startPrice) / $endPrice) * 100, 4);
+    return number_format( ( ($endPrice - $startPrice) / $endPrice) * 100, 2);
 
   }
 

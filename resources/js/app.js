@@ -11,6 +11,8 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 Vue.component('bet-component', require('./components/BetComponent.vue').default);
 Vue.component('table-detail', require('./components/TableDetail.vue').default);
 Vue.component('bet-row', require('./components/BetRow.vue').default);
+Vue.component('bet-row-simple', require('./components/BetRowSimple.vue').default);
+Vue.component('strategy-stats', require('./components/StrategyStats.vue').default);
 
 
 require('./betbot.js');

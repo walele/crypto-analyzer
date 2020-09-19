@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
 use App\Crypto\Helpers;
+use Carbon\Carbon;
 
 class Bet extends JsonResource
 {
@@ -27,12 +28,18 @@ class Bet extends JsonResource
       // Date format
       $created_at = $this->created_at;
       $created_at = $created_at->toDateTimeString();
+      $end = new Carbon($this->end_at);
+      $short = sprintf('%s - %s',
+                $this->created_at->format('m-d H:i:s'),
+                $end->format('m-d H:i:s')
+              );
 
       // Payload format
       $payload = Helpers::parsePayload($this->payload);
       $times = [
           'start' => $created_at,
-          'end' => $this->end_at
+          'end' => $this->end_at,
+          'short' => $short
       ];
 
       // Prices
