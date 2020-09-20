@@ -38,9 +38,10 @@ abstract class AbstractStrategy
   /**
   * Add indcator
   */
-  public function addIndicator(string $name, Indicator $indicator)
+  public function addIndicator(Indicator $indicator)
   {
-    $this->indicators[$name] = $indicator;
+    $key = $indicator->getKey();
+    $this->indicators[$key] = $indicator;
   }
 
   /**

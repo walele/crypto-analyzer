@@ -54,6 +54,10 @@ class AlwaysUp extends AbstractStrategy implements Strategy
     $condition = new Condition (2.0, Condition::LOWER, $maCompAvgPrice);
     $this->addCondition($condition);
 
+    // MovingAverageLatestDiffCumul 1m
+    $ma1minLatestCumul = new MovingAverageLatestDiffCumul('1m', 7, 15);
+    $condition = new Condition (0.4, Condition::BIGGER, $ma1minLatestCumul);
+    $this->addIndicator($condition);
   }
 
   public function getName(): string

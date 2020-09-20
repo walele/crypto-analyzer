@@ -13,7 +13,7 @@ interface Strategy
 
   public function getDescription(): string;
 
-  public function addIndicator(string $name, Indicator $indicator);
+  public function addIndicator(Indicator $indicator);
 
   public function getIndicators(): array;
 
