@@ -11,11 +11,13 @@ interface Strategy
 
   public function getKey(): string;
 
+  public function getDescription(): string;
+
   public function addIndicator(string $name, Indicator $indicator);
 
   public function getIndicators(): array;
 
-  public function addCondition(string $name, ConditionInterface $condition);
+  public function addCondition(ConditionInterface $condition);
 
   public function getConditions(): array;
 
@@ -31,8 +33,7 @@ interface Strategy
 
   public function getLogs();
 
-  public function addBet($market, $payload);
+  public function addBet(string $market, $payload);
 
-  public function getDescription(): string;
 
 }

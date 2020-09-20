@@ -19,6 +19,9 @@ class Condition implements ConditionInterface
     $this->indicator = $indicator;
   }
 
+  /**
+  * Get name
+  */
   public function getName(): string
   {
 
@@ -30,11 +33,28 @@ class Condition implements ConditionInterface
     return $str;
   }
 
+  /**
+  * Get key, string with indicator name & condition string
+  *
+  * @return string $name
+  */
+  public function getKey(): string
+  {
+    $name = str_replace(" ", "_", $this->getName());
+    return $name;
+  }
+
+  /**
+  * Get indicator
+  */
   public function getIndicator(): Indicator
   {
     return $this->indicator;
   }
 
+  /**
+  * Check condition & return boolean result
+  */
   public function checkCondition($value): bool
   {
     // If indicator as false value return false
@@ -55,4 +75,5 @@ class Condition implements ConditionInterface
     return false;
 
   }
+
 }

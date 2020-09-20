@@ -32,6 +32,17 @@ class Conditions implements ConditionInterface
     return $str;
   }
 
+  /**
+  * Get key, string with indicator name & condition string
+  *
+  * @return string $name
+  */
+  public function getKey(): string
+  {
+    $name = str_replace(" ", "_", $this->getName());
+    return $name;
+  }
+
   public function getIndicator(): Indicator
   {
     return $this->indicator;
