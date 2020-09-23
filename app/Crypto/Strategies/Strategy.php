@@ -14,8 +14,10 @@ interface Strategy
   public function getDescription(): string;
 
   public function addIndicator(Indicator $indicator);
+  public function addFeature(Indicator $indicator);
 
   public function getIndicators(): array;
+  public function getFeatures(): array;
 
   public function addCondition(ConditionInterface $condition);
 

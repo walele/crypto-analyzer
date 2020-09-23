@@ -189,4 +189,13 @@ class StatsController extends Controller
 
       return $data;
     }
+
+    public function strategyStats($key, StatsBot $bot)
+    {
+      $data['stats'] = [
+        'daily_stats' => $bot->getStrategyStats($key),
+      ];
+
+      return $data;
+    }
 }

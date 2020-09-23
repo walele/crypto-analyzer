@@ -52,6 +52,8 @@ Route::prefix('bot')->group(function () {
 Route::prefix('stats')->group(function () {
   Route::get('/', 'API\StatsController@index');
   Route::get('/daily', 'API\StatsController@daily');
+  Route::get('/strategy/{key}', 'API\StatsController@strategyStats');
+
 });
 
 Route::prefix('fix')->group(function () {

@@ -66,6 +66,25 @@ class BetBot
       return $this->strategies;
   }
 
+  public function getStrategiesInfo(): array
+  {
+      $data = [];
+
+      foreach($this->strategies as $strat){
+
+        $data[] = [
+          'name' => $strat->getName(),
+          'key' => $strat->getKey(),
+          'description' => $strat->getDescription(),
+          'indicators' =>  $strat->getIndicators(),
+          'conditions' => $strat->getConditions(),
+          'features' => $strat->getFeatures(),
+        ];
+      }
+
+      return $data;
+  }
+
   /**
   * Fun all strategies and make bets
   */
@@ -185,6 +204,20 @@ class BetBot
 
     foreach($this->strategies as $s){
       $data = ($s->getIndicators());
+    }
+
+    return $data;
+  }
+
+  /**
+  *  Get features used by strategies
+  */
+  public function getFeatures()
+  {
+    $data = [];
+
+    foreach($this->strategies as $s){
+      $data = ($s->getFeatures());
     }
 
     return $data;

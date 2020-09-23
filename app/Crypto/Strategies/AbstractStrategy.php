@@ -9,6 +9,7 @@ abstract class AbstractStrategy
 {
   protected $indicators = [];
   protected $conditions = [];
+  protected $features = [];
 
   private $bets = [];
   private $logs = [];
@@ -51,6 +52,28 @@ abstract class AbstractStrategy
   {
     $str = [];
     foreach($this->indicators as $i){
+      $str[] = $i->getName();
+    }
+
+    return $str;
+  }
+
+  /**
+  * Add indcator
+  */
+  public function addFeature(Indicator $indicator)
+  {
+    $key = $indicator->getKey();
+    $this->features[$key] = $indicator;
+  }
+
+  /**
+  * Get indicators
+  */
+  public function getFeatures(): array
+  {
+    $str = [];
+    foreach($this->features as $i){
       $str[] = $i->getName();
     }
 
@@ -151,7 +174,7 @@ abstract class AbstractStrategy
       if($addRow){
 
         // Get extra indicators values
-        foreach($this->indicators as $key => $i){
+        foreach($this->features as $key => $i){
 
           $value = $i->getValue($market);
 

@@ -13716,6 +13716,8 @@ a.text-dark:focus {
 
 .title-4 {
   font-size: 0.9rem;
+  font-weight: 500;
+  color: #11ece5;
 }
 
 .title-5 {

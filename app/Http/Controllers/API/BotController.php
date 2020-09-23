@@ -28,15 +28,7 @@ class BotController extends Controller
      */
     public function index(BetBot $bot)
     {
-      $indicators = $bot->getIndicators();
-      $conditions = $bot->getConditions();
-
-      $data['strategy'] = [
-        'indicators' => $indicators,
-        'conditions' => $conditions,
-        'description' => $bot->strategyToString(),
-        'strat_keys' => $bot->strategyKeyToString()
-      ];
+      $data['strategies'] = $bot->getStrategiesInfo();
 
       return $data;
     }
