@@ -1,5 +1,6 @@
 <template>
   <div class="">
+
     <div class="row justify-content-center">
 
         <div class="col-sm">
@@ -64,6 +65,7 @@
 -->
     <hr style="width: 42%">
 
+<!--
     <table-list
       tableId="table-order"
       title="Orders"
@@ -79,7 +81,7 @@
       perPage="16">
     </table-list>
     <hr style="width: 42%">
-
+-->
     <table-list
       tableId="table-bets"
       title="Active Bets"
@@ -116,6 +118,8 @@
     export default {
         mounted() {
             console.log('Component mounted.')
+            let spinner = document.getElementById("main-spinner");
+            spinner.classList.add("hide");
         },
         data() {
           return {
@@ -155,6 +159,7 @@
               url: '/api/bot'
             }).then(res => {
               this.strategies = res.data.strategies
+
             });
 /*
             axios({

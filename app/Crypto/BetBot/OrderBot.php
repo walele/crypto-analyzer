@@ -44,7 +44,7 @@ class OrderBot
   public function __construct()
   {
     $this->init();
-    $this->initExchangeInfo();
+    //$this->initExchangeInfo();
   }
 
 

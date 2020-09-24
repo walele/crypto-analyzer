@@ -6,23 +6,41 @@
       <div class="card">
           <div class="card-header">Strategy {{ item.name }}</div>
           <div class="card-body">
-            <p class="title-4">Description</p>
-            <p class="">{{ item.description }} </p>
-            <p>&nbsp;</p>
 
             <div class="row">
               <div class="col-sm">
-                <p class="title-4">Conditions</p>
-                <ul>
-                  <li v-for="value in item.conditions">{{ value }}</li>
-                </ul>
+                <div class="card">
+                  <div class="card-header">Description</div>
+                  <div class="card-body">
+                    <p class="">{{ item.description }} </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm">
+                <div class="card">
+                  <div class="card-header">Conditions</div>
+                  <div class="card-body">
+                    <ul>
+                      <li v-for="value in item.conditions">{{ value }}</li>
+                    </ul>
+                  </div>
+                </div>
               </div>
 
               <div class="col-sm">
-                <p class="title-4">Features</p>
-                <ul>
-                  <li v-for="value in item.features">{{ value }}</li>
-                </ul>
+
+                <div class="card">
+                  <div class="card-header">Features</div>
+                  <div class="card-body">
+                    <ul>
+                      <li v-for="value in item.features">{{ value }}</li>
+                    </ul>
+                  </div>
+                </div>
+
               </div>
             </div>
 
@@ -30,14 +48,20 @@
 
             <div class="row">
               <div class="col-sm">
-                <p class="title-4">Total stas</p>
-                <ul>
-                  <li v-for="value in item.conditions">{{ value }}</li>
-                </ul>
+                <div class="card">
+                    <div class="card-header">Total Stats</div>
+
+                    <div class="card-body">
+                      <strategy-stats
+                        v-for="item in stats.total"
+                        v-bind:key="item.name"
+                        v-bind:item="item"
+                      ></strategy-stats>
+                    </div>
+                </div>
               </div>
 
               <div class="col-sm">
-                <p class="title-4">Daily stats</p>
 
                 <div class="card">
                     <div class="card-header">Daily Stats</div>
@@ -45,7 +69,7 @@
                     <div class="card-body">
 
                       <strategy-stats
-                        v-for="item in daily_stats"
+                        v-for="item in stats.daily"
                         v-bind:key="item.name"
                         v-bind:item="item"
                       ></strategy-stats>
@@ -75,7 +99,7 @@
     data() {
       return {
         item: [],
-        daily_stats: [],
+        stats: {},
       }
     },
     methods: {
@@ -86,7 +110,7 @@
           method: 'get',
           url: '/api/stats/strategy/' + key
         }).then(res => {
-          this.strategies = res.data
+          this.stats = res.data.stats
           console.log(res.data)
         });
 

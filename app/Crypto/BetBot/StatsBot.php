@@ -201,8 +201,7 @@ class StatsBot
     $data = [];
 
     // Get strategies's bet
-    $start_time = Carbon::now()->subHours(24 )->toDateTimeString();
-    $strat_key = $strat->getKey();
+    $start_time = Carbon::now()->subHours(24 * 15)->toDateTimeString();
     $bets = Bet::where('strategy', $key )
                 ->where('active', false)
                 ->where('created_at', '>',  $start_time )
@@ -225,7 +224,6 @@ class StatsBot
     $bets = BetCollection::make($bets);
 
     $item = [
-      'name' =>  $strat->getName(),
       'date' => $start_time,
       'stats' => [
         'total' => $total,
@@ -242,6 +240,47 @@ class StatsBot
     return $data;
   }
 
+  /**
+  * getStrategyStats
+  *
+  * @param string $key the strategy key
+  */
+  public function getStrategyTotalStats($key)
+  {
+    $data = [];
+
+    // Get strategies's bet
+    $bets = Bet::where('strategy', $key )
+                ->where('active', false)
+                ->get();
+
+    // Init strategies's stats object
+    $total = $bets->count();
+
+    // Get win stats
+    $filtered = $bets->where('success', true);
+    $win = $filtered->count();
+
+    // Get loss stats
+    $filtered = $bets->where('success', false);
+    $loss = $filtered->count();
+
+    $item = [
+      'stats' => [
+        'total' => $total,
+        'win' => $win,
+        'loss' => $loss,
+        'key' => $key,
+      ],
+
+    ];
+
+    $data[] = $item;
+
+
+
+    return $data;
+  }
 
   /**
   * getStrategyStats
@@ -250,7 +289,12 @@ class StatsBot
   */
   public function getStrategyStats($key)
   {
-    $data = [];
+    $data = [
+      'total' => $this->getStrategyTotalStats($key),
+      'daily' => $this->getStrategyDailyStats($key)
+    ];
+
+    return $data;
   }
 
 }

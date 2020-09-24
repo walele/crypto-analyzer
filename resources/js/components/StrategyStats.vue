@@ -1,8 +1,7 @@
 <template>
   <div class="row">
     <div class="col-sm large-col">
-      <p class="title-3">Strategy {{ item.name }}</p>
-      <p class="subtle-text">Stats since {{ item.date }}</p>
+      <p class="subtle-text" v-if="item.date">Stats since {{ item.date }}</p>
       <p class="" v-for="(value, name) in item.stats">
           <b>{{ name }}</b> {{ value }}
       </p>

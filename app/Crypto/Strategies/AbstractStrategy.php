@@ -63,7 +63,7 @@ abstract class AbstractStrategy
   */
   public function addFeature(Indicator $indicator)
   {
-    $key = $indicator->getKey();
+    $key = $indicator->getPayloadKey();
     $this->features[$key] = $indicator;
   }
 
