@@ -1,8 +1,6 @@
 <template>
-  <div class="row">
+  <div class="row margin-bottom-medium">
     <div class="col-sm large-col">
-
-
       <div class="card">
           <div class="card-header">Strategy {{ item.name }}</div>
           <div class="card-body">
@@ -23,7 +21,7 @@
                 <div class="card">
                   <div class="card-header">Conditions</div>
                   <div class="card-body">
-                    <ul>
+                    <ul class="small-text">
                       <li v-for="value in item.conditions">{{ value }}</li>
                     </ul>
                   </div>
@@ -35,7 +33,7 @@
                 <div class="card">
                   <div class="card-header">Features</div>
                   <div class="card-body">
-                    <ul>
+                    <ul class="small-text">
                       <li v-for="value in item.features">{{ value }}</li>
                     </ul>
                   </div>
@@ -86,6 +84,7 @@
 
 
     </div>
+
   </div>
 
 </template>

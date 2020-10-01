@@ -10,6 +10,11 @@ class LastPricesUpRatioScore implements Indicator
 
   private $number = 120;
 
+  public function __construct($number = 120)
+  {
+    $this->number = $number;
+  }
+
   /**
   * Get indicator key
   */

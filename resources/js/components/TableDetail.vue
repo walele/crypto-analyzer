@@ -27,6 +27,7 @@
                         <div class="col-sm small-text large-col">
                           <p class="title-small">Info</p>
                           <p><b>id</b>: {{ item.id }}</p>
+                          <p><b>strategy</b>: {{ item.strategy }}</p>
                           <p><b>start</b>: {{ item.times.start }}</p>
                           <p><b>end</b>: {{ item.times.end }}</p>
                           <p><a target='_blank' :href="item.name_link.link">{{ item.name_link.name }} link</a></p>

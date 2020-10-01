@@ -92,21 +92,31 @@ class BetBot
   {
     $active_markets = $this->getActiveMarketBets();
     $inactive_markets = array_diff($this->markets, $active_markets);
+    $results = [];
 
     foreach($this->strategies as $s){
       $s->run($inactive_markets);
-      $this->bets = $s->getBets();
-      $this->logs = $s->getLogs();
+      //$this->bets = $s->getBets();
+      //$this->logs = $s->getLogs();
+      $key = $s->getKey();
+
+      $results[$key] = [
+        'name' => $s->getName(),
+        'key' => $s->getKey(),
+        'bets' => $s->getBets(),
+        'logs' => $s->getLogs(),
+      ];
 
       // Log
       $log = new Log([
         'type' => 'bet',
-        'payload' => serialize($this->logs),
+        'group' => $key,
+        'payload' => serialize($s->getLogs()),
       ]);
       $log->save();
     }
 
-    return true;
+    return $results;
   }
 
 
@@ -122,23 +132,26 @@ class BetBot
 
 
     // Run bot strategy
-    $this->run();
-    $bets = $this->bets;
-    $logs = $this->logs;
+    $strategies = $this->run();
+    //$bets = $this->bets;
+    //$logs = $this->logs;
 
     //Log::info('bets : ' . print_r($logs, true));
+    foreach($strategies as $s){
 
+      // Place new bets
+      $bets = $s['bets'];
+      $this->trainLearnBot($bets);
+      foreach($bets as $bet){
+        $this->placeBet($bet);
+      }
 
-    // Place new bets
-    $this->trainLearnBot($bets);
-    foreach($bets as $bet){
-      $this->placeBet($bet);
     }
 
 
+
     $data = [
-      'logs' => $logs,
-      'bets' => array_values($bets)
+      'strategies' => $strategies,
     ];
 
     return $data;
@@ -240,9 +253,10 @@ class BetBot
   /**
   *  Get active bet for a market
   */
-  public function getActiveBet($market)
+  public function getActiveBet($market, $strategy='')
   {
     $activeBet = Bet::where('market', $market )
+                      ->where('strategy', $strategy)
                       ->where('active', 1);
 
     return $activeBet;
@@ -272,7 +286,7 @@ class BetBot
       $successPerc = $bet['success_perc'] ?? self::SUCCESS_PRICE;
       $stopPerc = $bet['stop_perc'] ?? self::STOP_PRICE;
 
-      $activeBet = $this->getActiveBet($market);
+      $activeBet = $this->getActiveBet($market, $strategy);
 
       if( ! $activeBet->count() ){
 

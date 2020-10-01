@@ -7,6 +7,7 @@ use App\Crypto\BetBot\BetBot;
 use App\Crypto\BetBot\StatsBot;
 use App\Crypto\Strategies\ShortUpSinceDrop;
 use App\Crypto\Strategies\AlwaysUp;
+use App\Crypto\Strategies\AlwaysUpLongTerm;
 
 class BetBotProvider extends ServiceProvider
 {
@@ -21,6 +22,7 @@ class BetBotProvider extends ServiceProvider
 
           $bot =  BetBot::getInstance();
           $bot->addStrategy(new AlwaysUp);
+          $bot->addStrategy(new AlwaysUpLongTerm);
 
           return $bot;
       });

@@ -17,6 +17,7 @@ class CreateLogsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('type', 50)->nullable();
+            $table->string('group')->nullable();
             $table->text('payload')->nullable();
         });
     }

@@ -63,6 +63,7 @@ class Bet extends JsonResource
 
       return [
         'id' => $this->id,
+        'strategy' => $this->strategy,
         'name_link' => $name_link,
         'times' => $times,
         'payload' => $payload,
