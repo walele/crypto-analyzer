@@ -80,7 +80,7 @@ class Bets extends ResourceCollection
         $created_at = $bet->created_at;
         $created_at->setTimezone('America/New_York');
         $created_at  =$created_at->toDateTimeString();
-        
+
         // Default attribute
         $parsed = [
           'id' => $bet->id,
@@ -94,7 +94,7 @@ class Bets extends ResourceCollection
           'payload' => [],
         ];
 
-        $payload = unserialize($bet->payload);
+        $payload = unserialize($bet->features);
         foreach($payload as $key => $value){
 
           $id = Str::slug($key, '_');

@@ -35,7 +35,7 @@ interface Strategy
 
   public function getLogs();
 
-  public function addBet(string $market, $payload);
+  public function addBet(string $market, array $conditions, array $features);
 
 
 }

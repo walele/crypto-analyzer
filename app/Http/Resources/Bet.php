@@ -35,7 +35,7 @@ class Bet extends JsonResource
               );
 
       // Payload format
-      $payload = Helpers::parsePayload($this->payload);
+      $payload = Helpers::parsePayload($this->features);
       $times = [
           'start' => $created_at,
           'end' => $this->end_at,

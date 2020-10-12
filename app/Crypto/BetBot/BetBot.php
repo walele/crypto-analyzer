@@ -86,7 +86,7 @@ class BetBot
   }
 
   /**
-  * Fun all strategies and make bets
+  * Run all strategies and make bets
   */
   private function run()
   {
@@ -133,15 +133,16 @@ class BetBot
 
     // Run bot strategy
     $strategies = $this->run();
-    //$bets = $this->bets;
-    //$logs = $this->logs;
 
-    //Log::info('bets : ' . print_r($logs, true));
     foreach($strategies as $s){
 
       // Place new bets
       $bets = $s['bets'];
-      $this->trainLearnBot($bets);
+      $key = $s['key'];
+
+      if($bets){
+        $this->trainLearnBot($key);
+      }
       foreach($bets as $bet){
         $this->placeBet($bet);
       }
@@ -280,9 +281,11 @@ class BetBot
   public function placeBet($bet)
   {
       $market = $bet['market'];
-      $payload = $bet['payload'];
+      $conditions = $bet['conditions'];
+      $features = $bet['features'];
       $client = new MarketClient;
       $strategy = $bet['strategy'] ?? '';
+      $strategy_key = $bet['strategy_key'] ?? '';
       $successPerc = $bet['success_perc'] ?? self::SUCCESS_PRICE;
       $stopPerc = $bet['stop_perc'] ?? self::STOP_PRICE;
 
@@ -299,8 +302,10 @@ class BetBot
 
         $bet = new Bet([
           'market' => $market,
-          'payload' => serialize($payload),
+          'conditions' => serialize($conditions),
+          'features' => serialize($features),
           'strategy' => $strategy,
+          'strategy_key' => $strategy_key,
           'buy_price' => $buy_price,
           'sell_price' => $sell_price,
           'stop_price' => $stop_price,
@@ -318,13 +323,8 @@ class BetBot
       return $bet;
   }
 
-  public function trainLearnBot($bets)
+  public function trainLearnBot($strategy_key)
   {
-    $strategy_key = '';
-
-    foreach($bets as $bet){
-      $strategy_key = $bet['strategy'] ?? '';
-    }
 
     $this->learnerBot->trainFromBets($strategy_key);
   }

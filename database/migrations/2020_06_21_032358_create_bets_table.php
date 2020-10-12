@@ -19,7 +19,9 @@ class CreateBetsTable extends Migration
             $table->timestamp('end_at')->nullable();
             $table->string('market');
             $table->string('strategy')->nullable();
-            $table->string('payload', 2048)->nullable();
+            $table->string('strategy_key')->nullable();
+            $table->string('conditions', 2048)->nullable();
+            $table->string('features', 2048)->nullable();
             $table->string('ml_status')->nullable();
 
             $table->boolean('active')->nullable();

@@ -116,15 +116,78 @@ abstract class AbstractStrategy
   * @param string $market
   * @param array $payload
   */
-  public function addBet(string $market, $payload)
+  public function addBet(string $market, array $conditions, array $features)
   {
     $this->bets[$market] = [
       'market' => $market,
-      'payload' => $payload,
-      'strategy' => $this->getKey(),
+      'conditions' => $conditions,
+      'features' => $features,
+      'strategy' => $this->getName(),
+      'strategy_key' => $this->getKey(),
       'success_perc' => $this->getSucessPerc(),
       'stop_perc' => $this->getStopPerc(),
     ];
+  }
+
+
+  /**
+  * Run strategy conditions for a market
+  */
+  protected function runConditions(string $market)
+  {
+    $data = [
+      'success' => true,
+      'data' => []
+    ];
+    // Loop all conditions & if all success add to bets
+    foreach($this->conditions as $key => $c){
+
+      // Get indicator name & value
+      $indicator = $c->getIndicator();
+      $name = $c->getName();
+      $payloadKey = $indicator->getPayloadKey();
+      $value = $indicator->getValue($market);
+
+      // Save condition value
+      $data['data'][$payloadKey] = $value;
+
+      // Log
+      $html = sprintf("Indicator %s as value %s", $name, $value);
+      $this->logs[$market][] = $html;
+
+      // Check If we  satify condition
+      if( ! $c->checkCondition($value)) {
+        $html = sprintf("Fail condition for %s. Value: %s", $name, $value) ;
+        $this->logs[$market][] = $html;
+
+        $data['success'] = false;
+        break;
+      }
+
+    }
+
+    return $data;
+  }
+
+  public function runFeatures($market)
+  {
+    $data = [
+      'data' => []
+    ];
+
+    // Get extra indicators values
+    foreach($this->features as $key => $i){
+
+      $value = $i->getValue($market);
+
+      $html = sprintf("Indicator %s as value %s", $key, $value) ;
+      $this->logs[$market][$key] = $html;
+
+      $data['data'][$i->getPayloadKey()] = $value;
+    }
+
+    return $data;
+
   }
 
   /**
@@ -134,58 +197,31 @@ abstract class AbstractStrategy
   public function run(array $markets)
   {
 
+    $count = 0;
+    $market_limit = (int) config('app.market_limit');
+
     foreach($markets as $market){
+
+      //market limit for quick testing
+      $count++;
+      if($market_limit && $count>$market_limit){
+        break;
+      }
 
       // init log
       $this->logs[$market] = [];
 
-      $row = [$market];
-      $addRow = true;
-      $payload = [];
 
-      // Loop all conditions & if all success add to bets
-      foreach($this->conditions as $key => $c){
+      // Run conditions on market & get status & data
+      $conditions = $this->runConditions($market);
+      $addRow = $conditions['success'] ?? false;
 
-        // Get indicator name & value
-        $indicator = $c->getIndicator();
-        $name = $c->getName();
-        $payloadKey = $indicator->getPayloadKey();
-        $value = $indicator->getValue($market);
-
-        // Log
-        $html = sprintf("Indicator %s as value %s", $key, $value);
-        $this->logs[$market][$key] = $html;
-
-        // If we dont satify condition
-        if( ! $c->checkCondition($value)) {
-          $html = sprintf("Fail condition for %s. Value: %s", $name, $value) ;
-          $this->logs[$market][$key . '_result'] = $html;
-
-          $addRow = false;
-          break;
-        }
-
-        // Save to bet payload
-        $row[] = $value;
-        $payload[$payloadKey] = $value;
-
-      }
-
+      // If all conditions are success
       if($addRow){
 
-        // Get extra indicators values
-        foreach($this->features as $key => $i){
+        $features = $this->runFeatures($market);
+        $this->addBet($market, $conditions['data'], $features['data']);
 
-          $value = $i->getValue($market);
-
-          $html = sprintf("Indicator %s as value %s", $key, $value) ;
-          $this->logs[$market][$key] = $html;
-
-          $row[] = $value;
-          $payload[$i->getPayloadKey()] = $value;
-        }
-
-        $this->addBet($market, $payload);
       }
 
     }

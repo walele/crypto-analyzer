@@ -265,12 +265,17 @@ class StatsBot
     $filtered = $bets->where('success', false);
     $loss = $filtered->count();
 
+    // Get active
+    $active = Bet::where('strategy', $key )
+                ->where('active', true)
+                ->get()
+                ->count();
     $item = [
       'stats' => [
         'total' => $total,
         'win' => $win,
         'loss' => $loss,
-        'key' => $key,
+        'active' => $active,
       ],
 
     ];

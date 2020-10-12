@@ -35,6 +35,7 @@ class AlwaysUpLongTerm extends AbstractStrategy implements Strategy
     $ma1dLatestCumul = new MovingAverageLatestDiffCumul('1d', 7, 7);
     $condition = new Condition (-1.0, Condition::BIGGER, $ma1dLatestCumul);
     $this->addCondition( $condition);
+    $this->addFeature($ma1dLatestCumul);
 
 
     // MovingAverageLatestDiffCumul 1h
@@ -60,14 +61,11 @@ class AlwaysUpLongTerm extends AbstractStrategy implements Strategy
     $this->addFeature($maCompAvgPrice);
 
     // MovingAverageLatestDiffCumul 1m
-    $ma1minLatestCumul = new MovingAverageLatestDiffCumul('1m', 3, 15);
-    $condition = new Condition (0.4, Condition::BIGGER, $ma1minLatestCumul);
-    $this->addCondition($condition);
-    $this->addFeature($ma1minLatestCumul);
+    //$ma1minLatestCumul = new MovingAverageLatestDiffCumul('1m', 3, 15);
+    //$condition = new Condition (0.4, Condition::BIGGER, $ma1minLatestCumul);
+    //$this->addCondition($condition);
+    //$this->addFeature($ma1minLatestCumul);
 
-    // MovingAverageLatestDiffCumul 1m
-    $ma1dLatestCumul = new MovingAverageLatestDiffCumul('1d', 7, 5);
-    $this->addFeature($ma1dLatestCumul);
   }
 
   public function getName(): string
