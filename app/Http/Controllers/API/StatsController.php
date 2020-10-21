@@ -129,7 +129,7 @@ class StatsController extends Controller
     public function validateBets()
     {
       $bot = BetBot::getInstance();
-      $bets2 = $bot->validateBets2();
+      $bets2 = $bot->validateBets();
 
       return $bets2;
 

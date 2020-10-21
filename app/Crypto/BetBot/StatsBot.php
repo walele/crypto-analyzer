@@ -202,7 +202,7 @@ class StatsBot
 
     // Get strategies's bet
     $start_time = Carbon::now()->subHours(24 * 15)->toDateTimeString();
-    $bets = Bet::where('strategy', $key )
+    $bets = Bet::where('strategy_key', $key )
                 ->where('active', false)
                 ->where('created_at', '>',  $start_time )
                 ->get();
@@ -250,7 +250,7 @@ class StatsBot
     $data = [];
 
     // Get strategies's bet
-    $bets = Bet::where('strategy', $key )
+    $bets = Bet::where('strategy_key', $key )
                 ->where('active', false)
                 ->get();
 
@@ -266,7 +266,7 @@ class StatsBot
     $loss = $filtered->count();
 
     // Get active
-    $active = Bet::where('strategy', $key )
+    $active = Bet::where('strategy_key', $key )
                 ->where('active', true)
                 ->get()
                 ->count();

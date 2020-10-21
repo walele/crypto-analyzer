@@ -27,11 +27,6 @@ class LearnerBot
   ];
   private static $instance = null;
 
-  private $bets = [];
-  private $strategies = [];
-  private $markets = [];
-  private $binanceApi;
-  private $tt = 0;
   private $estimator;
 
   private function __construct()
@@ -105,19 +100,19 @@ class LearnerBot
   */
   protected function createDataset($data, $unlabeled = false)
   {
-    $samples = $data['rows'];
+    $samples = [];
     $labels = [];
 
+    foreach($data as $bet){
+
+      $features = unserialize($bet->features);
+      $samples[] = array_values($features);
+
+      $labels[] = ($bet->success) ? 'success' : 'fail';
+
+    }
+
     foreach($samples as $key => $sample){
-
-      // Set labels
-      $labels[] = ($sample['success'] == 1) ? 'success' : 'fail';
-
-      // Remove unused features
-      unset($samples[$key]['success']);
-      unset($samples[$key]['active']);
-      unset($samples[$key]['id']);
-      unset($samples[$key]['market']);
 
       // Parse float for remaining features
       $samples[$key] = array_map('floatval', $samples[$key]);
@@ -140,11 +135,11 @@ class LearnerBot
   public function getTrainDataset($strategy)
   {
     $res = new Bets(Bet::where('active', false)
-                      ->where('strategy', $strategy)
+                      ->where('strategy_key', $strategy)
                       ->orderBy('id', 'asc')->get());
 
-    $data = $res->toCsv();
-    $dataset = $this->createDataset($data);
+    //$data = $res->toCsv();
+    $dataset = $this->createDataset($res);
 
 
     return $dataset;
@@ -164,8 +159,8 @@ class LearnerBot
     }
 
     $res = new Bets($request->get());
-    $data = $res->toCsv();
-    $dataset = $this->createDataset($data, true);
+    //$data = $res->toCsv();
+    $dataset = $this->createDataset($res, true);
 
     return $dataset;
   }
@@ -227,6 +222,7 @@ class LearnerBot
     // Train with KNN
     $this->estimator = new KNearestNeighbors(42, true, new Manhattan());
     $this->estimator->train($trainDataset);
+
   }
 
   public function getBetPrediction($bet)

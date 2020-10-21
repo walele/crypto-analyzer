@@ -137,15 +137,6 @@ class BotController extends Controller
 
     }
 
-    public function validateBets()
-    {
-      $bot = BetBot::getInstance();
-      $bets2 = $bot->validateBets2();
-
-      return $bets2;
-
-    }
-
 
     /**
     * Make Bets & trades

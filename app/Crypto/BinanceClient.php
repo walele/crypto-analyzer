@@ -35,14 +35,14 @@ class BinanceClient
   /**
   * Get candle stick
   */
-  public function getCandleSticksData($market, $interval)
+  public function getCandleSticksData($market, $interval, $limit=200)
   {
     $cacheKey = 'getCandleSticksData_'.$market.$interval;
     if($cache = $this->getCache($cacheKey)){
       return $cache;
     }
 
-    $params = sprintf("?symbol=%s&interval=%s&limit=200", $market, $interval);
+    $params = sprintf("?symbol=%s&interval=%s&limit=%s", $market, $interval, $limit);
     $url = self::API_URL . self::CANDLESTICK_URL . $params;
     $response = Http::get($url);
     $data = json_decode($response->body());
