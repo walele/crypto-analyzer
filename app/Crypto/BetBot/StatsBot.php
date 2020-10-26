@@ -200,7 +200,7 @@ class StatsBot
         $data = [];
 
         // Get strategies's bet
-        $start_time = Carbon::now()->subHours(24 * 15)->toDateTimeString();
+        $start_time = Carbon::now()->subHours(24 )->toDateTimeString();
         $bets = Bet::where('strategy_key', $key)
             ->where('active', false)
             ->where('created_at', '>', $start_time)
@@ -271,7 +271,8 @@ class StatsBot
             ->count();
 
         // Get success rate
-        $success_rate = ($total) ? ($win*100) / $total : 'n/a';
+        $success_rate = ($total) ? ($win*100) / $total : 0;
+        $success_rate = number_format($success_rate, 2);
 
         $item = [
             'stats' => [
