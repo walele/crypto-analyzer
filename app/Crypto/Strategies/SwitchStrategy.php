@@ -52,7 +52,7 @@ class SwitchStrategy extends AbstractStrategy implements Strategy
 
         // MovingAverageCompAvgPrice
         $indicator = new MovingAverageCompAvgPrice('15m', 22);
-        $condition = new Condition (2.0, Condition::LOWER, $indicator);
+        $condition = new Condition (4.0, Condition::LOWER, $indicator);
         $this->addCondition($condition);
         $this->addFeature($indicator);
 
